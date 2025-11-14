@@ -1,0 +1,73 @@
+@charset "utf-8";
+
+:root {
+	--Primary:#7A64E4;
+	--Secondary:#F5F5F5;
+	--Tertiary:#E7EBF2;
+
+	--White:#FFFFFF;
+	--Black:#000000;
+	--Gray:#667080;
+
+	--Point:#003B68;
+	--Error:#FF5757;
+
+	--Primary-100:#E4E0FA;
+	--Primary-200:#CAC1F4;
+	--Primary-300:#AFA2EF;
+	--Primary-400:#9583E9;
+	--Primary-500:#7A64E4;
+	--Primary-600:#6250B6;
+	--Primary-700:#493C89;
+	--Primary-800:#31285B;
+	--Primary-900:#18142E;
+
+	--Gray-100:#E0E2E6;
+	--Gray-200:#C2C6CC;
+	--Gray-300:#A3A9B3;
+	--Gray-400:#858D99;
+	--Gray-500:#667080;
+	--Gray-600:#525A66;
+	--Gray-700:#3D434D;
+	--Gray-800:#292D33;
+	--Gray-900:#14161A;
+
+	--border-01:1px solid #E0E0E0;
+	--border-02:1px solid #C2C6CC;
+
+	--font-default:#14161A;
+}
+
+/* core.css 사이트 전체 공통 디자인*/
+html {
+	font-size: 62.5%;
+}
+*{
+	font-size:1.7rem;
+	font-weight: 500;
+	color: var(--font-default);
+}
+
+input{
+	padding:8px;
+	border:var(--border-02);
+	text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+button {
+	border: 0px;
+	background: transparent;
+	cursor: pointer;
+}
+
+/*focus*/
+select:focus:focus,
+input:focus,
+textarea:focus {
+    outline: 2px solid rgba(122, 100, 228, 0.3);
+}
+body {
+  font-size: 1.7rem;
+}

@@ -1,0 +1,61 @@
+@charset "utf-8";
+
+/* ==========================================
+   푸터 레이아웃
+   ========================================== */
+
+.footer {
+    background-color: var(--Gray-800);
+    color: var(--Gray-300);
+    padding: 40px 0;
+    margin-top: auto;
+}
+
+.footer .inner {
+    max-width: 100%;
+    padding: 0 40px;
+}
+
+.ft_menu_bot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+/* 주소 박스 */
+.address-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+}
+
+.address-box p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--Gray-400);
+    margin: 0;
+}
+
+/* 저작권 정보 강조 */
+.address-box p:last-child {
+    font-size: 12px;
+    color: var(--Gray-500);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .footer {
+        padding: 30px 0;
+    }
+    
+    .footer .inner {
+        padding: 0 20px;
+    }
+    
+    .address-box p {
+        font-size: 12px;
+    }
+}

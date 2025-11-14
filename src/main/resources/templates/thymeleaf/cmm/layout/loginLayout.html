@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html th:fragment="layout (content, title)" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 콘텐츠별 title -->
+    <title th:text="${title != null ? title : '로그인'}">로그인</title>
+
+    <!-- 공통 meta -->
+    <link th:replace="~{cmm/meta :: metaLayout}">
+
+    <!-- 공통 script -->
+    <link th:replace="~{cmm/script :: script}">
+
+    <!-- 공통 css (로그인 페이지용) -->
+    <link type="text/css" rel="stylesheet" th:href="@{/css/reset.css}" >
+    <link type="text/css" rel="stylesheet" th:href="@{/css/common.css}" >
+    <link type="text/css" rel="stylesheet" th:href="@{/css/components.css}" >
+    <link type="text/css" rel="stylesheet" th:href="@{/css/cmm/login.css}" >
+    <link th:href="@{/css/cmm/font/pretendard-gov.css}" rel="stylesheet">
+</head>
+<body>
+    <!-- 콘텐츠만 표시 (헤더, 푸터 없음) -->
+    <th:block th:replace="${content}">
+        <p>contents</p>
+    </th:block>
+</body>
+</html>
+

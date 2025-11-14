@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- TOC JavaScript -->
+<script th:src="@{/js/toc/toc.js}"></script>
+
+<div th:fragment="tocLayout">
+    <!-- TOC 사이드바 -->
+    <aside class="dashboard-sidebar">
+        <div class="sidebar-menu">
+            <!-- 1차 메뉴 반복 -->
+            <div th:each="menu : ${menuList}" class="sidebar-menu-item-wrapper">
+                <!-- 1차 메뉴 아이템 -->
+                <div class="sidebar-menu-item toc-menu-item" 
+                     th:classappend="${(menu.subMenuList != null and menu.subMenuList.size() > 0) ? 'has-submenu' : ''} + ${#strings.contains(#httpServletRequest.requestURI, menu.menuUrl) ? ' active' : ''}">
+                    <i th:class="'icon-' + ${menu.menuIcon}"></i>
+                    <span th:text="${menu.menuNm}"></span>
+                    <!-- 하위 메뉴가 있는 경우 화살표 아이콘 표시 -->
+                    <span th:if="${menu.subMenuList != null and menu.subMenuList.size() > 0}" class="submenu-arrow">▼</span>
+                </div>
+                
+                <!-- 2차 메뉴 (하위 메뉴) -->
+                <div class="submenu-list" th:if="${menu.subMenuList != null and menu.subMenuList.size() > 0}">
+                    <a th:each="subMenu : ${menu.subMenuList}"
+                       th:href="@{${subMenu.menuUrl}}"
+                       class="submenu-item"
+                       th:classappend="${#strings.contains(#httpServletRequest.requestURI, subMenu.menuUrl)} ? 'active' : ''">
+                        <i th:class="'icon-' + ${subMenu.menuIcon}"></i>
+                        <span th:text="${subMenu.menuNm}"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
+</html>
+

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="codeMapper">
+
+	<select id="selectCmmnCodeList" parameterType="String" resultType="egovframework.com.cmm.vo.CodeVO">
+		SELECT	code_id,
+		       	code,
+		       	code_nm,
+		       	code_dc,
+		       	use_at,
+		       	TO_CHAR(frst_regist_pnttm, 'YYYY-MM-DD') AS frst_regist_pnttm
+		FROM 	com_cmmn_detail_code
+		WHERE   code_id = #{codeId}
+		and 	use_at = 'Y'
+		ORDER BY code_id, code
+	</select>
+</mapper>

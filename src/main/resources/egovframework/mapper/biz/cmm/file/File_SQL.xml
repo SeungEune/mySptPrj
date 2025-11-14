@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Converted at: Wed May 11 15:49:38 KST 2016-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FileManageDAO">
+
+ 	<select id="selectFileList" parameterType="biz.file.vo.FileVO" resultType="biz.file.vo.FileVO">
+		SELECT
+			a.atch_file_id,
+			b.file_cn,
+			b.file_sn,
+			b.file_stre_cours,
+			b.stre_file_nm,
+			b.file_extsn,
+			b.orignl_file_nm,
+			b.file_size,
+			a.creat_dt
+		FROM com_file a, com_file_detail b
+		WHERE a.atch_file_id = #{atchFileId}
+		  AND a.atch_file_id = b.atch_file_id
+		  AND a.use_at = 'Y'
+		ORDER BY
+			b.file_sn
+ 	</select>
+ 	
+	<insert id="insertFileMaster" parameterType="biz.file.vo.FileVO">
+		INSERT INTO com_file (
+			atch_file_id,
+			creat_dt,
+			use_at
+		) VALUES (
+			#{atchFileId},
+			NOW(),
+			'Y'
+	   )
+	</insert>
+	
+	<insert id="insertFileDetail" parameterType="biz.file.vo.FileVO">
+		INSERT INTO com_file_detail (
+			atch_file_id,
+			file_sn,
+			file_stre_cours,
+			stre_file_nm,
+			orignl_file_nm,
+			file_extsn,
+			file_size,
+			file_cn
+		) VALUES (
+		   	#{atchFileId},
+		   	CAST(#{fileSn} AS NUMERIC),
+		   	#{fileStreCours},
+		   	#{streFileNm},
+		   	#{orignlFileNm},
+		   	#{fileExtsn},
+		   	CAST(#{fileMg} AS NUMERIC),
+		   	#{fileCn}
+	   	)
+	</insert>	
+	
+	<delete id="deleteFileDetail" parameterType="biz.file.vo.FileVO">
+		DELETE FROM com_file_detail
+		WHERE atch_file_id = #{atchFileId}
+		  AND file_sn = CAST(#{fileSn} AS NUMERIC)
+	</delete>
+ 	
+	<select id="getMaxFileSN" parameterType="biz.file.vo.FileVO" resultType="java.lang.Integer">
+		SELECT COALESCE(MAX(file_sn), 0) + 1 AS file_sn
+		FROM com_file_detail
+		WHERE atch_file_id = #{atchFileId}
+	</select>
+
+ 	<select id="selectFileInf" parameterType="biz.file.vo.FileVO" resultType="biz.file.vo.FileVO">
+		SELECT
+			atch_file_id,
+			file_cn,
+			file_sn,
+			file_stre_cours,
+			stre_file_nm,
+			file_extsn,
+			orignl_file_nm,
+			file_size
+		FROM com_file_detail
+		WHERE atch_file_id = #{atchFileId}
+		  AND file_sn = CAST(#{fileSn} AS NUMERIC)
+ 	</select>
+
+	<update id="deleteCOMTNFILE" parameterType="biz.file.vo.FileVO">
+		UPDATE com_file
+		SET use_at = 'N'
+		WHERE atch_file_id = #{atchFileId}
+	</update>
+
+ 	<select id="selectFileListByFileNm" parameterType="biz.file.vo.FileVO" resultType="biz.file.vo.FileVO">
+		SELECT
+			a.atch_file_id,
+			b.file_cn,
+			b.file_sn,
+			b.file_stre_cours,
+			b.stre_file_nm,
+			b.file_extsn,
+			b.orignl_file_nm,
+			b.file_size,
+			a.creat_dt
+		FROM com_file a, com_file_detail b
+		WHERE a.atch_file_id = b.atch_file_id
+   		  AND a.use_at = 'Y'
+
+		<if test="searchCondition == 'streFileNm'">
+			AND b.stre_file_nm LIKE CONCAT('%', #{searchKeyword}, '%')
+		</if>
+		<if test="searchCondition == 'orignlFileNm'">
+			AND b.orignl_file_nm LIKE CONCAT('%', #{searchKeyword}, '%')
+		</if>
+
+		ORDER BY a.atch_file_id, b.file_sn
+		LIMIT #{recordCountPerPage}
+		OFFSET #{firstIndex}
+ 	</select>
+
+ 	<select id="selectFileListCntByFileNm" parameterType="biz.file.vo.FileVO" resultType="java.lang.Integer">
+		SELECT COUNT(a.atch_file_id)
+		FROM com_file a, com_file_detail b
+		WHERE a.atch_file_id = b.atch_file_id
+		  AND a.use_at = 'Y'
+
+		<if test="searchCondition == 'streFileNm'">
+			AND b.stre_file_nm LIKE CONCAT('%', #{searchKeyword}, '%')
+		</if>
+		<if test="searchCondition == 'orignlFileNm'">
+			AND b.orignl_file_nm LIKE CONCAT('%', #{searchKeyword}, '%')
+		</if>
+ 	</select>
+
+	<select id="selectFileListByStreFileNm" parameterType="biz.file.vo.FileVO" resultType="biz.file.vo.FileVO">
+		SELECT
+			a.atch_file_id,
+			b.file_cn,
+			b.file_sn,
+			b.file_stre_cours,
+			b.stre_file_nm,
+			b.file_extsn,
+			b.orignl_file_nm,
+			b.file_size,
+			a.creat_dt
+		FROM com_file a, com_file_detail b
+		WHERE a.atch_file_id = b.atch_file_id
+		AND a.use_at = 'Y'
+
+		<if test="searchCondition == 'streFileNm'">
+			AND SPLIT_PART(b.stre_file_nm, '_', 1) = #{searchKeyword}
+		</if>
+
+		ORDER BY a.atch_file_id, b.file_sn
+	</select>
+
+	<select id="selectFileListCntByStreFileNm" parameterType="biz.file.vo.FileVO" resultType="biz.file.vo.FileVO">
+		SELECT COUNT(a.atch_file_id)
+		FROM com_file a, com_file_detail b
+		WHERE a.atch_file_id = b.atch_file_id
+		AND a.use_at = 'Y'
+
+		<if test="searchCondition == 'streFileNm'">
+			AND SPLIT_PART(b.stre_file_nm, '_', 1) = #{searchKeyword}
+		</if>
+	</select>
+
+  	<select id="selectImageFileList" parameterType="biz.file.vo.FileVO" resultType="biz.file.vo.FileVO">
+		SELECT
+			a.atch_file_id,
+			b.file_cn,
+			b.file_sn,
+			b.file_stre_cours,
+			b.stre_file_nm,
+			b.file_extsn,
+			b.orignl_file_nm,
+			b.file_size,
+			a.creat_dt
+		FROM com_file a, com_file_detail b
+		WHERE a.atch_file_id = #{atchFileId}
+		  AND a.atch_file_id = b.atch_file_id
+		  AND UPPER(b.file_extsn) IN ('GIF', 'JPG', 'BMP', 'PNG', 'SVG')
+		  AND a.use_at = 'Y'
+		ORDER BY b.file_sn
+ 	</select>	
+</mapper>

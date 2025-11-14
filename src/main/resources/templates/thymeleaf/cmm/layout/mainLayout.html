@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html th:fragment="layout (content)" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 콘텐츠별 title -->
+    <title>SpatialtT 인트라넷</title>
+
+    <!-- 공통 meta -->
+    <link th:replace="~{cmm/meta :: metaLayout}">
+
+    <!-- 공통 script -->
+    <link th:replace="~{cmm/script :: script}">
+
+    <!-- 공통 css -->
+    <link type="text/css" rel="stylesheet" th:href="@{/css/reset.css}" >
+    <link type="text/css" rel="stylesheet" th:href="@{/css/common.css}" >
+    <link type="text/css" rel="stylesheet" th:href="@{/css/components.css}" >
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main/dashboard.css}" >
+    <link type="text/css" rel="stylesheet" th:href="@{/css/toc/toc.css}" >
+    <link type="text/css" rel="stylesheet" th:href="@{/css/cmm/main.css}" >
+    <link type="text/css" rel="stylesheet" th:href="@{/css/cmm/header.css}" >
+    <link type="text/css" rel="stylesheet" th:href="@{/css/cmm/footer.css}" >
+</head>
+<body>
+    <!-- header -->
+    <div th:replace="~{cmm/header :: headerLayout}">
+        <p>header<p>
+    </div>
+
+    <!-- TOC와 콘텐츠를 flex로 배치 -->
+    <main class="main-content">
+        <div class="dashboard-container">
+            <!-- TOC 사이드바 -->
+            <div th:replace="~{cmm/layout/tocLayout :: tocLayout}"></div>
+            
+            <!-- 메인 콘텐츠 -->
+            <div class="dashboard-content">
+                <th:block th:replace="${content}">
+                    <p>contents</p>
+                </th:block>
+            </div>
+        </div>
+    </main>
+
+    <!-- footer -->
+    <div th:replace="~{cmm/footer :: footerLayout}">
+        <p>footerLayout<p>
+    </div>
+
+    <!-- loading -->
+    <div th:replace="~{cmm/loading :: loadingLayout}"></div>
+</body>
+</html>

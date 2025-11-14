@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="menuDAO">
+
+    <!--
+        권한별 메뉴 목록 조회 (모든 레벨)
+        - tb_menu와 tb_role_menu_author를 조인하여 권한이 있는 메뉴만 조회
+        - 사용 여부가 'Y'이고 읽기 권한이 'Y'인 메뉴만 표시
+        - 모든 레벨의 메뉴 조회
+        - 정렬: menu_level, menu_order
+    -->
+    <select id="selectMenuListByRole" parameterType="String" resultType="biz.menu.vo.MenuVO">
+        <!-- 권한별 메뉴 목록 조회 -->
+        SELECT 
+            m.menu_id,
+            m.menu_nm,
+            m.upper_menu_id,
+            m.menu_level,
+            m.menu_order,
+            m.menu_url,
+            m.menu_icon,
+            m.use_yn
+        FROM tb_menu m
+        INNER JOIN tb_role_menu_author rma ON m.menu_id = rma.menu_id
+        WHERE m.use_yn = 'Y'
+          AND rma.role_cd = #{roleCd}
+          AND rma.read_author_yn = 'Y'
+        ORDER BY m.menu_level, m.menu_order
+    </select>
+    
+</mapper>
+

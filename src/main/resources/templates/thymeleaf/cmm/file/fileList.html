@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>파일 관리</title>
+    <link th:href="@{/css/common.css}" rel="stylesheet">
+    <link th:href="@{/css/cmm/main.css}" rel="stylesheet">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <h1>파일 관리</h1>
+            <div class="user-info">
+                <span class="welcome-msg">안녕하세요, <strong th:text="${loginVO.userNm}">사용자명</strong>님</span>
+                <a th:href="@{/main/mainForm.do}" class="back-btn">메인으로</a>
+                <a th:href="@{/login/logout.do}" class="logout-btn">로그아웃</a>
+            </div>
+        </div>
+    </header>
+    
+    <main class="main-content">
+        <div class="content-container">
+            <!-- 에러 메시지 표시 -->
+            <div th:if="${error}" class="error-message" th:text="${error}"></div>
+            
+            <div class="page-header">
+                <h2>파일 목록</h2>
+                <div class="file-actions">
+                    <button class="btn btn-primary" onclick="location.reload()">새로고침</button>
+                </div>
+            </div>
+            
+            <!-- 파일 목록 테이블 -->
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>파일명</th>
+                            <th>원본파일명</th>
+                            <th>파일크기</th>
+                            <th>등록일</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(fileList)}">
+                            <td colspan="6" class="no-data">등록된 파일이 없습니다.</td>
+                        </tr>
+                        <tr th:each="file, iterStat : ${fileList}">
+                            <td th:text="${iterStat.count}">1</td>
+                            <td th:text="${file.fileNm}">파일명</td>
+                            <td th:text="${file.orignlFileNm}">원본파일명</td>
+                            <td th:text="${file.fileMg}">크기</td>
+                            <td th:text="${#dates.format(file.frstRegistPnttm, 'yyyy-MM-dd HH:mm')}">등록일</td>
+                            <td class="action-buttons">
+                                <a th:href="@{/cmm/fms/getImage.do(atchFileId=${file.atchFileId}, fileSn=${file.fileSn})}" 
+                                   class="btn btn-small btn-primary">다운로드</a>
+                                <a th:href="@{/cmm/fms/selectFileInf.do(atchFileId=${file.atchFileId}, fileSn=${file.fileSn})}" 
+                                   class="btn btn-small btn-secondary">상세보기</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 파일 통계 정보 -->
+            <div class="file-stats">
+                <h3>파일 통계</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">총 파일 수</span>
+                        <span class="stat-value" th:text="${#lists.size(fileList)}">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">총 파일 크기</span>
+                        <span class="stat-value">계산 중...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="main-footer">
+        <p>&copy; 2024 전자정부 프레임워크. All rights reserved.</p>
+    </footer>
+</body>
+</html>

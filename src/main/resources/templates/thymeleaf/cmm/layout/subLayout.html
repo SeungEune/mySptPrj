@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html th:fragment="layout (contentLink, script, content, title)" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 콘텐츠별 title -->
+    <title th:text="${title != null ? title : 'Spatialt 인트라넷'}">Spatialt 인트라넷</title>
+
+    <!-- 공통 meta -->
+    <link th:replace="~{cmm/meta :: metaLayout}">
+
+    <!-- 공통 script -->
+    <link th:replace="~{cmm/script :: script}">
+
+    <!-- 공통 css -->
+    <link th:replace="~{cmm/css :: css}">
+
+    <!-- 각 컨테츠 별 script -->
+    <th:block th:if="${script}">
+        <script th:replace="${script}"></script>
+    </th:block>
+
+    <!-- 컨텐츠별 link -->
+    <th:block th:if="${contentLink}">
+        <link th:replace="${contentLink}"/>
+    </th:block>
+</head>
+<body>
+    <!-- header -->
+    <div th:replace="~{cmm/header :: headerLayout}">
+        <p>header<p>
+    </div>
+
+    <!-- TOC 사이드바 -->
+    <div th:replace="~{cmm/layout/tocLayout :: tocLayout}"></div>
+
+    <th:block th:replace="${content}">
+        <p>contents</p>
+    </th:block>
+
+    <!-- footer -->
+    <div th:replace="~{cmm/footer :: footerLayout}">
+        <p>footerLayout<p>
+    </div>
+
+</body>
+</html>

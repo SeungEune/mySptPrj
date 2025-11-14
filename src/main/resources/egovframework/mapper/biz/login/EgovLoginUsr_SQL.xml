@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="loginDAO">
+
+	<!-- 일반 로그인 -->
+	<select id="actionLogin" resultType="biz.login.vo.LoginVO">
+		SELECT u.user_id
+		     , u.user_nm
+		     , u.user_password
+		     , u.email_adres
+		     , u.moblphon_no
+		     , u.dept_cd
+		     , d.dept_nm
+		     , u.user_sttus_cd
+		     , u.sexdstn_cd
+		     , u.brthdy
+		     , u.jbgd_cd
+		     , u.jssfc_cd
+		     , u.join_de
+		     , u.password_change_de
+		     , u.last_login_dt
+		     , u.login_fail_co
+		     , u.acnt_lock_yn
+		     , u.use_yn
+		     , ur.role_cd
+		     , r.role_nm
+		  FROM tb_user u
+		  LEFT OUTER JOIN tb_dept d ON u.dept_cd = d.dept_cd
+		  LEFT OUTER JOIN tb_user_role ur ON u.user_id = ur.user_id
+		  LEFT OUTER JOIN tb_role r ON ur.role_cd = r.role_cd
+		 WHERE u.user_id = #{userId}
+		   AND u.user_sttus_cd = 'NORMAL'
+		   AND u.use_yn = 'Y'
+	</select>
+
+	<!-- 로그인 실패 횟수 증가 -->
+	<update id="updateLoginFail">
+		UPDATE tb_user
+		   SET login_fail_co = login_fail_co + 1
+		     , updt_dt = CURRENT_TIMESTAMP
+		 WHERE user_id = #{userId}
+	</update>
+
+	<!-- 계정 잠금 처리 (5회 실패 시) -->
+	<update id="updateAccountLock">
+		UPDATE tb_user
+		   SET acnt_lock_yn = 'Y'
+		     , updt_dt = CURRENT_TIMESTAMP
+		 WHERE user_id = #{userId}
+		   AND login_fail_co >= 5
+	</update>
+
+	<!-- 로그인 성공 처리 (실패 횟수 초기화, 최종 로그인 일시 업데이트) -->
+	<update id="updateLoginSuccess">
+		UPDATE tb_user
+		   SET login_fail_co = 0
+		     , last_login_dt = CURRENT_TIMESTAMP
+		     , password_change_de = COALESCE(password_change_de, CURRENT_DATE)
+		     , updt_dt = CURRENT_TIMESTAMP
+		 WHERE user_id = #{userId}
+	</update>
+
+	<!-- 로그인 이력 기록 -->
+	<insert id="insertLoginHistory">
+		INSERT INTO tb_login_hist (
+		       user_id
+		     , login_dt
+		     , login_success_yn
+		     , login_ip
+		     , login_fail_resn
+		     , session_id
+		) VALUES (
+		       #{userId}
+		     , CURRENT_TIMESTAMP
+		     , #{loginSuccessYn}
+		     , #{ip}
+		     , #{loginFailResn}
+		     , #{sessionId}
+		)
+	</insert>
+
+	<!-- 아이디 찾기 -->
+	<select id="searchId" resultType="biz.login.vo.LoginVO">
+		SELECT user_id
+		     , user_nm
+		     , email_adres
+		  FROM tb_user
+		 WHERE user_nm = #{userNm}
+		   AND email_adres = #{emailAdres}
+		   AND user_sttus_cd = 'NORMAL'
+		   AND use_yn = 'Y'
+	</select>
+
+	<!-- 비밀번호 찾기 -->
+	<select id="searchPassword" resultType="biz.login.vo.LoginVO">
+		SELECT user_id
+		     , user_nm
+		     , email_adres
+		     , user_password
+		  FROM tb_user
+		 WHERE user_id = #{userId}
+		   AND user_nm = #{userNm}
+		   AND email_adres = #{emailAdres}
+		   AND user_sttus_cd = 'NORMAL'
+		   AND use_yn = 'Y'
+	</select>
+
+	<!-- 비밀번호 변경 -->
+	<update id="updatePassword">
+		UPDATE tb_user
+		   SET user_password = #{userPassword}
+		     , password_change_de = CURRENT_DATE
+		     , updt_dt = CURRENT_TIMESTAMP
+		 WHERE user_id = #{userId}
+	</update>
+
+	<!-- 사용자 정보 조회 (세션용) -->
+	<select id="selectUserInfo" resultType="biz.login.vo.LoginVO">
+		SELECT u.user_id
+		     , u.user_nm
+		     , u.email_adres
+		     , u.dept_cd
+		     , d.dept_nm
+		     , u.user_sttus_cd
+		     , u.jbgd_cd
+		     , u.jssfc_cd
+		     , ur.role_cd
+		     , r.role_nm
+		  FROM tb_user u
+		  LEFT OUTER JOIN tb_dept d ON u.dept_cd = d.dept_cd
+		  LEFT OUTER JOIN tb_user_role ur ON u.user_id = ur.user_id
+		  LEFT OUTER JOIN tb_role r ON ur.role_cd = r.role_cd
+		 WHERE u.user_id = #{userId}
+	</select>
+</mapper>

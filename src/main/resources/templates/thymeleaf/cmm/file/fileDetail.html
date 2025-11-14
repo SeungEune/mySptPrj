@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>파일 상세 정보</title>
+    <link th:href="@{/css/common.css}" rel="stylesheet">
+    <link th:href="@{/css/cmm/main.css}" rel="stylesheet">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <h1>파일 상세 정보</h1>
+            <div class="user-info">
+                <span class="welcome-msg">안녕하세요, <strong th:text="${loginVO.userNm}">사용자명</strong>님</span>
+                <a th:href="@{/cmm/fms/selectFileInfs.do}" class="back-btn">목록으로</a>
+                <a th:href="@{/login/logout.do}" class="logout-btn">로그아웃</a>
+            </div>
+        </div>
+    </header>
+    
+    <main class="main-content">
+        <div class="content-container">
+            <!-- 에러 메시지 표시 -->
+            <div th:if="${error}" class="error-message" th:text="${error}"></div>
+            
+            <!-- 파일 상세 정보 -->
+            <div th:if="${fileVO}" class="file-detail">
+                <h2>파일 정보</h2>
+                
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <label>첨부파일 ID</label>
+                        <span th:text="${fileVO.atchFileId}">-</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <label>파일 순번</label>
+                        <span th:text="${fileVO.fileSn}">-</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <label>저장 파일명</label>
+                        <span th:text="${fileVO.fileNm}">-</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <label>원본 파일명</label>
+                        <span th:text="${fileVO.orignlFileNm}">-</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <label>파일 확장자</label>
+                        <span th:text="${fileVO.fileExtsn}">-</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <label>파일 크기</label>
+                        <span th:text="${fileVO.fileMg}">-</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <label>등록일</label>
+                        <span th:text="${#dates.format(fileVO.frstRegistPnttm, 'yyyy-MM-dd HH:mm:ss')}">-</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <label>등록자</label>
+                        <span th:text="${fileVO.frstRegisterId}">-</span>
+                    </div>
+                </div>
+                
+                <!-- 파일 액션 버튼 -->
+                <div class="file-actions">
+                    <a th:href="@{/cmm/fms/getImage.do(atchFileId=${fileVO.atchFileId}, fileSn=${fileVO.fileSn})}" 
+                       class="btn btn-primary">파일 다운로드</a>
+                    
+                    <!-- 이미지 파일인 경우 미리보기 제공 -->
+                    <div th:if="${fileVO.fileExtsn != null and (#strings.contains(fileVO.fileExtsn, 'jpg') or #strings.contains(fileVO.fileExtsn, 'jpeg') or #strings.contains(fileVO.fileExtsn, 'png') or #strings.contains(fileVO.fileExtsn, 'gif'))}">
+                        <button class="btn btn-secondary" onclick="showPreview()">미리보기</button>
+                    </div>
+                </div>
+                
+                <!-- 이미지 미리보기 영역 -->
+                <div id="preview-area" class="preview-area" style="display: none;">
+                    <h3>이미지 미리보기</h3>
+                    <div class="preview-container">
+                        <img th:src="@{/cmm/fms/getImage.do(atchFileId=${fileVO.atchFileId}, fileSn=${fileVO.fileSn})}" 
+                             alt="이미지 미리보기" class="preview-image">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 파일 정보가 없는 경우 -->
+            <div th:unless="${fileVO}" class="no-data">
+                <p>파일 정보를 찾을 수 없습니다.</p>
+                <a th:href="@{/cmm/fms/selectFileInfs.do}" class="btn btn-primary">파일 목록으로 돌아가기</a>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="main-footer">
+        <p>&copy; 2024 전자정부 프레임워크. All rights reserved.</p>
+    </footer>
+    
+    <script>
+        function showPreview() {
+            const previewArea = document.getElementById('preview-area');
+            if (previewArea.style.display === 'none') {
+                previewArea.style.display = 'block';
+            } else {
+                previewArea.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
