@@ -1,0 +1,603 @@
+---
+alwaysApply: true
+---
+
+# Spatialt 인트라넷 프로젝트 - Cursor AI 규칙
+
+## 프로젝트 개요
+이 저장소는 Spatialt 인트라넷(사내 업무 포털) 백오피스를 구성합니다.
+- Spring Boot 2.7.12 + Spring Framework 5.3.x
+- eGovFrame Runtime 4.2.0
+- Java 17 / Maven 단일 모듈(WAR 패키징)
+- PostgreSQL 14.x, MyBatis 기반 데이터 접근
+- 프런트: Thymeleaf 템플릿 + jQuery + 공통 정적 리소스(`src/main/resources/static`)
+- **기본 패키지**: `biz.<도메인>` (Controller·Service·DAO·VO 계층)
+
+## 코딩 스타일 및 규칙
+
+### 1. 명명 규칙
+- 클래스명: PascalCase (예: UserInfoController)
+- 메서드명: camelCase (예: getUserList)
+- 변수명: camelCase (예: userId, menuList)
+- 상수명: UPPER_SNAKE_CASE (예: DEFAULT_PAGE_SIZE)
+- 패키지명: lowercase (예: biz.menu.service)
+- 테이블명: snake_case (예: user_info)
+
+### 2. 파일 구조 규칙
+- Controller: `biz.<domain>.web.*Controller`
+- Service: `biz.<domain>.service.*Service`, `*ServiceImpl`
+- DAO/Mapper: `biz.<domain>.dao.*DAO`, XML은 `resources/egovframework/mapper/biz/<domain>`
+- VO/DTO: `biz.<domain>.vo.*VO`
+- View: `src/main/resources/templates/thymeleaf/<domain>/<view>.html`
+
+### 3. 주석 작성 규칙
+```java
+/**
+ * 사용자 정보를 조회합니다.
+ * @param searchVO 검색 조건
+ * @return 사용자 목록
+ * @author 홍길동
+ * @since 2024.01.01
+ */
+public List<UserVO> getUserList(SearchVO searchVO) {
+    // 한글로 명확한 주석 작성
+    return userMapper.selectUserList(searchVO);
+}
+```
+
+### 4. 이모지 사용 금지
+- 코드, 주석, 커밋 메시지, 문서에 이모지 사용 금지
+- 사유: 가독성 및 프로페셔널리즘 유지
+
+### 5. 아키텍처 패턴
+- Controller → Service → DAO(CommonMapper) → MyBatis XML → DB
+- VO/DTO로 계층 간 데이터 전달, 검색 조건은 `SearchVO` 또는 VO 내 `searchVO`
+- 트랜잭션: ServiceImpl에서 `@Transactional(rollbackFor = Exception.class)` 기본
+- 공통 예외: `BadRequestException`, `BusinessException`, `UnauthorizedException`
+
+### 6. MVC 패턴 표준 템플릿
+신규 기능은 `biz.<domain>` 패키지 구조와 Thymeleaf 뷰 경로를 따라 작성합니다.
+
+#### Controller 작성 규칙
+```java
+@Slf4j
+@Controller
+@RequestMapping("/module/feature")
+@RequiredArgsConstructor
+public class FeatureController {
+
+    private final FeatureService featureService;
+
+    /**
+     * 목록 화면 이동 (GET)
+     */
+    @GetMapping("/featureListForm.do")
+    public String featureListForm(Model model) {
+        model.addAttribute("codeList", CmmCodeUtil.getCmmnCodeList("COMMON_CODE"));
+        return "module/feature/featureList";
+    }
+
+    /**
+     * 등록 화면 이동 (GET)
+     */
+    @GetMapping("/featureRegisterForm.do")
+    public String featureRegisterForm(Model model) {
+        model.addAttribute("codeList", CmmCodeUtil.getCmmnCodeList("COMMON_CODE"));
+        return "module/feature/featureForm";
+    }
+
+    /**
+     * 수정 화면 이동 (GET)
+     */
+    @GetMapping("/featureForm.do")
+    public String featureForm(@RequestParam String sn, Model model) {
+        FeatureVO featureVO = featureService.getDetail(sn);
+        model.addAttribute("vo", featureVO);
+        return "module/feature/featureForm";
+    }
+
+    /**
+     * 목록 조회 (POST + JSON)
+     */
+    @ResponseBody
+    @PostMapping("/getList.do")
+    public ResponseEntity<Map<String, Object>> getList(@RequestBody FeatureSearchVO searchVO) {
+        String userId = SessionUtil.getUserId();
+        searchVO.setUserId(userId);
+
+        int totalCnt = featureService.getListCnt(searchVO);
+        searchVO.getSearchVO().calculateOffset();
+        List<FeatureVO> list = featureService.getList(searchVO);
+
+        PagingVO paging = new PagingVO(
+                totalCnt,
+                searchVO.getSearchVO().getPageNo(),
+                searchVO.getSearchVO().getPageSize()
+        );
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("list", list);
+        resultMap.put("pagingVO", paging);
+        resultMap.put("searchVO", searchVO.getSearchVO());
+        return ResponseEntity.ok(resultMap);
+    }
+
+    /**
+     * 상세 조회 (GET)
+     */
+    @GetMapping("/detail.do")
+    public String getDetail(Model model, @ModelAttribute("sn") String sn) {
+        FeatureVO featureVO = featureService.getDetail(sn);
+        model.addAttribute("vo", featureVO);
+        return "module/feature/detail";
+    }
+
+    /**
+     * 등록/수정 처리 (POST)
+     */
+    @ResponseBody
+    @PostMapping("/save.do")
+    public ResultVO save(@RequestBody FeatureVO vo) {
+        return featureService.save(vo);
+    }
+}
+```
+
+#### Service 작성 규칙
+```java
+public interface FeatureService {
+    int getListCnt(FeatureSearchVO searchVO);
+    List<FeatureVO> getList(FeatureSearchVO searchVO);
+    FeatureVO getDetail(String sn);
+    ResultVO save(FeatureVO vo);
+}
+
+@Slf4j
+@RequiredArgsConstructor
+@Service("featureService")
+public class FeatureServiceImpl implements FeatureService {
+
+    private final FeatureMapper featureMapper;
+
+    @Override
+    public int getListCnt(FeatureSearchVO searchVO) {
+        return featureMapper.selectListCnt(searchVO);
+    }
+
+    @Override
+    public List<FeatureVO> getList(FeatureSearchVO searchVO) {
+        return featureMapper.selectList(searchVO);
+    }
+
+    @Override
+    public FeatureVO getDetail(String sn) {
+        return featureMapper.selectDetail(sn);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResultVO save(FeatureVO vo) {
+        ResultVO resultVO = new ResultVO();
+        try {
+            if (vo.getSn() == 0) {
+                featureMapper.insert(vo);
+                resultVO.setMessage("등록이 완료되었습니다.");
+            } else {
+                featureMapper.update(vo);
+                resultVO.setMessage("수정이 완료되었습니다.");
+            }
+            resultVO.setResultValue(true);
+        } catch (Exception e) {
+            log.error("기능명 저장 실패", e);
+            resultVO.setMessage("처리에 실패하였습니다.");
+            resultVO.setResultValue(false);
+        }
+        return resultVO;
+    }
+}
+```
+
+#### Mapper 작성 규칙
+```java
+@Repository("featureMapper")
+public class FeatureMapper extends CommonMapper {
+
+    public int selectListCnt(FeatureSearchVO searchVO) {
+        return selectOne("featureMapper.selectListCnt", searchVO);
+    }
+
+    public List<FeatureVO> selectList(FeatureSearchVO searchVO) {
+        return selectList("featureMapper.selectList", searchVO);
+    }
+
+    public FeatureVO selectDetail(String sn) {
+        return selectOne("featureMapper.selectDetail", sn);
+    }
+
+    public int insert(FeatureVO vo) {
+        return insert("featureMapper.insert", vo);
+    }
+
+    public int update(FeatureVO vo) {
+        return update("featureMapper.update", vo);
+    }
+
+    public int delete(String sn) {
+        return delete("featureMapper.delete", sn);
+    }
+}
+```
+
+**중요 규칙**
+- 파라미터명은 타입이 드러나도록 작성 (예: `FeatureVO featureVO`, `SearchVO searchVO`)
+- Mapper 호출 시 namespace 명시 필수 (`"featureMapper.selectDetail"`)
+
+#### MyBatis XML 작성 규칙
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="featureMapper">
+    <sql id="searchQuery">
+        <if test="userId != null and userId != ''">
+            AND t.user_id = #{userId}
+        </if>
+        <if test="searchVO.searchType != null and searchVO.searchType != ''">
+            <choose>
+                <when test="searchVO.searchType == 'title' and searchVO.searchKeyword != null and searchVO.searchKeyword != ''">
+                    AND UPPER(t.title) LIKE UPPER(CONCAT('%', #{searchVO.searchKeyword}, '%'))
+                </when>
+                <when test="searchVO.searchType == 'userId' and searchVO.searchKeyword != null and searchVO.searchKeyword != ''">
+                    AND UPPER(t.user_id) LIKE UPPER(CONCAT('%', #{searchVO.searchKeyword}, '%'))
+                </when>
+            </choose>
+        </if>
+    </sql>
+
+    <select id="selectListCnt" resultType="int">
+        SELECT COUNT(1)
+        FROM feature_table t
+        WHERE 1=1
+        <include refid="searchQuery"/>
+    </select>
+
+    <select id="selectList" resultType="biz.module.feature.vo.FeatureVO">
+        SELECT ROW_NUMBER() OVER (ORDER BY t.sn DESC) AS row_num,
+               t.sn,
+               t.title,
+               t.user_id,
+               TO_CHAR(t.reg_dt,'YYYY-MM-DD') AS reg_dt
+        FROM feature_table t
+        WHERE 1=1
+        <include refid="searchQuery"/>
+        ORDER BY t.sn DESC
+        LIMIT #{searchVO.pageSize}
+        OFFSET #{searchVO.offset}
+    </select>
+
+    <select id="selectDetail" resultType="biz.module.feature.vo.FeatureVO">
+        SELECT sn,
+               title,
+               user_id,
+               reg_dt
+        FROM feature_table
+        WHERE sn = #{sn}
+    </select>
+
+    <insert id="insert" parameterType="biz.module.feature.vo.FeatureVO">
+        INSERT INTO feature_table (
+            title,
+            user_id,
+            reg_dt
+        ) VALUES (
+            #{title},
+            #{userId},
+            NOW()
+        )
+    </insert>
+
+    <update id="update" parameterType="biz.module.feature.vo.FeatureVO">
+        UPDATE feature_table
+        SET title = #{title},
+            updt_dt = NOW()
+        WHERE sn = #{sn}
+    </update>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM feature_table
+        WHERE sn = #{sn}
+    </delete>
+</mapper>
+```
+
+#### Thymeleaf 템플릿 규칙
+- 모든 화면은 `src/main/resources/templates/thymeleaf/cmm/layout` 하위 레이아웃(`subLayout`, `mainLayout`, `loginLayout`, `tocLayout`)을 기반으로 작성한다.
+- 일반 업무 화면은 `cmm/layout/subLayout :: layout` 프래그먼트를 사용하고, `contentLink`, `script`, `content` 세 개의 파라미터를 전달한다.
+- CSS는 `contentLink` fragment에, JavaScript는 `script` fragment에, 실제 콘텐츠는 `content` fragment에 작성한다.
+- 페이지 title은 변경하지 않으며, 모든 페이지에서 "Spatialt 인트라넷"으로 고정된다.
+
+#### URL 네이밍 규칙
+- **화면 이동 요청**: `~~Form.do` 형식 사용 (예: `userListForm.do`, `userForm.do`)
+- **등록 화면 이동**: `~~RegisterForm.do` 형식 사용 (예: `userRegisterForm.do`)
+- **수정 화면 이동**: `~~Form.do` 형식 사용, `sn` 파라미터로 수정 모드 구분 (예: `userForm.do?sn=123`)
+- **목록 화면 이동**: `~~ListForm.do` 형식 사용 (예: `userListForm.do`)
+- **데이터 처리 요청**: `~~.do` 형식 사용 (예: `getList.do`, `save.do`, `delete.do`)
+
+```html
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{cmm/layout/subLayout :: layout (
+            contentLink=~{::contentLink},
+            script=~{::script},
+            content=~{::content})}">
+
+<th:block th:fragment="contentLink">
+    <!-- 페이지별 CSS -->
+    <link rel="stylesheet" th:href="@{/css/module/feature/list.css}" />
+</th:block>
+
+<th:block th:fragment="script">
+    <!-- 페이지별 JavaScript -->
+    <script th:src="@{/js/module/feature/list.js}"></script>
+</th:block>
+
+<main th:fragment="content">
+    <div class="wrap-inner">
+        <section class="sub-title">
+            <h2 class="txt-h2">기능명</h2>
+        </section>
+        <section class="sub-contents">
+            <div class="item-box board-list-srch Fdt-row jst-end">
+                <div class="select-box w150px">
+                    <select class="select" id="selectBox" name="selectBox">
+                        <option value="" selected>전체</option>
+                        <th:block th:each="code : ${codeList}">
+                            <option th:value="${code.code}" th:text="${code.codeNm}"></option>
+                        </th:block>
+                    </select>
+                </div>
+                <div class="condition-search">
+                    <select id="searchType" name="searchType" class="filter">
+                        <option value="title">제목</option>
+                        <option value="userId">작성자</option>
+                    </select>
+                    <input class="search-input" type="search" id="searchKeyword" placeholder="검색어를 입력해주세요."/>
+                    <button class="search-btn" id="searchBtn">검색</button>
+                </div>
+            </div>
+
+            <div class="table-box type01">
+                <div class="table-inner">
+                    <table class="table-type01 cur-point" id="listTb">
+                        <caption class="hidden">목록 조회</caption>
+                        <colgroup>
+                            <col width="5%"/>
+                            <col width="45%"/>
+                            <col width="20%"/>
+                            <col width="20%"/>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>제목</th>
+                            <th>작성자</th>
+                            <th>등록일자</th>
+                        </tr>
+                        </thead>
+                        <tbody id="listTbody">
+                        <tr>
+                            <td class="tc" colspan="4" style="height:350px;">조회 결과가 없습니다.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="item-box align-ct mt-30 po-rel" id="paginationArea"></div>
+            </div>
+        </section>
+    </div>
+</main>
+
+</html>
+```
+
+- `mainLayout`/`loginLayout`/`tocLayout` 사용이 필요한 특수 화면은 동일한 방식으로 `th:replace="~{cmm/layout/<layout> :: layout(...)}"` 형태로 적용한다.
+- 공통 헤더·푸터·TOC는 레이아웃이 주입하므로 페이지 템플릿에서 다시 불러오지 않는다.
+
+#### JavaScript 작성 규칙
+```javascript
+document.addEventListener('DOMContentLoaded', () => {
+    fn_init();
+
+    document.getElementById('searchBtn').addEventListener('click', () => fn_searchData(1));
+    document.getElementById('searchKeyword').addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            fn_searchData(1);
+        }
+    });
+});
+
+function fn_init() {
+    fn_searchData(1);
+}
+
+function fn_searchData(pageNo) {
+    const searchKeyword = $('#searchKeyword').val();
+    const selectBox = $('#selectBox').val();
+    const searchType = $('#searchType').val();
+
+    const data = {
+        selectBox: Util.isEmpty(selectBox) ? null : selectBox,
+        searchVO: {
+            searchType: Util.isEmpty(searchType) ? null : searchType,
+            searchKeyword: Util.isEmpty(searchKeyword) ? null : searchKeyword,
+            pageNo: pageNo
+        }
+    };
+
+    const callback = function (result) {
+        $('#listTbody').empty();
+
+        if (result.list && result.list.length > 0) {
+            $('#listTemplate').tmpl(result.list).appendTo('#listTbody');
+            setPagination(result.pagingVO, document.getElementById('paginationArea'), 'fn_searchData');
+        } else {
+            $('#emptyTemplate').tmpl().appendTo('#listTbody');
+        }
+    };
+    callModule.call(Util.getRequestUrl('/module/feature/getList.do'), data, callback, true, 'POST');
+}
+
+function fn_goDetailPage(sn) {
+    if (Util.isEmpty(sn)) {
+        MessageUtil.error('상세 조회 필수 값이 존재하지 않습니다.');
+        return;
+    }
+    const data = { sn: sn };
+    callModule.post(Util.getRequestUrl('/module/feature/detail.do'), data, 'GET');
+}
+```
+
+#### VO 작성 규칙
+```java
+@Getter
+@Setter
+public class FeatureVO {
+    private int sn;
+    private String title;
+    private String userId;
+    private String userName;
+    private String regDt;
+    private String updtDt;
+    private SearchVO searchVO = new SearchVO();
+}
+```
+
+## 기술 스택 가이드
+
+### 1. Spring Framework
+- Spring Boot 2.7.12 / Spring Framework 5.3.27
+- Spring Security 5.7.x (로그인/세션 관리)
+- Spring MVC 패턴 사용
+
+### 2. 데이터베이스
+- PostgreSQL JDBC 42.6.0
+- Commons DBCP2 기반 커넥션 풀
+- MyBatis + Mapper XML
+
+### 3. 공간 데이터 처리
+- GeoTools 24.0 (필요 시)
+- JTS (Java Topology Suite)
+
+### 4. 프런트엔드
+- Thymeleaf + HTML5
+- jQuery, FullCalendar, DataTables, SweetAlert
+
+## UI 작업 규칙
+
+### 1. CSS 작업 규칙
+1. `static/css`의 `reset.css`, `common.css`, `components.css`, `cmm/*.css` 파일 구조를 유지하며 필요한 스타일을 작성
+2. 공통 CSS 클래스를 최우선으로 사용
+3. 공통 클래스 조합으로 레이아웃 구성
+4. 불가 시 템플릿 `<style>` 블록에 페이지 특화 CSS를 최소한으로 작성
+5. 인라인 스타일(`style=""`) 사용 금지
+
+### 2. UI 작업 프로세스
+1. 유사 화면 템플릿(`templates/thymeleaf`)을 우선 참고
+2. 공통 CSS 클래스 확인 후 조합
+3. 필요 시 `static/js/module` 하위에 별도 JS 파일 작성
+4. 공통 리소스로 해결이 어려우면 담당자와 협의
+
+## 개발 가이드라인
+
+### 1. 에러 처리
+```java
+if (file.isEmpty()) {
+    throw new BadRequestException("업로드할 파일이 없습니다.");
+}
+if (result == null) {
+    throw new BusinessException("조회 결과가 존재하지 않습니다.");
+}
+```
+
+### 2. 응답 형식
+```java
+Map<String, Object> payload = new HashMap<>();
+payload.put("data", data);
+payload.put("message", "처리가 완료되었습니다.");
+return ResponseEntity.ok(payload);
+```
+
+### 3. 파일 업로드
+```java
+String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+if (!ALLOWED_EXTENSIONS.contains(extension.toLowerCase())) {
+    throw new BadRequestException("허용되지 않는 파일 형식입니다.");
+}
+```
+
+### 4. 페이징 처리
+```java
+PagingVO paging = new PagingVO(totalCnt, searchVO.getSearchVO().getPageNo(), searchVO.getSearchVO().getPageSize());
+searchVO.getSearchVO().calculateOffset();
+```
+
+## 로깅 가이드
+- `Slf4j` 사용, INFO 이상은 꼭 필요한 경우에만 기록
+- 비즈니스 실패는 `warn`, 예외 상황은 `error`로 남기되 메시지는 간결하게
+- 민감정보(비밀번호, 주민번호 등)는 로그에 출력 금지
+
+## 보안 규칙
+
+### 1. 입력값 검증
+- 모든 사용자 입력 검증, Bean Validation 또는 수동 검증
+- SQL 인젝션 방지를 위해 MyBatis 파라미터 바인딩 사용
+- 출력 시 XSS 예방을 위한 escaping, Thymeleaf의 `th:text` 기본 사용
+
+### 2. 인증/인가
+- Spring Security 기반 세션 인증
+- `SessionUtil`을 통해 로그인 정보 접근 및 검증 누락 금지
+
+### 3. 파일 보안
+- 허용 확장자/용량 검증
+- 저장 경로 검증 및 임시 파일 정리
+
+## 성능 최적화
+- 페이징 쿼리는 반드시 LIMIT/OFFSET 사용
+- 목록/통계 쿼리는 필요 시 인덱스 확인
+- 공통 코드/설정 값은 캐싱 또는 ApplicationContext에서 재사용
+
+## 테스트 규칙
+- Service 레이어 단위 테스트 필수 (Mock DAO 활용)
+- 통합 테스트 시 H2 또는 테스트 DB 프로파일 사용
+- 빌드 전 `mvn test` 통과 확인
+
+## 코드 리뷰 체크리스트
+- [ ] 요구사항 충족 여부
+- [ ] 예외 처리 및 메시지 적절성
+- [ ] 보안 검증(입력값/세션) 여부
+- [ ] 명명 규칙·패키지 구조 준수
+- [ ] 공통 CSS/JS 재사용 여부
+- [ ] 테스트 코드 및 실행 결과
+
+## 프로젝트 특화 규칙
+- `biz.login`, `biz.main`, `biz.menu`, `biz.file` 등 기존 패키지 구조 준수
+- 첨부파일은 `biz.file` 모듈 API/유틸 재사용 (신규 구현 금지)
+- 코드 조회는 `CmmCodeUtil.getCmmnCodeList("코드ID")` 공통 함수 사용
+- 화면 이동 시 반드시 세션 인증 여부를 확인하고 미인증 시 `/login/loginForm.do`로 리다이렉트
+
+## 환경별 설정
+- `application.properties`에서 `spring.profiles.active=dev` 기본
+- `application-*.properties`에 DB·보안 정보를 분리, 민감정보는 암호화
+- 세션 타임아웃: 30분, HttpOnly 쿠키 사용
+
+## 유지보수 가이드
+- 사용하지 않는 import/주석 코드 제거
+- 공통 컴포넌트 변경 시 영향 범위를 확인
+- 시스템 리소스·에러 로그·성능 지표를 정기적으로 점검
+
+---
+
+**마지막 업데이트**: 2025년 11월 14일  
+**버전**: 2.0  
+**프로젝트**: Spatialt 인트라넷  
+**변경사항**: Drone OPM 전용 규칙을 현 프로젝트(Spring Boot + Thymeleaf) 구조에 맞게 전면 개편하고, 샘플 코드·UI·로깅·보안 지침을 최신 스택에 맞춰 업데이트함.

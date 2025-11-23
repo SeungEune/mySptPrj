@@ -29,7 +29,9 @@
      * 공지사항 목록 조회
      */
     function loadNoticeList() {
-        const noticeList = document.getElementById('noticeList');
+        if (!document.getElementById('noticeList')) {
+            return;
+        }
         
         // TODO: 백엔드 API 연동 시 주석 해제
         /*
@@ -56,26 +58,30 @@
     function renderNoticeList(notices) {
         const noticeList = document.getElementById('noticeList');
         
-        if (!notices || notices.length === 0) {
+        if (!noticeList) {
+            return;
+        }
+
+        if (!Array.isArray(notices) || notices.length === 0) {
             renderNoticeEmpty();
             return;
         }
 
-        let html = '';
-        notices.forEach(notice => {
+        const html = notices.map(notice => {
             const badgeClass = getNoticeBadgeClass(notice.noticeTyCd);
             const formattedDate = formatDate(notice.registDt);
+            const noticeUrl = `/notice/noticeDetail.do?noticeSn=${notice.noticeSn}`;
             
-            html += `
-                <div class="notice-item" onclick="location.href='/notice/noticeDetail.do?noticeSn=${notice.noticeSn}'">
-                    <span class="notice-type-badge ${badgeClass}">${getNoticeTypeName(notice.noticeTyCd)}</span>
-                    <div class="notice-content">
-                        <div class="notice-title">${escapeHtml(notice.noticeTitle)}</div>
-                        <div class="notice-date">${formattedDate}</div>
-                    </div>
-                </div>
+            return `
+                <tr class="cur-point" onclick="location.href='${noticeUrl}'">
+                    <td class="tc">
+                        <span class="chip ${badgeClass}">${getNoticeTypeName(notice.noticeTyCd)}</span>
+                    </td>
+                    <td>${escapeHtml(notice.noticeTitle)}</td>
+                    <td class="tc">${formattedDate}</td>
+                </tr>
             `;
-        });
+        }).join('');
 
         noticeList.innerHTML = html;
     }
@@ -85,11 +91,13 @@
      */
     function renderNoticeEmpty() {
         const noticeList = document.getElementById('noticeList');
+        if (!noticeList) {
+            return;
+        }
         noticeList.innerHTML = `
-            <div class="widget-empty">
-                <i>📭</i>
-                <p>등록된 공지사항이 없습니다.</p>
-            </div>
+            <tr>
+                <td class="tc" colspan="3">등록된 공지사항이 없습니다.</td>
+            </tr>
         `;
     }
 
@@ -98,14 +106,12 @@
      */
     function getNoticeBadgeClass(type) {
         switch(type) {
-            case 'NORMAL':
-                return 'normal';
-            case 'IMPORTANT':
-                return 'important';
             case 'URGENT':
-                return 'urgent';
+                return 'error';
+            case 'IMPORTANT':
+                return 'point';
             default:
-                return 'normal';
+                return 'primary';
         }
     }
 
@@ -168,10 +174,9 @@
         const noticeList = document.getElementById('noticeList');
         if (noticeList) {
             noticeList.innerHTML = `
-                <div class="widget-empty">
-                    <i>⚠️</i>
-                    <p>공지사항을 불러올 수 없습니다.</p>
-                </div>
+                <tr>
+                    <td class="tc" colspan="3">공지사항을 불러올 수 없습니다.</td>
+                </tr>
             `;
         }
     }

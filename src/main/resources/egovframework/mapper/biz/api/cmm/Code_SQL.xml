@@ -7,11 +7,18 @@
 		       	code,
 		       	code_nm,
 		       	code_dc,
-		       	use_at,
-		       	TO_CHAR(frst_regist_pnttm, 'YYYY-MM-DD') AS frst_regist_pnttm
-		FROM 	com_cmmn_detail_code
+		       	use_yn,
+		       	TO_CHAR(regist_dt, 'YYYY-MM-DD') AS registDt
+		FROM 	tb_cmmn_code_detail
 		WHERE   code_id = #{codeId}
-		and 	use_at = 'Y'
+		and 	use_yn = 'Y'
 		ORDER BY code_id, code
+	</select>
+
+	<select id="selectAllCodeIdList" resultType="String">
+		SELECT code_id
+		FROM tb_cmmn_code
+		WHERE use_yn = 'Y'
+		ORDER BY code_id
 	</select>
 </mapper>

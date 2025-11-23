@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{cmm/layout/subLayout :: layout (contentLink=~{::contentLink}, script=~{::script}, content=~{::content})}">
+
+<th:block th:fragment="contentLink">
+    <link rel="stylesheet" th:href="@{/css/system/user.css}" />
+</th:block>
+
+<th:block th:fragment="script">
+    <script th:src="@{/js/system/user/userEditForm.js}"></script>
+</th:block>
+
+<main th:fragment="content">
+    <div class="wrap-inner">
+        <section class="sub-title">
+            <h2 class="txt-h2">사용자 수정</h2>
+        </section>
+
+        <section class="sub-contents">
+            <form id="userForm" class="item-box">
+                <input type="hidden" id="userId" name="userId">
+                
+                <!-- 기본 정보 섹션 -->
+                <div class="table-box type01">
+                    <div class="table-inner">
+                        <table class="table-type01 form-table">
+                            <caption class="hidden">사용자 기본 정보 수정</caption>
+                            <colgroup>
+                                <col width="15%"/>
+                                <col width="35%"/>
+                                <col width="15%"/>
+                                <col width="35%"/>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th><label for="userIdDisplay">사용자ID <span class="required">*</span></label></th>
+                                <td>
+                                    <input type="text" id="userIdDisplay" class="input" readonly>
+                                </td>
+                                <th><label for="userNm">사용자명 <span class="required">*</span></label></th>
+                                <td>
+                                    <input type="text" id="userNm" name="userNm" class="input" 
+                                           placeholder="사용자명을 입력하세요" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="password">비밀번호</label></th>
+                                <td>
+                                    <div class="input-group">
+                                        <button type="button" class="outline-btn" id="changePasswordBtn">비밀번호 변경</button>
+                                        <input type="password" id="password" name="password" class="input" 
+                                               style="display:none;" placeholder="새 비밀번호를 입력하세요">
+                                    </div>
+                                </td>
+                                <th><label for="emailAdres">이메일주소</label></th>
+                                <td>
+                                    <input type="email" id="emailAdres" name="emailAdres" class="input" 
+                                           placeholder="이메일주소를 입력하세요">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="moblphonNo">휴대전화번호</label></th>
+                                <td>
+                                    <input type="tel" id="moblphonNo" name="moblphonNo" class="input" 
+                                           placeholder="휴대전화번호를 입력하세요 (예: 010-1234-5678)">
+                                </td>
+                                <th><label for="deptCd">부서코드</label></th>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" id="deptNm" name="deptNm" class="input" 
+                                               placeholder="부서를 선택하세요" readonly>
+                                        <input type="hidden" id="deptCd" name="deptCd">
+                                        <button type="button" class="outline-btn" id="deptSearchBtn">검색</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="userSttusCd">사용자상태코드 <span class="required">*</span></label></th>
+                                <td>
+                                    <div class="select-box">
+                                        <select id="userSttusCd" name="userSttusCd" class="select" required>
+                                            <option value="">선택하세요</option>
+                                            <th:block th:each="code : ${userSttusCodeList}">
+                                                <option th:value="${code.code}" th:text="${code.codeNm}"></option>
+                                            </th:block>
+                                        </select>
+                                    </div>
+                                </td>
+                                <th><label for="useYn">사용여부 <span class="required">*</span></label></th>
+                                <td>
+                                    <div class="radio-group">
+                                        <label class="radio-label">
+                                            <input type="radio" name="useYn" value="Y">
+                                            <span>사용</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="useYn" value="N">
+                                            <span>미사용</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 개인 정보 섹션 -->
+                <div class="table-box type01 mt-30">
+                    <div class="table-inner">
+                        <table class="table-type01 form-table">
+                            <caption class="hidden">사용자 개인 정보 수정</caption>
+                            <colgroup>
+                                <col width="15%"/>
+                                <col width="35%"/>
+                                <col width="15%"/>
+                                <col width="35%"/>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th><label for="sexdstnCd">성별코드</label></th>
+                                <td>
+                                    <div class="select-box">
+                                        <select id="sexdstnCd" name="sexdstnCd" class="select">
+                                            <option value="">선택하세요</option>
+                                            <th:block th:each="code : ${sexdstnCodeList}">
+                                                <option th:value="${code.code}" th:text="${code.codeNm}"></option>
+                                            </th:block>
+                                        </select>
+                                    </div>
+                                </td>
+                                <th><label for="brthdy">생년월일</label></th>
+                                <td>
+                                    <input type="date" id="brthdy" name="brthdy" class="input">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="jbgdCd">직급코드</label></th>
+                                <td>
+                                    <div class="select-box">
+                                        <select id="jbgdCd" name="jbgdCd" class="select">
+                                            <option value="">선택하세요</option>
+                                            <th:block th:each="code : ${jbgdCodeList}">
+                                                <option th:value="${code.code}" th:text="${code.codeNm}"></option>
+                                            </th:block>
+                                        </select>
+                                    </div>
+                                </td>
+                                <th><label for="jssfcCd">직책코드</label></th>
+                                <td>
+                                    <div class="select-box">
+                                        <select id="jssfcCd" name="jssfcCd" class="select">
+                                            <option value="">선택하세요</option>
+                                            <th:block th:each="code : ${jssfcCodeList}">
+                                                <option th:value="${code.code}" th:text="${code.codeNm}"></option>
+                                            </th:block>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="joinDe">입사일</label></th>
+                                <td>
+                                    <input type="date" id="joinDe" name="joinDe" class="input">
+                                </td>
+                                <th><label for="acntLockYn">계정잠금여부</label></th>
+                                <td>
+                                    <div class="radio-group">
+                                        <label class="radio-label">
+                                            <input type="radio" name="acntLockYn" value="N">
+                                            <span>정상</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="acntLockYn" value="Y">
+                                            <span>잠금</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 시스템 정보 섹션 -->
+                <div class="table-box type01 mt-30">
+                    <div class="table-inner">
+                        <table class="table-type01 form-table">
+                            <caption class="hidden">시스템 정보</caption>
+                            <colgroup>
+                                <col width="15%"/>
+                                <col width="35%"/>
+                                <col width="15%"/>
+                                <col width="35%"/>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th>등록자ID</th>
+                                <td id="registerId" class="readonly-field">-</td>
+                                <th>등록일시</th>
+                                <td id="registDt" class="readonly-field">-</td>
+                            </tr>
+                            <tr>
+                                <th>수정자ID</th>
+                                <td id="updusrId" class="readonly-field">-</td>
+                                <th>수정일시</th>
+                                <td id="updtDt" class="readonly-field">-</td>
+                            </tr>
+                            <tr>
+                                <th>마지막로그인일시</th>
+                                <td id="lastLoginDt" class="readonly-field">-</td>
+                                <th>로그인실패횟수</th>
+                                <td id="loginFailCo" class="readonly-field">-</td>
+                            </tr>
+                            <tr>
+                                <th>비밀번호변경일</th>
+                                <td id="passwordChangeDe" class="readonly-field">-</td>
+                                <td colspan="2"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 하단 액션 버튼 -->
+                <div class="item-horizontal-box jst-end g10 mt-30">
+                    <button type="button" class="outline-btn" onclick="location.href='/system/user/userListForm.do'">목록</button>
+                    <button type="button" class="outline-btn-Bck" id="deleteBtn">삭제</button>
+                    <button type="submit" class="primary-btn">저장</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</main>
+
+</html>
+

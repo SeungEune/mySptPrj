@@ -1,138 +1,95 @@
 @charset "utf-8";
 
-/* ==========================================
-   TOC (Table of Contents) 사이드바 스타일
-   ========================================== */
-
 .dashboard-sidebar {
-    width: 260px;
-    min-height: 100%;
-    background-color: var(--White);
-    border-right: 1px solid var(--Gray-200);
-    padding: 30px 20px;
+    width: 250px;
+    height: 100%;
+    background-color: #FFFFFF;
+    border-right: 1px solid #EBEEF2; /* Softer border */
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    flex-shrink: 0;
 }
 
 .sidebar-menu {
+    padding: 20px 16px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 4px;
 }
 
+/* 1차 메뉴 아이템 */
 .sidebar-menu-item {
     display: flex;
     align-items: center;
     padding: 12px 16px;
     border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #2D3436;
     cursor: pointer;
     transition: all 0.2s;
+    text-decoration: none;
 }
 
 .sidebar-menu-item:hover {
-    background-color: var(--Primary-100);
+    background-color: #F4F6F8;
+    color: #2D3436;
 }
 
 .sidebar-menu-item.active {
-    background-color: var(--Primary);
-    color: var(--White);
+    background-color: #EBEBFF; /* Very Light Primary */
+    color: #666BE1; /* New Primary */
+    font-weight: 600;
 }
 
 .sidebar-menu-item i {
     margin-right: 10px;
     font-size: 18px;
+    width: 20px;
+    text-align: center;
 }
 
-/* 메뉴 래퍼 */
-.sidebar-menu-item-wrapper {
-    display: flex;
-    flex-direction: column;
-}
-
-/* 하위 메뉴가 있는 메뉴 아이템 */
-.sidebar-menu-item.has-submenu {
-    position: relative;
-    cursor: pointer;
-}
-
-/* 하위 메뉴가 있을 때 화살표 아이콘 */
+/* 서브메뉴 화살표 */
 .submenu-arrow {
     margin-left: auto;
-    font-size: 12px;
-    transition: transform 0.3s ease;
+    font-size: 10px;
+    transition: transform 0.2s;
 }
-
-.sidebar-menu-item.has-submenu.active .submenu-arrow {
+.sidebar-menu-item.active .submenu-arrow {
     transform: rotate(180deg);
 }
 
-/* 하위 메뉴 리스트 */
+/* 2차 메뉴 리스트 */
 .submenu-list {
     display: flex;
     flex-direction: column;
-    padding-left: 20px;
-    margin-top: 8px;
-    gap: 8px;
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+    padding: 4px 0 4px 30px; /* 들여쓰기 */
+    gap: 2px;
 }
 
-.submenu-list.open {
-    max-height: 1000px !important;
-    opacity: 1 !important;
-    padding-bottom: 8px !important;
-}
-
-/* 하위 메뉴 아이템 */
 .submenu-item {
     display: flex;
     align-items: center;
-    padding: 8px 16px;
+    padding: 8px 12px;
     border-radius: 6px;
-    text-decoration: none;
-    color: var(--font-default);
     font-size: 14px;
+    color: #636E72;
     transition: all 0.2s;
 }
 
 .submenu-item:hover {
-    background-color: var(--Primary-100);
-    color: var(--Primary);
+    color: #2D3436;
+    background-color: #F4F6F8;
 }
 
 .submenu-item.active {
-    background-color: var(--Primary);
-    color: var(--White);
+    color: #666BE1; /* New Primary */
+    font-weight: 600;
 }
 
 .submenu-item i {
     margin-right: 8px;
-    font-size: 16px;
+    font-size: 14px;
+    width: 16px;
 }
-
-/* ==========================================
-   반응형 디자인
-   ========================================== */
-
-@media (max-width: 1024px) {
-    .dashboard-sidebar {
-        width: 220px;
-    }
-}
-
-@media (max-width: 768px) {
-    .dashboard-sidebar {
-        width: 100%;
-        padding: 20px;
-    }
-    
-    .sidebar-menu {
-        flex-direction: row;
-        overflow-x: auto;
-    }
-    
-    .sidebar-menu-item {
-        white-space: nowrap;
-    }
-}
-

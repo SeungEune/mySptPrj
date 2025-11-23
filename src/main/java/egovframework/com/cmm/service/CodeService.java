@@ -36,4 +36,12 @@ public class CodeService {
         }
         return codeMapper.selectCmmnCodeList(codeClcd);
     }
+
+    /**
+     * 전체 코드ID 목록 조회
+     * @return 사용 중인 모든 코드ID 목록
+     */
+    public List<String> getAllCodeIdList() {
+        return codeMapper.selectAllCodeIdList();
+    }
 }

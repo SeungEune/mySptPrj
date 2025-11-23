@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html th:fragment="layout (contentLink, script, content, title)" xmlns:th="http://www.thymeleaf.org">
+<html th:fragment="layout (contentLink, script, content)" xmlns:th="http://www.thymeleaf.org">
 <head>
     <!-- 콘텐츠별 title -->
-    <title th:text="${title != null ? title : 'Spatialt 인트라넷'}">Spatialt 인트라넷</title>
+    <title>Spatialt 인트라넷</title>
 
     <!-- 공통 meta -->
     <link th:replace="~{cmm/meta :: metaLayout}">
@@ -12,15 +12,19 @@
 
     <!-- 공통 css -->
     <link th:replace="~{cmm/css :: css}">
-
-    <!-- 각 컨테츠 별 script -->
-    <th:block th:if="${script}">
-        <script th:replace="${script}"></script>
-    </th:block>
+    
+    <!-- 대시보드 및 TOC 관련 CSS -->
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main/dashboard.css}" >
+    <link type="text/css" rel="stylesheet" th:href="@{/css/toc/toc.css}" >
 
     <!-- 컨텐츠별 link -->
-    <th:block th:if="${contentLink}">
-        <link th:replace="${contentLink}"/>
+    <th:block th:if="${contentLink != null}">
+        <th:block th:replace="${contentLink}"></th:block>
+    </th:block>
+
+    <!-- 각 컨테츠 별 script -->
+    <th:block th:if="${script != null}">
+        <th:block th:replace="${script}"></th:block>
     </th:block>
 </head>
 <body>
@@ -29,17 +33,27 @@
         <p>header<p>
     </div>
 
-    <!-- TOC 사이드바 -->
-    <div th:replace="~{cmm/layout/tocLayout :: tocLayout}"></div>
-
-    <th:block th:replace="${content}">
-        <p>contents</p>
-    </th:block>
+    <!-- TOC와 콘텐츠를 flex로 배치 -->
+    <main class="main-content">
+        <div class="dashboard-container">
+            <!-- TOC 사이드바 -->
+            <div th:replace="~{cmm/layout/tocLayout :: tocLayout}"></div>
+            
+            <!-- 메인 콘텐츠 -->
+            <div class="dashboard-content">
+                <th:block th:replace="${content}">
+                    <p>contents</p>
+                </th:block>
+            </div>
+        </div>
+    </main>
 
     <!-- footer -->
     <div th:replace="~{cmm/footer :: footerLayout}">
         <p>footerLayout<p>
     </div>
 
+    <!-- loading -->
+    <div th:replace="~{cmm/loading :: loadingLayout}"></div>
 </body>
 </html>

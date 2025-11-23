@@ -1,126 +1,58 @@
 @charset "utf-8";
 
-/* ==========================================
-   헤더 레이아웃
-   ========================================== */
-
-.mainHeader {
-    background: linear-gradient(135deg, var(--Primary), var(--Primary-600));
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-#headerWrapper {
-    max-width: 100%;
-    padding: 0 40px;
-}
-
-/* 유틸 메뉴 */
-.util-menu {
+header {
+    flex-shrink: 0; /* 높이 고정 */
+    height: 60px;
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #EBEEF2; /* Softer border color */
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 0;
+    padding: 0 24px;
+    z-index: 100;
 }
 
-.util-menu ul {
+.gnb {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 로고 */
+.logo a {
     display: flex;
     align-items: center;
-    gap: 12px;
-    list-style: none;
-    padding: 0;
-    margin: 0;
 }
 
-/* 로고 영역 (좌측) */
-.header-logo {
+.logo img {
+    height: 24px; /* 적절한 높이 조정 */
+    object-fit: contain;
+}
+
+/* 우측 사용자 메뉴 (Util) */
+.util ul {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--White);
-    text-decoration: none;
+    gap: 24px;
 }
 
-.header-logo i {
-    font-size: 28px;
-}
-
-/* 사용자 정보 (우측) */
-.util-menu .user {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background-color: rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    transition: background-color 0.2s;
-}
-
-.util-menu .user:hover {
-    background-color: rgba(255, 255, 255, 0.25);
-}
-
-.util-menu .user a {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--White);
+.util li {
     font-size: 14px;
-    font-weight: 600;
-    text-decoration: none;
-}
-
-.util-menu .user span {
-    font-weight: 700;
-}
-
-/* 로그아웃 버튼 */
-.util-menu .logout a {
+    color: #636E72;
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    color: var(--White);
-    font-size: 14px;
+}
+
+.util .profile a {
     font-weight: 600;
-    text-decoration: none;
-    transition: all 0.2s;
+    color: #2D3436;
+    margin-right: 4px;
 }
 
-.util-menu .logout a:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-    transform: translateY(-1px);
+.util a {
+    transition: color 0.2s;
 }
-
-.util-menu .logout img {
-    width: 16px;
-    height: 16px;
-    filter: brightness(0) invert(1);
-}
-
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-    #headerWrapper {
-        padding: 0 20px;
-    }
-    
-    .util-menu {
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    .header-logo {
-        font-size: 18px;
-    }
-    
-    .util-menu ul {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
+.util a:hover {
+    color: #666BE1; /* New Primary */
 }

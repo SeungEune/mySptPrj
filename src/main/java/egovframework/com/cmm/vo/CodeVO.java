@@ -24,6 +24,6 @@ public class CodeVO {
     private String code;
     private String codeNm;
     private String codeDc;
-    private String useAt;
-    private String frstRegistPnttm;
+    private String useYn;
+    private String registDt;
 }

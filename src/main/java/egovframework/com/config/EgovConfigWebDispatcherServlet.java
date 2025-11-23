@@ -6,6 +6,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -55,16 +56,16 @@ public class EgovConfigWebDispatcherServlet implements WebMvcConfigurer {
 		registry.addViewController("/").setViewName("redirect:/login/loginForm.do");
 		registry.addViewController("/cmmn/validator.do").setViewName("cmmn/validator");
 	}
-	//
-	//@Override
-	//public void addResourceHandlers(ResourceHandlerRegistry registry) {
-	//	registry.addResourceHandler("/js/**")
-	//			.addResourceLocations("classpath:/static/js/", "classpath:/public/js/", "/js/");
-	//
-	//	registry.addResourceHandler("/css/**")
-	//			.addResourceLocations("classpath:/static/css/", "classpath:/public/css/", "/css/");
-	//
-	//	registry.addResourceHandler("/images/**")
-	//			.addResourceLocations("classpath:/static/images/", "classpath:/public/images/", "/images/");
-	//}
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/js/**")
+				.addResourceLocations("classpath:/static/js/", "classpath:/public/js/", "/js/");
+
+		registry.addResourceHandler("/css/**")
+				.addResourceLocations("classpath:/static/css/", "classpath:/public/css/", "/css/");
+
+		registry.addResourceHandler("/images/**")
+				.addResourceLocations("classpath:/static/images/", "classpath:/public/images/", "/images/");
+	}
 }

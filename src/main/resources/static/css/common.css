@@ -1,73 +1,282 @@
 @charset "utf-8";
 
-:root {
-	--Primary:#7A64E4;
-	--Secondary:#F5F5F5;
-	--Tertiary:#E7EBF2;
-
-	--White:#FFFFFF;
-	--Black:#000000;
-	--Gray:#667080;
-
-	--Point:#003B68;
-	--Error:#FF5757;
-
-	--Primary-100:#E4E0FA;
-	--Primary-200:#CAC1F4;
-	--Primary-300:#AFA2EF;
-	--Primary-400:#9583E9;
-	--Primary-500:#7A64E4;
-	--Primary-600:#6250B6;
-	--Primary-700:#493C89;
-	--Primary-800:#31285B;
-	--Primary-900:#18142E;
-
-	--Gray-100:#E0E2E6;
-	--Gray-200:#C2C6CC;
-	--Gray-300:#A3A9B3;
-	--Gray-400:#858D99;
-	--Gray-500:#667080;
-	--Gray-600:#525A66;
-	--Gray-700:#3D434D;
-	--Gray-800:#292D33;
-	--Gray-900:#14161A;
-
-	--border-01:1px solid #E0E0E0;
-	--border-02:1px solid #C2C6CC;
-
-	--font-default:#14161A;
+/* ==========================================================================
+   Reset & Base
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-/* core.css 사이트 전체 공통 디자인*/
-html {
-	font-size: 62.5%;
-}
-*{
-	font-size:1.7rem;
-	font-weight: 500;
-	color: var(--font-default);
-}
-
-input{
-	padding:8px;
-	border:var(--border-02);
-	text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    font-size: 16px;
+    color: #2D3436; /* Darker Gray Text for better readability */
+    line-height: 1.5;
 }
 
-button {
-	border: 0px;
-	background: transparent;
-	cursor: pointer;
-}
+ul, ol, li { list-style: none; }
+a { text-decoration: none; color: inherit; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; }
 
-/*focus*/
-select:focus:focus,
-input:focus,
-textarea:focus {
-    outline: 2px solid rgba(122, 100, 228, 0.3);
-}
+/* ==========================================================================
+   Layout Structure
+   ========================================================================== */
 body {
-  font-size: 1.7rem;
+    display: flex;
+    flex-direction: column;
+    background-color: #F4F6F8; /* Softer Cool Gray Background */
+}
+
+/* Header, Footer는 별도 CSS에서 높이 지정 */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* 스크롤은 내부에서 처리 */
+}
+
+.dashboard-container {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   Typography & Text Utilities
+   ========================================================================== */
+.txt-h2 { font-size: 24px; font-weight: 700; color: #2D3436; line-height: 1.4; }
+.txt-h3 { font-size: 18px; font-weight: 600; color: #2D3436; line-height: 1.4; }
+
+.txt-body-sm { font-size: 14px; color: #636E72; } /* Slightly softer gray */
+.txt-body-xs { font-size: 12px; color: #B2BEC3; }
+
+.fw-bold { font-weight: 700; }
+
+.tc { text-align: center; }
+.tl { text-align: left; }
+.tr { text-align: right; }
+
+.fc-primary { color: #666BE1 !important; } /* Desaturated Blue-Violet */
+.fc-gr { color: #636E72 !important; }
+.fc-wh { color: #FFFFFF !important; }
+
+.txt-link {
+    font-size: 13px;
+    color: #636E72;
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   Spacing Utilities
+   ========================================================================== */
+.mt-10 { margin-top: 10px !important; }
+.mb-0  { margin-bottom: 0 !important; }
+.g5    { gap: 5px; }
+.g10   { gap: 10px; }
+.g20   { gap: 20px; }
+
+/* ==========================================================================
+   Flex Utilities
+   ========================================================================== */
+.item-horizontal-box { display: flex; align-items: center; }
+.fx-wrap { flex-wrap: wrap; }
+.jst-btw { justify-content: space-between; }
+.align-ct { align-items: center; }
+
+/* ==========================================================================
+   Sizing Utilities
+   ========================================================================== */
+.w50 { width: 50%; }
+.w100 { width: 100%; }
+.w150px { width: 150px; }
+
+/* ==========================================================================
+   Button Styles
+   ========================================================================== */
+[class*="-btn"] {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    padding: 0 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.primary-btn {
+    background-color: #666BE1; /* New Primary */
+    color: #fff;
+}
+.primary-btn:hover { background-color: #5A5FC0; }
+
+.outline-btn {
+    border: 1px solid #666BE1;
+    color: #666BE1;
+    background-color: #fff;
+}
+.outline-btn:hover { background-color: #EBEBFF; }
+
+.outline-btn-Bck {
+    border: 1px solid #2D3436;
+    color: #2D3436;
+    background-color: #fff;
+}
+.outline-btn-Bck:hover { background-color: #F4F6F8; }
+
+.outline-btn-Gr {
+    border: 1px solid #B2BEC3;
+    color: #636E72;
+    background-color: #fff;
+}
+.outline-btn-Gr:hover { background-color: #F4F6F8; }
+
+/* ==========================================================================
+   Table Styles
+   ========================================================================== */
+.table-type01 {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 2px solid #2D3436;
+}
+
+.table-type01 th,
+.table-type01 td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #DFE6E9;
+    font-size: 14px;
+    text-align: left;
+}
+
+.table-type01 th {
+    background-color: #F8F9FA;
+    font-weight: 600;
+    color: #2D3436;
+}
+
+.table-type01 td {
+    color: #636E72;
+}
+
+.table-type01 td.tc { text-align: center; }
+
+/* ==========================================================================
+   Badge Styles (상태 표시용)
+   ========================================================================== */
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.badge.success {
+    background-color: #D4EDDA;
+    color: #155724;
+}
+
+.badge.warning {
+    background-color: #FFF3CD;
+    color: #856404;
+}
+
+.badge.gray {
+    background-color: #E9ECEF;
+    color: #495057;
+}
+
+.badge.error {
+    background-color: #F8D7DA;
+    color: #721C24;
+}
+
+/* ==========================================================================
+   Form Styles
+   ========================================================================== */
+.form-table th {
+    background-color: #F8F9FA;
+    font-weight: 600;
+    text-align: left;
+}
+
+.form-table td {
+    padding: 15px;
+}
+
+.input-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.input-group .input {
+    flex: 1;
+}
+
+.input, .select {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #DFE6E9;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #2D3436;
+    background-color: #FFFFFF;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.input:focus, .select:focus {
+    outline: none;
+    border-color: #666BE1;
+    box-shadow: 0 0 0 2px rgba(102, 107, 225, 0.1);
+}
+
+.input:readonly {
+    background-color: #F4F6F8;
+    cursor: not-allowed;
+}
+
+.select {
+    cursor: pointer;
+}
+
+.required {
+    color: #FF5757;
+    margin-left: 2px;
+}
+
+.radio-group {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.radio-label input[type="radio"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+.select-box {
+    position: relative;
+}
+
+.select-box .select {
+    width: 100%;
 }

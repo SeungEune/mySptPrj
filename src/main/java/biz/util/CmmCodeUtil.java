@@ -22,19 +22,34 @@ public class CmmCodeUtil {
     @PostConstruct
     public void init() {
         codeService = service;
+
+        // 시스템 시작 시 모든 공통 코드를 미리 로드
+        List<String> codeIdList = codeService.getAllCodeIdList();
+        if (!ListUtil.isEmpty(codeIdList)) {
+            for (String codeId : codeIdList) {
+                List<CodeVO> codeList = codeService.getCmmnCodeList(codeId);
+                if (!ListUtil.isEmpty(codeList)) {
+                    codeMap.put(codeId, codeList);
+                }
+            }
+        }
     }
 
     private static List<CodeVO> getCodeList(String codeId) {
-        return codeMap.getOrDefault(codeId, new ArrayList<>());
+        // 키가 없을 때 null 반환 (빈 리스트 대신)
+        return codeMap.get(codeId);
     }
 
     public static List<CodeVO> getCmmnCodeList(String codeId) {
         List<CodeVO> codeList = getCodeList(codeId);
-        if (ListUtil.isEmpty(codeList)) {
+        // null 체크로 변경 (키가 없거나 빈 리스트인 경우)
+        if (codeList == null || ListUtil.isEmpty(codeList)) {
             codeList = codeService.getCmmnCodeList(codeId);
-            CmmCodeUtil.setCmmnCode(codeId, codeList);
+            if (!ListUtil.isEmpty(codeList)) {
+                CmmCodeUtil.setCmmnCode(codeId, codeList);
+            }
         }
-        return codeList;
+        return codeList != null ? codeList : new ArrayList<>();
     }
 
     public static Map<String, List<CodeVO>> getCmmnDetailCode(List<CmmCdNmVO> cdNmList) {
@@ -43,11 +58,14 @@ public class CmmCodeUtil {
         if (!ListUtil.isEmpty(cdNmList)) {
             for (CmmCdNmVO cdNm : cdNmList) {
                 List<CodeVO> codeList = getCodeList(cdNm.getCodeId());
-                if (ListUtil.isEmpty(codeList)) {
+                // null 체크로 변경
+                if (codeList == null || ListUtil.isEmpty(codeList)) {
                     codeList = codeService.getCmmnCodeList(cdNm.getCodeId());
-                    CmmCodeUtil.setCmmnCode(cdNm.getCodeId(), codeList);
+                    if (!ListUtil.isEmpty(codeList)) {
+                        CmmCodeUtil.setCmmnCode(cdNm.getCodeId(), codeList);
+                    }
                 }
-                map.put(cdNm.getCodeNm(), codeList);
+                map.put(cdNm.getCodeNm(), codeList != null ? codeList : new ArrayList<>());
             }
         }
 
@@ -60,9 +78,16 @@ public class CmmCodeUtil {
         }
 
         List<CodeVO> codeList = getCodeList(codeId);
-        if (ListUtil.isEmpty(codeList)) {
+        // null 체크로 변경
+        if (codeList == null || ListUtil.isEmpty(codeList)) {
             codeList = codeService.getCmmnCodeList(codeId);
-            CmmCodeUtil.setCmmnCode(codeId, codeList);
+            if (!ListUtil.isEmpty(codeList)) {
+                CmmCodeUtil.setCmmnCode(codeId, codeList);
+            }
+        }
+
+        if (codeList == null || ListUtil.isEmpty(codeList)) {
+            return StringUtil.STR_EMPTY;
         }
 
         Optional<CodeVO> codeVO = codeList.stream().findFirst().filter(curCode -> curCode.getCode().equals(code));
