@@ -123,9 +123,11 @@ function fn_showPasswordInput() {
  * 부서 검색
  */
 function fn_searchDept() {
-    // 부서 검색 팝업 또는 모달 호출
-    // TODO: 부서 검색 기능 구현
-    MessageUtil.alert('부서 검색 기능은 추후 구현 예정입니다.');
+    // 부서 검색 모달 열기
+    DeptSearchModal.open(function(deptCd, deptNm) {
+        document.getElementById('deptCd').value = deptCd;
+        document.getElementById('deptNm').value = deptNm;
+    });
 }
 
 /**
@@ -164,7 +166,7 @@ function fn_updateUser(event) {
         moblphonNo: document.getElementById('moblphonNo').value.trim(),
         deptCd: document.getElementById('deptCd').value,
         userSttusCd: userSttusCd,
-        sexdstnCd: document.getElementById('sexdstnCd').value,
+        sexdstnCd: document.querySelector('input[name="sexdstnCd"]:checked') ? document.querySelector('input[name="sexdstnCd"]:checked').value : '',
         brthdy: document.getElementById('brthdy').value,
         jbgdCd: document.getElementById('jbgdCd').value,
         jssfcCd: document.getElementById('jssfcCd').value,
@@ -175,18 +177,18 @@ function fn_updateUser(event) {
     
     // 비밀번호 변경이 있는 경우에만 추가
     if (!Util.isEmpty(password)) {
-        formData.password = password;
+        formData.userPassword = password;
     }
     
-    const url = Util.getRequestUrl('/system/user/save.do');
+    const url = Util.getRequestUrl('/system/user/userSave.do');
     
     callModule.call(url, formData, function(result) {
-        if (result && result.resultValue === true) {
-            MessageUtil.success(result.message || '수정이 완료되었습니다.', function() {
+        if (result && result.result && result.result.success) {
+            MessageUtil.success(result.status.message || '수정이 완료되었습니다.', function() {
                 location.href = '/system/user/userListForm.do';
             });
         } else {
-            MessageUtil.error(result.message || '수정에 실패하였습니다.');
+            MessageUtil.error((result && result.status && result.status.message) || '수정에 실패하였습니다.');
         }
     }, true, 'POST');
 }

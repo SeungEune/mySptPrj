@@ -44,6 +44,14 @@ public class PagingVO {
     }
 
     /**
+     * 하위 호환성을 위한 totalRecordCount getter
+     * @return totalCount 값 반환
+     */
+    public int getTotalRecordCount() {
+        return this.totalCount;
+    }
+
+    /**
      * 페이징 생성
      */
     private void makePaging() {

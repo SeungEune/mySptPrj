@@ -1,9 +1,12 @@
 /**
  * 사용자 등록 화면 JavaScript
  */
+
+// 중복확인 완료 여부를 추적하는 전역 변수
+let isUserIdChecked = false;
+let checkedUserId = '';
+
 document.addEventListener('DOMContentLoaded', () => {
-    fn_init();
-    
     // 중복확인 버튼 이벤트
     document.getElementById('checkIdBtn').addEventListener('click', fn_checkUserId);
     
@@ -12,14 +15,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 부서 검색 버튼 이벤트
     document.getElementById('deptSearchBtn').addEventListener('click', fn_searchDept);
+    
+    // userId 입력 시 중복확인 플래그 초기화
+    document.getElementById('userId').addEventListener('input', function() {
+        if (this.value.trim() !== checkedUserId) {
+            isUserIdChecked = false;
+        }
+    });
 });
-
-/**
- * 초기화
- */
-function fn_init() {
-    // 초기화 로직
-}
 
 /**
  * 사용자ID 중복확인
@@ -36,10 +39,21 @@ function fn_checkUserId() {
     const url = Util.getRequestUrl('/system/user/checkUserId.do');
     
     callModule.call(url, data, function(result) {
-        if (result && result.duplicate === false) {
-            MessageUtil.success('사용 가능한 사용자ID입니다.');
+        if (result && result.result && result.result.duplicate === false) {
+            // 중복확인 성공 시 플래그 설정
+            isUserIdChecked = true;
+            checkedUserId = userId;
+            MessageUtil.success(result.status.message);
+        } else if (result && result.status) {
+            // 중복 시 플래그 초기화
+            isUserIdChecked = false;
+            checkedUserId = '';
+            MessageUtil.error(result.status.message);
         } else {
-            MessageUtil.error('이미 사용 중인 사용자ID입니다.');
+            // 오류 시 플래그 초기화
+            isUserIdChecked = false;
+            checkedUserId = '';
+            MessageUtil.error('중복 확인 중 오류가 발생했습니다.');
         }
     }, true, 'POST');
 }
@@ -48,9 +62,11 @@ function fn_checkUserId() {
  * 부서 검색
  */
 function fn_searchDept() {
-    // 부서 검색 팝업 또는 모달 호출
-    // TODO: 부서 검색 기능 구현
-    MessageUtil.alert('부서 검색 기능은 추후 구현 예정입니다.');
+    // 부서 검색 모달 열기
+    DeptSearchModal.open(function(deptCd, deptNm) {
+        document.getElementById('deptCd').value = deptCd;
+        document.getElementById('deptNm').value = deptNm;
+    });
 }
 
 /**
@@ -62,8 +78,21 @@ function fn_saveUser(event) {
     const userId = document.getElementById('userId').value.trim();
     const userNm = document.getElementById('userNm').value.trim();
     const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('passwordConfirm').value;
     const userSttusCd = document.getElementById('userSttusCd').value;
+    const roleCd = document.getElementById('roleCd').value;
     const useYn = document.querySelector('input[name="useYn"]:checked').value;
+    
+    // 중복확인 여부 검증
+    if (!isUserIdChecked) {
+        MessageUtil.error('사용자ID 중복확인을 해주세요.');
+        return;
+    }
+    
+    if (userId !== checkedUserId) {
+        MessageUtil.error('사용자ID가 변경되었습니다. 중복확인을 다시 해주세요.');
+        return;
+    }
     
     // 필수값 검증
     if (Util.isEmpty(userId)) {
@@ -81,8 +110,24 @@ function fn_saveUser(event) {
         return;
     }
     
+    if (Util.isEmpty(passwordConfirm)) {
+        MessageUtil.error('비밀번호 확인을 입력해주세요.');
+        return;
+    }
+    
+    // 비밀번호 일치 검증
+    if (password !== passwordConfirm) {
+        MessageUtil.error('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+        return;
+    }
+    
     if (Util.isEmpty(userSttusCd)) {
         MessageUtil.error('사용자상태코드를 선택해주세요.');
+        return;
+    }
+    
+    if (Util.isEmpty(roleCd)) {
+        MessageUtil.error('권한을 선택해주세요.');
         return;
     }
     
@@ -90,12 +135,14 @@ function fn_saveUser(event) {
     const formData = {
         userId: userId,
         userNm: userNm,
-        password: password,
+        userPassword: password,
+        passwordConfirm: passwordConfirm,
         emailAdres: document.getElementById('emailAdres').value.trim(),
         moblphonNo: document.getElementById('moblphonNo').value.trim(),
         deptCd: document.getElementById('deptCd').value,
         userSttusCd: userSttusCd,
-        sexdstnCd: document.getElementById('sexdstnCd').value,
+        roleCd: roleCd,
+        sexdstnCd: document.querySelector('input[name="sexdstnCd"]:checked') ? document.querySelector('input[name="sexdstnCd"]:checked').value : '',
         brthdy: document.getElementById('brthdy').value,
         jbgdCd: document.getElementById('jbgdCd').value,
         jssfcCd: document.getElementById('jssfcCd').value,
@@ -104,15 +151,15 @@ function fn_saveUser(event) {
         useYn: useYn
     };
     
-    const url = Util.getRequestUrl('/system/user/save.do');
+    const url = Util.getRequestUrl('/system/user/saveUser.do');
     
     callModule.call(url, formData, function(result) {
-        if (result && result.resultValue === true) {
-            MessageUtil.success(result.message || '등록이 완료되었습니다.', function() {
+        if (result && result.result && result.result.success) {
+            MessageUtil.success(result.status.message || '등록이 완료되었습니다.', function() {
                 location.href = '/system/user/userListForm.do';
             });
         } else {
-            MessageUtil.error(result.message || '등록에 실패하였습니다.');
+            MessageUtil.error((result && result.status && result.status.message) || '등록에 실패하였습니다.');
         }
     }, true, 'POST');
 }

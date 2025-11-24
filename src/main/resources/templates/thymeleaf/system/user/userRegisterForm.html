@@ -4,9 +4,11 @@
 
 <th:block th:fragment="contentLink">
     <link rel="stylesheet" th:href="@{/css/system/user.css}" />
+    <link rel="stylesheet" th:href="@{/css/system/dept/deptSearchModal.css}" />
 </th:block>
 
 <th:block th:fragment="script">
+    <script th:src="@{/js/system/dept/deptSearchModal.js}"></script>
     <script th:src="@{/js/system/user/userRegisterForm.js}"></script>
 </th:block>
 
@@ -22,7 +24,7 @@
                 <div class="table-box type01">
                     <div class="table-inner">
                         <table class="table-type01 form-table">
-                            <caption class="hidden">사용자 기본 정보 입력</caption>
+                            <caption class="table-caption">사용자 기본 정보 입력</caption>
                             <colgroup>
                                 <col width="15%"/>
                                 <col width="35%"/>
@@ -51,19 +53,26 @@
                                     <input type="password" id="password" name="password" class="input" 
                                            placeholder="비밀번호를 입력하세요" required>
                                 </td>
+                                <th><label for="passwordConfirm">비밀번호 확인 <span class="required">*</span></label></th>
+                                <td>
+                                    <input type="password" id="passwordConfirm" name="passwordConfirm" class="input" 
+                                           placeholder="비밀번호를 다시 입력하세요" required>
+                                </td>
+                            </tr>
+                            <tr>
                                 <th><label for="emailAdres">이메일주소</label></th>
                                 <td>
                                     <input type="email" id="emailAdres" name="emailAdres" class="input" 
                                            placeholder="이메일주소를 입력하세요">
                                 </td>
-                            </tr>
-                            <tr>
                                 <th><label for="moblphonNo">휴대전화번호</label></th>
                                 <td>
                                     <input type="tel" id="moblphonNo" name="moblphonNo" class="input" 
                                            placeholder="휴대전화번호를 입력하세요 (예: 010-1234-5678)">
                                 </td>
-                                <th><label for="deptCd">부서코드</label></th>
+                            </tr>
+                            <tr>
+                                <th><label for="deptCd">부서</label></th>
                                 <td>
                                     <div class="input-group">
                                         <input type="text" id="deptNm" name="deptNm" class="input" 
@@ -72,9 +81,20 @@
                                         <button type="button" class="outline-btn" id="deptSearchBtn">검색</button>
                                     </div>
                                 </td>
+                                <th><label for="roleCd">권한 <span class="required">*</span></label></th>
+                                <td>
+                                    <div class="select-box">
+                                        <select id="roleCd" name="roleCd" class="select" required>
+                                            <option value="">선택하세요</option>
+                                            <th:block th:each="role : ${roleCodeList}">
+                                                <option th:value="${role.roleCd}" th:text="${role.roleNm}"></option>
+                                            </th:block>
+                                        </select>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
-                                <th><label for="userSttusCd">사용자상태코드 <span class="required">*</span></label></th>
+                                <th><label for="userSttusCd">사용자상태 <span class="required">*</span></label></th>
                                 <td>
                                     <div class="select-box">
                                         <select id="userSttusCd" name="userSttusCd" class="select" required>
@@ -108,7 +128,7 @@
                 <div class="table-box type01 mt-30">
                     <div class="table-inner">
                         <table class="table-type01 form-table">
-                            <caption class="hidden">사용자 개인 정보 입력</caption>
+                            <caption class="table-caption">사용자 개인 정보 입력</caption>
                             <colgroup>
                                 <col width="15%"/>
                                 <col width="35%"/>
@@ -117,15 +137,15 @@
                             </colgroup>
                             <tbody>
                             <tr>
-                                <th><label for="sexdstnCd">성별코드</label></th>
+                                <th><label>성별</label></th>
                                 <td>
-                                    <div class="select-box">
-                                        <select id="sexdstnCd" name="sexdstnCd" class="select">
-                                            <option value="">선택하세요</option>
-                                            <th:block th:each="code : ${sexdstnCodeList}">
-                                                <option th:value="${code.code}" th:text="${code.codeNm}"></option>
-                                            </th:block>
-                                        </select>
+                                    <div class="radio-group">
+                                        <th:block th:each="code, stat : ${sexdstnCodeList}">
+                                            <label class="radio-label">
+                                                <input type="radio" name="sexdstnCd" th:value="${code.code}" th:checked="${stat.first}">
+                                                <span th:text="${code.codeNm}"></span>
+                                            </label>
+                                        </th:block>
                                     </div>
                                 </td>
                                 <th><label for="brthdy">생년월일</label></th>
@@ -134,7 +154,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th><label for="jbgdCd">직급코드</label></th>
+                                <th><label for="jbgdCd">직급</label></th>
                                 <td>
                                     <div class="select-box">
                                         <select id="jbgdCd" name="jbgdCd" class="select">
@@ -145,7 +165,7 @@
                                         </select>
                                     </div>
                                 </td>
-                                <th><label for="jssfcCd">직책코드</label></th>
+                                <th><label for="jssfcCd">직책</label></th>
                                 <td>
                                     <div class="select-box">
                                         <select id="jssfcCd" name="jssfcCd" class="select">
@@ -189,6 +209,9 @@
             </form>
         </section>
     </div>
+
+    <!-- 부서 검색 모달 -->
+    <th:block th:insert="~{system/dept/deptSearchModal :: deptSearchModal}"></th:block>
 </main>
 
 </html>

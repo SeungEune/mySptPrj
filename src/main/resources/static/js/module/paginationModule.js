@@ -9,7 +9,6 @@
  * @param fnName ajax 실행 fn name
  */
 function setPagination(paging, target, fnName){
-
     let pageHtml = '';
 
     if(paging.totalCount <= 1){
@@ -53,7 +52,6 @@ function setPagination(paging, target, fnName){
     }
     pageHtml +=     '</ul>';
 
-
     //다음
     pageHtml +=         `<a href='javascript:void(0)' class="next_page `;
     if(paging.finalPageNo !== paging.pageNo){
@@ -63,23 +61,47 @@ function setPagination(paging, target, fnName){
     }
     pageHtml +=         '다음 페이지</a>';
 
+    const pageInput = document.getElementById('searchPageNo');
+    if (pageInput) { pageInput.value = paging.pageNo; }
 
     if (target instanceof jQuery) target.html(pageHtml);
     else if (target instanceof HTMLElement) target.innerHTML = pageHtml;
-
 }
 
 /**
  * 빈 페이징 구성
  * @param target 페이징 처리 html target
  */
-function setEmptyPagination(target) {
+function setEmptyPagination(target){
     let pageHtml = '';
-    pageHtml += '<a class="disabled_prev_page">이전 페이지</a>';
-    pageHtml += '   <ul>';
-    pageHtml += '       <li class="active"><a>1</a></li>';
-    pageHtml += '   </ul>';
-    pageHtml += '<a class="disabled_next_page">다음 페이지</a>';
+    pageHtml += '<ul>';
+    pageHtml +=     `<li>`;
+    pageHtml +=         `<a href="javascript:void(0);" class="page-link current active">1</a>`;
+    pageHtml +=     '</li>';
+    pageHtml += '</ul>';
 
     target.html(pageHtml);
+}
+
+/**
+ * 현재 활성화된 페이지 번호 찾기
+ * @param target
+ * @returns {number}
+ */
+function getCurrentPageNumber(target) {
+    let activePageNumber = 1;
+
+    if (target instanceof jQuery) {
+        const activeElem = target.find('li.active > a.active');
+        if (activeElem.length > 0) {
+            activePageNumber = parseInt(activeElem.text(), 10);
+        }
+    } else if (target instanceof HTMLElement) {
+        const activeElem = target.querySelector('li.active > a.active');
+        if (activeElem) {
+            activePageNumber = parseInt(activeElem.textContent, 10);
+        }
+    }
+
+    return activePageNumber;
 }

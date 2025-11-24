@@ -1,6 +1,7 @@
 package egovframework.com.cmm.dao;
 
 import egovframework.com.cmm.vo.CodeVO;
+import egovframework.com.cmm.vo.RoleVO;
 import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
 import org.springframework.stereotype.Repository;
 
@@ -26,5 +27,13 @@ public class CodeMapper extends EgovAbstractMapper {
      */
     public List<String> selectAllCodeIdList() {
         return selectList("codeMapper.selectAllCodeIdList");
+    }
+
+    /**
+     * 권한 목록 조회
+     * @return 권한 목록
+     */
+    public List<RoleVO> selectRoleList() {
+        return selectList("codeMapper.selectRoleList");
     }
 }

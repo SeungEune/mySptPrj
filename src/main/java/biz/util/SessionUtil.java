@@ -45,6 +45,16 @@ public class SessionUtil {
     }
     
     /**
+     * 로그인한 사용자의 ID를 조회한다.
+     *
+     * @return 사용자 ID
+     */
+    public static String getUserId() {
+        LoginVO loginUser = SessionUtil.getLoginUser();
+        return loginUser != null ? loginUser.getUserId() : null;
+    }
+    
+    /**
      * name에 해당하는 세션 속성정보를 조회한다.
      *
      * @param name - 세션에서 조회할 속성정보의 name

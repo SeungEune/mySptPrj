@@ -3,6 +3,7 @@ package biz.util;
 import egovframework.com.cmm.service.CodeService;
 import egovframework.com.cmm.vo.CmmCdNmVO;
 import egovframework.com.cmm.vo.CodeVO;
+import egovframework.com.cmm.vo.RoleVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -102,5 +103,13 @@ public class CmmCodeUtil {
         codeMap.remove(codeId);
         List<CodeVO> codeList = codeService.getCmmnCodeList(codeId);
         CmmCodeUtil.setCmmnCode(codeId, codeList);
+    }
+
+    /**
+     * 권한 목록 조회
+     * @return 권한 목록
+     */
+    public static List<RoleVO> getRoleList() {
+        return codeService.getRoleList();
     }
 }

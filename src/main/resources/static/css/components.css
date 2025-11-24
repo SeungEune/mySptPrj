@@ -4,3 +4,106 @@
    필요한 스타일은 common.css 및 각 모듈 css에 직접 정의하여 사용합니다.
    추후 공통 컴포넌트 스타일이 필요할 경우 이곳에 작성합니다.
 */
+
+/* ==========================================================================
+   Pagination
+   ========================================================================== */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.pagination ul{
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pagination li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.pagination a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  color: #000;
+  border-radius: 50%;
+  background-color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.pagination a.first_page,
+.pagination a.disabled_first_page,
+.pagination a.disabled_prev_page,
+.pagination a.prev_page,
+.pagination a.next_page,
+.pagination a.disabled_next_page,
+.pagination a.last_page,
+.pagination a.disabled_last_page {
+  text-indent: -9999px;
+}
+
+.pagination a.disabled_prev_page.prev_page {
+  background: url('/images/img/Arrow_left_disabled.svg') no-repeat center;
+  cursor: default;
+}
+
+.pagination a.prev_page {
+  background: url('/images/img/Arrow_left.svg') no-repeat center;
+  cursor: pointer;
+}
+
+.pagination a.prev_page.no-active {
+    background: url('/images/img/Arrow_left_disabled.svg') no-repeat center;
+    cursor: default;
+}
+
+.pagination a.next_page {
+  background: url('/images/img/Arrow_right.svg') no-repeat center;
+  cursor: pointer;
+}
+
+.pagination a.next_page.no-active {
+    background: url('/images/img/Arrow_right_disabled.svg') no-repeat center;
+    cursor: default;
+}
+
+.pagination a.disabled_next_page {
+  background: url('/images/img/Arrow_right_disabled.svg') no-repeat center;
+  cursor: default;
+}
+
+.pagination li.active a {
+  background-color: #2D3436;
+  color: #fff;
+  cursor: default;
+}
+
+.pagination li:not(.active) a:hover {
+  background-color: #F4F6F8;
+}
+
+.pagination li a.ellipsis{
+  cursor: default;
+}
+
+.pagination li a.ellipsis:hover,
+a.disabled_prev_page:hover,
+a.disabled_next_page:hover{
+  background-color: transparent;
+}

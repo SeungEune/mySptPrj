@@ -12,7 +12,7 @@
 		FROM 	tb_cmmn_code_detail
 		WHERE   code_id = #{codeId}
 		and 	use_yn = 'Y'
-		ORDER BY code_id, code
+		ORDER BY code_order
 	</select>
 
 	<select id="selectAllCodeIdList" resultType="String">
@@ -20,5 +20,16 @@
 		FROM tb_cmmn_code
 		WHERE use_yn = 'Y'
 		ORDER BY code_id
+	</select>
+
+	<!-- 권한 목록 조회 -->
+	<select id="selectRoleList" resultType="egovframework.com.cmm.vo.RoleVO">
+		SELECT role_cd,
+		       role_nm,
+		       role_dc,
+		       use_yn
+		FROM tb_role
+		WHERE use_yn = 'Y'
+		ORDER BY role_cd
 	</select>
 </mapper>

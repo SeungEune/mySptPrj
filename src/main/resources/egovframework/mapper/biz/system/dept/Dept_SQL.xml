@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="deptDAO">
+
+    <!-- 검색 조건 -->
+    <sql id="searchQuery">
+        <if test="searchVO != null">
+            <!-- 부서명 검색 -->
+            <if test="searchVO.searchKeyword != null and searchVO.searchKeyword != ''">
+                AND UPPER(d.dept_nm) LIKE UPPER(CONCAT('%', #{searchVO.searchKeyword}, '%'))
+            </if>
+        </if>
+        <!-- 사용여부 필터 -->
+        <if test="useYn != null and useYn != ''">
+            AND d.use_yn = #{useYn}
+        </if>
+    </sql>
+
+    <!-- 부서 목록 카운트 조회 -->
+    <select id="selectDeptListCnt" parameterType="biz.system.dept.vo.DeptVO" resultType="int">
+        SELECT COUNT(1)
+          FROM tb_dept d
+         WHERE 1=1
+        <include refid="searchQuery"/>
+    </select>
+
+    <!-- 부서 목록 조회 (계층 구조 트리) -->
+    <select id="selectDeptList" parameterType="biz.system.dept.vo.DeptVO" resultType="biz.system.dept.vo.DeptVO">
+        <choose>
+            <!-- 검색 조건이 있는 경우: 매칭되는 부서와 그 상위 경로를 모두 포함 -->
+            <when test="searchVO != null and searchVO.searchKeyword != null and searchVO.searchKeyword != ''">
+                WITH RECURSIVE 
+                -- 1단계: 검색어에 매칭되는 부서 찾기
+                matched_depts AS (
+                    SELECT dept_cd, upper_dept_cd
+                    FROM tb_dept
+                    WHERE use_yn = 'Y'
+                      AND UPPER(dept_nm) LIKE UPPER(CONCAT('%', #{searchVO.searchKeyword}, '%'))
+                ),
+                -- 2단계: 매칭된 부서의 상위 경로 추적
+                parent_path AS (
+                    SELECT dept_cd, upper_dept_cd
+                    FROM matched_depts
+                    
+                    UNION
+                    
+                    SELECT d.dept_cd, d.upper_dept_cd
+                    FROM tb_dept d
+                    INNER JOIN parent_path pp ON d.dept_cd = pp.upper_dept_cd
+                    WHERE d.use_yn = 'Y'
+                ),
+                -- 3단계: 전체 트리 구조 생성 (필터링된 부서만)
+                dept_tree AS (
+                    SELECT 
+                        dept_cd, 
+                        dept_nm, 
+                        upper_dept_cd, 
+                        dept_level, 
+                        dept_order,
+                        dept_mngr_id, 
+                        use_yn, 
+                        regist_dt,
+                        CAST(dept_cd AS VARCHAR) AS path,
+                        0 AS tree_level
+                    FROM tb_dept
+                    WHERE (upper_dept_cd IS NULL OR upper_dept_cd = '')
+                      AND use_yn = 'Y'
+                      AND dept_cd IN (SELECT dept_cd FROM parent_path)
+                    
+                    UNION ALL
+                    
+                    SELECT 
+                        d.dept_cd,
+                        d.dept_nm,
+                        d.upper_dept_cd,
+                        d.dept_level,
+                        d.dept_order,
+                        d.dept_mngr_id,
+                        d.use_yn,
+                        d.regist_dt,
+                        dt.path || '>' || d.dept_cd AS path,
+                        dt.tree_level + 1 AS tree_level
+                    FROM tb_dept d
+                    INNER JOIN dept_tree dt ON d.upper_dept_cd = dt.dept_cd
+                    WHERE d.use_yn = 'Y'
+                      AND d.dept_cd IN (SELECT dept_cd FROM parent_path)
+                )
+                SELECT 
+                    dept_cd,
+                    dept_nm,
+                    upper_dept_cd,
+                    dept_level,
+                    dept_order,
+                    dept_mngr_id,
+                    use_yn,
+                    TO_CHAR(regist_dt, 'YYYY-MM-DD') AS regist_dt,
+                    tree_level,
+                    path,
+                    (SELECT COUNT(1) FROM tb_dept WHERE upper_dept_cd = dept_tree.dept_cd AND use_yn = 'Y') AS has_children
+                FROM dept_tree
+                ORDER BY path, dept_order
+            </when>
+            <!-- 검색 조건이 없는 경우: 전체 트리 조회 -->
+            <otherwise>
+                WITH RECURSIVE dept_tree AS (
+                    SELECT 
+                        dept_cd, 
+                        dept_nm, 
+                        upper_dept_cd, 
+                        dept_level, 
+                        dept_order,
+                        dept_mngr_id, 
+                        use_yn, 
+                        regist_dt,
+                        CAST(dept_cd AS VARCHAR) AS path,
+                        0 AS tree_level
+                    FROM tb_dept
+                    WHERE (upper_dept_cd IS NULL OR upper_dept_cd = '')
+                      AND use_yn = 'Y'
+                    
+                    UNION ALL
+                    
+                    SELECT 
+                        d.dept_cd,
+                        d.dept_nm,
+                        d.upper_dept_cd,
+                        d.dept_level,
+                        d.dept_order,
+                        d.dept_mngr_id,
+                        d.use_yn,
+                        d.regist_dt,
+                        dt.path || '>' || d.dept_cd AS path,
+                        dt.tree_level + 1 AS tree_level
+                    FROM tb_dept d
+                    INNER JOIN dept_tree dt ON d.upper_dept_cd = dt.dept_cd
+                    WHERE d.use_yn = 'Y'
+                )
+                SELECT 
+                    dept_cd,
+                    dept_nm,
+                    upper_dept_cd,
+                    dept_level,
+                    dept_order,
+                    dept_mngr_id,
+                    use_yn,
+                    TO_CHAR(regist_dt, 'YYYY-MM-DD') AS regist_dt,
+                    tree_level,
+                    path,
+                    (SELECT COUNT(1) FROM tb_dept WHERE upper_dept_cd = dept_tree.dept_cd AND use_yn = 'Y') AS has_children
+                FROM dept_tree
+                ORDER BY path, dept_order
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 부서 상세 조회 -->
+    <select id="selectDeptDetail" parameterType="String" resultType="biz.system.dept.vo.DeptVO">
+        SELECT d.dept_cd
+             , d.dept_nm
+             , d.upper_dept_cd
+             , ud.dept_nm AS upper_dept_nm
+             , d.dept_level
+             , d.dept_order
+             , d.dept_mngr_id
+             , d.use_yn
+             , d.register_id
+             , TO_CHAR(d.regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS regist_dt
+             , d.updusr_id
+             , TO_CHAR(d.updt_dt, 'YYYY-MM-DD HH24:MI:SS') AS updt_dt
+          FROM tb_dept d
+          LEFT OUTER JOIN tb_dept ud ON d.upper_dept_cd = ud.dept_cd
+         WHERE d.dept_cd = #{deptCd}
+    </select>
+
+    <!-- 추후 부서 관리 기능 구현 시 사용할 쿼리들 -->
+    
+    <!-- 부서 등록 -->
+    <!--
+    <insert id="insertDept" parameterType="biz.system.dept.vo.DeptVO">
+        INSERT INTO tb_dept (
+               dept_cd
+             , dept_nm
+             , upper_dept_cd
+             , dept_level
+             , dept_order
+             , dept_mngr_id
+             , use_yn
+             , register_id
+             , regist_dt
+        ) VALUES (
+               #{deptCd}
+             , #{deptNm}
+             , #{upperDeptCd}
+             , #{deptLevel}
+             , #{deptOrder}
+             , #{deptMngrId}
+             , COALESCE(#{useYn}, 'Y')
+             , #{registerId}
+             , CURRENT_TIMESTAMP
+        )
+    </insert>
+    -->
+
+    <!-- 부서 수정 -->
+    <!--
+    <update id="updateDept" parameterType="biz.system.dept.vo.DeptVO">
+        UPDATE tb_dept
+           SET dept_nm = #{deptNm}
+             , upper_dept_cd = #{upperDeptCd}
+             , dept_level = #{deptLevel}
+             , dept_order = #{deptOrder}
+             , dept_mngr_id = #{deptMngrId}
+             , use_yn = #{useYn}
+             , updusr_id = #{updusrId}
+             , updt_dt = CURRENT_TIMESTAMP
+         WHERE dept_cd = #{deptCd}
+    </update>
+    -->
+
+    <!-- 부서 삭제 -->
+    <!--
+    <delete id="deleteDept" parameterType="String">
+        DELETE FROM tb_dept
+         WHERE dept_cd = #{deptCd}
+    </delete>
+    -->
+
+    <!-- 부서 코드 중복 확인 -->
+    <!--
+    <select id="checkDeptCodeDuplicate" parameterType="String" resultType="int">
+        SELECT COUNT(1)
+          FROM tb_dept
+         WHERE dept_cd = #{deptCd}
+    </select>
+    -->
+
+</mapper>
+

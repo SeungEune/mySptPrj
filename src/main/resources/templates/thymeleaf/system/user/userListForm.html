@@ -56,7 +56,7 @@
                         <span class="txt-body-sm">Total: <strong id="totalCount">0</strong>건</span>
                     </div>
                     <div class="item-horizontal-box g10">
-                        <a href="/system/user/userRegisterForm.do" class="primary-btn">신규 등록</a>
+                        <button type="button" class="primary-btn" id="registerBtn">신규 등록</button>
                         <button type="button" class="outline-btn-Gr" id="excelDownloadBtn">엑셀 다운로드</button>
                     </div>
                 </div>
@@ -72,26 +72,24 @@
                                 <col width="12%"/>
                                 <col width="10%"/>
                                 <col width="15%"/>
-                                <col width="8%"/>
-                                <col width="12%"/>
+                                <col width="10%"/>
                                 <col width="14%"/>
                             </colgroup>
                             <thead>
                             <tr>
-                                <th>No</th>
-                                <th>아이디</th>
-                                <th>이름</th>
-                                <th>부서</th>
-                                <th>직급/역할</th>
-                                <th>이메일</th>
-                                <th>상태</th>
-                                <th>등록일</th>
-                                <th>관리</th>
+                                <th class="tc">No</th>
+                                <th class="tc">아이디</th>
+                                <th class="tc">이름</th>
+                                <th class="tc">부서</th>
+                                <th class="tc">직급/역할</th>
+                                <th class="tc">이메일</th>
+                                <th class="tc">상태</th>
+                                <th class="tc">등록일</th>
                             </tr>
                             </thead>
                             <tbody id="userListBody">
                             <tr>
-                                <td class="tc" colspan="9" style="height:350px;">조회 결과가 없습니다.</td>
+                                <td class="tc" colspan="8" style="height:350px;">조회 결과가 없습니다.</td>
                             </tr>
                             </tbody>
                         </table>
@@ -99,10 +97,33 @@
                 </div>
 
                 <!-- 페이징 -->
-                <div class="item-box align-ct mt-20" id="paginationArea"></div>
+                <div class="item-box align-ct mt-20">
+                    <div id="paginationArea" class="pagination"></div>
+                    <input type="hidden" id="searchPageNo" value="1">
+                </div>
             </div>
         </section>
     </div>
+    
+    <!-- jQuery tmpl 템플릿 -->
+    <script type="text/x-jquery-tmpl" id="emptyTemplate">
+        <tr>
+            <td class="tc" colspan="8" style="height:350px;">조회 결과가 없습니다.</td>
+        </tr>
+    </script>
+
+    <script type="text/x-jquery-tmpl" id="listTemplate">
+        <tr class="tc cur-point" data-user-id="{{html userId}}" onclick="fn_goEditForm('{{html userId}}')">
+            <td>{{html rowNum}}</td>
+            <td>{{html userId}}</td>
+            <td>{{html userNm}}</td>
+            <td>{{if deptNm}}{{html deptNm}}{{else}}-{{/if}}</td>
+            <td>{{if roleNm}}{{html roleNm}}{{else}}-{{/if}}</td>
+            <td>{{if emailAdres}}{{html emailAdres}}{{else}}-{{/if}}</td>
+            <td>{{html userSttusCdNm}}</td>
+            <td>{{html registDt}}</td>
+        </tr>
+    </script>
 </main>
 
 </html>

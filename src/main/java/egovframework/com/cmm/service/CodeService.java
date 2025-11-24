@@ -2,6 +2,7 @@ package egovframework.com.cmm.service;
 
 import egovframework.com.cmm.dao.CodeMapper;
 import egovframework.com.cmm.vo.CodeVO;
+import egovframework.com.cmm.vo.RoleVO;
 import biz.util.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,5 +44,13 @@ public class CodeService {
      */
     public List<String> getAllCodeIdList() {
         return codeMapper.selectAllCodeIdList();
+    }
+
+    /**
+     * 권한 목록 조회
+     * @return 사용 중인 권한 목록
+     */
+    public List<RoleVO> getRoleList() {
+        return codeMapper.selectRoleList();
     }
 }

@@ -4,9 +4,11 @@
 
 <th:block th:fragment="contentLink">
     <link rel="stylesheet" th:href="@{/css/system/user.css}" />
+    <link rel="stylesheet" th:href="@{/css/system/dept/deptSearchModal.css}" />
 </th:block>
 
 <th:block th:fragment="script">
+    <script th:src="@{/js/system/dept/deptSearchModal.js}"></script>
     <script th:src="@{/js/system/user/userEditForm.js}"></script>
 </th:block>
 
@@ -231,6 +233,9 @@
             </form>
         </section>
     </div>
+
+    <!-- 부서 검색 모달 -->
+    <th:block th:insert="~{system/dept/deptSearchModal :: deptSearchModal}"></th:block>
 </main>
 
 </html>

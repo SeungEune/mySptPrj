@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<!-- 부서 검색 모달 Fragment -->
+<div th:fragment="deptSearchModal" id="deptSearchModal" class="dept-modal">
+    <div class="dept-modal-overlay" onclick="DeptSearchModal.close()"></div>
+    <div class="dept-modal-container">
+        <div class="dept-modal-header">
+            <h3>부서 검색</h3>
+            <button type="button" class="dept-modal-close" onclick="DeptSearchModal.close()">&times;</button>
+        </div>
+        <div class="dept-modal-body">
+            <!-- 검색 영역 -->
+            <div class="dept-search-area">
+                <input type="text" 
+                       id="modalDeptNm" 
+                       placeholder="부서명을 입력하세요"
+                       onkeypress="if(event.key==='Enter') DeptSearchModal.searchDeptList();">
+                <button type="button" onclick="DeptSearchModal.searchDeptList();">검색</button>
+            </div>
+
+            <!-- 트리 컨테이너 -->
+            <div class="dept-tree-container">
+                <!-- 검색 결과 정보 -->
+                <div class="dept-search-result-info">
+                    <span id="deptTotalCount">전체 0개</span>
+                </div>
+                
+                <!-- 트리 리스트 -->
+                <div class="dept-tree-list" id="deptTreeList">
+                    <div class="dept-tree-loading">부서 정보를 불러오는 중...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>
