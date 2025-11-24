@@ -54,6 +54,11 @@ public List<UserVO> getUserList(SearchVO searchVO) {
 - VO/DTO로 계층 간 데이터 전달, 검색 조건은 `SearchVO` 또는 VO 내 `searchVO`
 - 트랜잭션: ServiceImpl에서 `@Transactional(rollbackFor = Exception.class)` 기본
 - 공통 예외: `BadRequestException`, `BusinessException`, `UnauthorizedException`
+- **의존성 주입**: `@Resource(name = "빈이름")` 어노테이션 사용 (생성자 주입 방식 대신)
+  ```java
+  @Resource(name = "userService")
+  private UserService userService;
+  ```
 
 ### 6. MVC 패턴 표준 템플릿
 신규 기능은 `biz.<domain>` 패키지 구조와 Thymeleaf 뷰 경로를 따라 작성합니다.
@@ -63,10 +68,10 @@ public List<UserVO> getUserList(SearchVO searchVO) {
 @Slf4j
 @Controller
 @RequestMapping("/module/feature")
-@RequiredArgsConstructor
 public class FeatureController {
 
-    private final FeatureService featureService;
+    @Resource(name = "featureService")
+    private FeatureService featureService;
 
     /**
      * 목록 화면 이동 (GET)
