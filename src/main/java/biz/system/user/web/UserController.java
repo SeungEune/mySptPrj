@@ -106,57 +106,70 @@ public class UserController {
      * @param model Model 객체
      * @return 사용자 수정 페이지
      */
-    @GetMapping("/userForm.do")
+    @PostMapping("/userForm.do")
     public String userForm(@RequestParam String userId, Model model) {
         // userId 필수 검증
         if (userId == null || userId.isEmpty()) {
             return "redirect:/system/user/userListForm.do";
         }
-        
+
         // 공통 코드 목록 전달
         model.addAttribute("userSttusCodeList", CmmCodeUtil.getCmmnCodeList("USER_STTUS"));
         model.addAttribute("sexdstnCodeList", CmmCodeUtil.getCmmnCodeList("SEXDSTN"));
         model.addAttribute("jbgdCodeList", CmmCodeUtil.getCmmnCodeList("JGBD"));
         model.addAttribute("jssfcCodeList", CmmCodeUtil.getCmmnCodeList("JSSFC"));
-        
+
         model.addAttribute("userId", userId);
-        
+
         return "system/user/userEditForm";
     }
 
     /**
-     * 사용자 ID 중복 확인
-     * @param params 확인할 사용자 ID
-     * @return 중복 여부 결과 (duplicate: true/false)
+     * 사용자 상세조회 화면
+     * @param userId 사용자 ID
+     * @param model Model 객체
+     * @return 사용자 상세조회 페이지
+     */
+    @PostMapping("/userViewForm.do")
+    public String userViewForm(@RequestParam String userId, Model model) {
+        // userId 필수 검증
+        if (userId == null || userId.isEmpty()) {
+            return "redirect:/system/user/userListForm.do";
+        }
+        model.addAttribute("userId", userId);
+        
+        return "system/user/userViewForm";
+    }
+    
+    /**
+     * 사용자 상세 정보 조회 (POST + JSON)
+     * @param params 사용자 ID를 포함한 파라미터
+     * @return 사용자 상세 정보
      */
     @ResponseBody
-    @PostMapping("/checkUserId.do")
-    public ResponseEntity checkUserId(@RequestBody Map<String, String> params) {
-        Map<String, Object> resultMap = new HashMap<>();
-        
+    @PostMapping("/getUserDetail.do")
+    public ResponseEntity getUserDetail(@RequestBody Map<String, String> params) {
         try {
             String userId = params.get("userId");
             
-            // 입력값 검증
+            // userId 유효성 검증
             if (StringUtil.isEmpty(userId)) {
-                resultMap.put("duplicate", true);
-                return ApiResponseVO.apiResponse(resultMap, HttpStatus.BAD_REQUEST.value(), "사용자ID를 입력해주세요.");
+                return ApiResponseVO.apiResponse(null, HttpStatus.BAD_REQUEST.value(), "사용자 ID는 필수입니다.");
             }
             
-            // 중복 체크
-            boolean isDuplicate = userService.checkUserIdDuplicate(userId);
-            resultMap.put("duplicate", isDuplicate);
+            // 사용자 상세 정보 조회
+            UserVO userVO = userService.getUserDetail(userId);
             
-            String message = isDuplicate ? "이미 사용 중인 사용자ID입니다." : "사용 가능한 사용자ID입니다.";
-            return ApiResponseVO.apiResponse(resultMap, HttpStatus.OK.value(), message);
+            return ApiResponseVO.apiResponse(userVO, HttpStatus.OK.value(), "조회되었습니다.");
             
+        } catch (IllegalArgumentException e) {
+            return ApiResponseVO.apiResponse(null, HttpStatus.BAD_REQUEST.value(), e.getMessage());
         } catch (Exception e) {
-            log.error("사용자 ID 중복 확인 중 오류 발생", e);
-            resultMap.put("duplicate", true);
-            return ApiResponseVO.apiResponse(resultMap, HttpStatus.INTERNAL_SERVER_ERROR.value(), "중복 확인 중 오류가 발생했습니다.");
+            log.error("사용자 상세 정보 조회 중 오류 발생", e);
+            return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "사용자 정보 조회 중 오류가 발생했습니다.");
         }
     }
-    
+
     /**
      * 사용자 정보 등록
      * @param userVO 사용자 정보
@@ -205,6 +218,39 @@ public class UserController {
         } catch (Exception e) {
             log.error("사용자 등록 중 오류 발생", e);
             return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "사용자 등록 중 오류가 발생했습니다.");
+        }
+    }
+
+    /**
+     * 사용자 ID 중복 확인
+     * @param params 확인할 사용자 ID
+     * @return 중복 여부 결과 (duplicate: true/false)
+     */
+    @ResponseBody
+    @PostMapping("/checkUserId.do")
+    public ResponseEntity checkUserId(@RequestBody Map<String, String> params) {
+        Map<String, Object> resultMap = new HashMap<>();
+
+        try {
+            String userId = params.get("userId");
+
+            // 입력값 검증
+            if (StringUtil.isEmpty(userId)) {
+                resultMap.put("duplicate", true);
+                return ApiResponseVO.apiResponse(resultMap, HttpStatus.BAD_REQUEST.value(), "사용자ID를 입력해주세요.");
+            }
+
+            // 중복 체크
+            boolean isDuplicate = userService.checkUserIdDuplicate(userId);
+            resultMap.put("duplicate", isDuplicate);
+
+            String message = isDuplicate ? "이미 사용 중인 사용자ID입니다." : "사용 가능한 사용자ID입니다.";
+            return ApiResponseVO.apiResponse(resultMap, HttpStatus.OK.value(), message);
+
+        } catch (Exception e) {
+            log.error("사용자 ID 중복 확인 중 오류 발생", e);
+            resultMap.put("duplicate", true);
+            return ApiResponseVO.apiResponse(resultMap, HttpStatus.INTERNAL_SERVER_ERROR.value(), "중복 확인 중 오류가 발생했습니다.");
         }
     }
 }

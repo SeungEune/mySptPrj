@@ -117,5 +117,27 @@ public class UserServiceImpl implements UserService {
         
         return resultVO;
     }
+
+    /**
+     * 사용자 상세 정보를 조회한다
+     * @param userId 사용자 ID
+     * @return 사용자 상세 정보
+     */
+    @Override
+    public UserVO getUserDetail(String userId) throws Exception {
+        // userId 유효성 검증
+        if (StringUtil.isEmpty(userId)) {
+            throw new IllegalArgumentException("사용자 ID는 필수입니다.");
+        }
+        
+        // 사용자 상세 정보 조회
+        UserVO userVO = userDAO.selectUserDetail(userId);
+        
+        if (userVO == null) {
+            throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
+        }
+        
+        return userVO;
+    }
 }
 

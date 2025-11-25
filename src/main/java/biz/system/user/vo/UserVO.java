@@ -26,9 +26,12 @@ public class UserVO {
     private String userSttusCd;      // 사용자상태코드
     private String userSttusCdNm;    // 사용자상태코드명 (조인용)
     private String sexdstnCd;        // 성별코드
+    private String sexdstnCdNm;      // 성별코드명 (조인용)
     private String brthdy;           // 생년월일
     private String jbgdCd;           // 직급코드
+    private String jbgdCdNm;         // 직급코드명 (조인용)
     private String jssfcCd;          // 직책코드
+    private String jssfcCdNm;        // 직책코드명 (조인용)
     private String joinDe;           // 입사일자
     private String roleCd;           // 권한코드 (등록/수정 시 사용)
     private String roleNm;           // 권한명 (조인용)

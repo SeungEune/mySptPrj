@@ -77,5 +77,14 @@ public class UserDAO extends EgovAbstractMapper {
     public int deleteUserRole(String userId) {
         return delete("userDAO.deleteUserRole", userId);
     }
+
+    /**
+     * 사용자 상세 정보를 조회한다
+     * @param userId 사용자 ID
+     * @return 사용자 상세 정보
+     */
+    public UserVO selectUserDetail(String userId) {
+        return selectOne("userDAO.selectUserDetail", userId);
+    }
 }
 

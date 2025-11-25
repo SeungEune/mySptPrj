@@ -44,5 +44,13 @@ public interface UserService {
      * @throws Exception
      */
     ResultVO userSave(UserVO userVO) throws Exception;
+
+    /**
+     * 사용자 상세 정보를 조회한다
+     * @param userId 사용자 ID
+     * @return 사용자 상세 정보
+     * @throws Exception
+     */
+    UserVO getUserDetail(String userId) throws Exception;
 }
 

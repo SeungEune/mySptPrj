@@ -84,15 +84,15 @@ function fn_goRegisterForm() {
 }
 
 /**
- * 사용자 수정 화면으로 이동
+ * 사용자 상세조회 화면으로 이동
  */
-function fn_goEditForm(userId) {
+function fn_goViewForm(userId) {
     if (Util.isEmpty(userId)) {
         MessageUtil.error('사용자 정보가 없습니다.');
         return;
     }
     
     const data = { userId: userId };
-    callModule.post(Util.getRequestUrl('/system/user/userForm.do'), data, 'GET');
+    callModule.post(Util.getRequestUrl('/system/user/userViewForm.do'), data);
 }
 

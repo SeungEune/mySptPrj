@@ -173,5 +173,48 @@
         OFFSET #{searchVO.offset}
     </select>
 
+    <!-- 사용자 상세 정보 조회 -->
+    <select id="selectUserDetail" parameterType="String" resultType="biz.system.user.vo.UserVO">
+        SELECT u.user_id,
+               u.user_nm,
+               u.email_adres,
+               u.moblphon_no,
+               u.dept_cd,
+               d.dept_nm,
+               u.user_sttus_cd,
+               c1.code_nm AS user_sttus_cd_nm,
+               u.sexdstn_cd,
+               c2.code_nm AS sexdstn_cd_nm,
+               TO_CHAR(u.brthdy, 'YYYY-MM-DD') AS brthdy,
+               u.jbgd_cd,
+               c3.code_nm AS jbgd_cd_nm,
+               u.jssfc_cd,
+               c4.code_nm AS jssfc_cd_nm,
+               TO_CHAR(u.join_de, 'YYYY-MM-DD') AS join_de,
+               TO_CHAR(u.password_change_de, 'YYYY-MM-DD') AS password_change_de,
+               TO_CHAR(u.last_login_dt, 'YYYY-MM-DD HH24:MI:SS') AS last_login_dt,
+               u.login_fail_co,
+               u.acnt_lock_yn,
+               u.use_yn,
+               u.register_id,
+               TO_CHAR(u.regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS regist_dt,
+               u.updusr_id,
+               TO_CHAR(u.updt_dt, 'YYYY-MM-DD HH24:MI:SS') AS updt_dt,
+               r.role_cd,
+               r.role_nm
+        FROM tb_user u
+        LEFT JOIN tb_dept d ON u.dept_cd = d.dept_cd
+        LEFT JOIN tb_cmmn_code_detail c1 ON u.user_sttus_cd = c1.code AND c1.code_id = 'USER_STTUS'
+        LEFT JOIN tb_cmmn_code_detail c2 ON u.sexdstn_cd = c2.code AND c2.code_id = 'SEXDSTN'
+        LEFT JOIN tb_cmmn_code_detail c3 ON u.jbgd_cd = c3.code AND c3.code_id = 'JGBD'
+        LEFT JOIN tb_cmmn_code_detail c4 ON u.jssfc_cd = c4.code AND c4.code_id = 'JSSFC'
+        LEFT JOIN (
+            SELECT ur.user_id, ur.role_cd, r.role_nm
+            FROM tb_user_role ur
+            INNER JOIN tb_role r ON ur.role_cd = r.role_cd
+        ) r ON u.user_id = r.user_id
+        WHERE u.user_id = #{userId}
+    </select>
+
 </mapper>
 
