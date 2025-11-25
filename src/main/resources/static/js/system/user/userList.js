@@ -61,12 +61,12 @@ function fn_searchData(pageNo) {
     const callback = function(result) {
         $('#userListBody').empty();
         
-        if (result.list && result.list.length > 0) {
-            $('#listTemplate').tmpl(result.list).appendTo('#userListBody');
-            setPagination(result.pagingVO, document.getElementById('paginationArea'), 'fn_searchData');
+        if (result && result.result && result.result.list && result.result.list.length > 0) {
+            $('#listTemplate').tmpl(result.result.list).appendTo('#userListBody');
+            setPagination(result.result.pagingVO, document.getElementById('paginationArea'), 'fn_searchData');
             
             // 전체 건수 표시
-            document.getElementById('totalCount').textContent = result.pagingVO.totalRecordCount;
+            document.getElementById('totalCount').textContent = result.result.pagingVO.totalRecordCount;
         } else {
             $('#emptyTemplate').tmpl().appendTo('#userListBody');
             document.getElementById('totalCount').textContent = '0';

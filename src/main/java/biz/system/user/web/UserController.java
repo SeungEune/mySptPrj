@@ -51,9 +51,7 @@ public class UserController {
      */
     @ResponseBody
     @PostMapping("/getList.do")
-    public ResponseEntity<Map<String, Object>> getList(@RequestBody UserVO userVO) {
-        Map<String, Object> resultMap = new HashMap<>();
-        
+    public ResponseEntity getList(@RequestBody UserVO userVO) {
         try {
             // 전체 건수 조회
             int totalCnt = userService.getUserListCnt(userVO);
@@ -71,15 +69,11 @@ public class UserController {
                 userVO.getSearchVO().getPageSize()
             );
             
-            resultMap.put("list", list);
-            resultMap.put("pagingVO", pagingVO);
-            resultMap.put("searchVO", userVO.getSearchVO());
-            
-            return ResponseEntity.ok(resultMap);
+            return ApiResponseVO.apiResponse(list, pagingVO);
             
         } catch (Exception e) {
             log.error("사용자 목록 조회 중 오류 발생", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
+            return ApiResponseVO.apiResponse(null, null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "사용자 목록 조회 중 오류가 발생했습니다.");
         }
     }
 
