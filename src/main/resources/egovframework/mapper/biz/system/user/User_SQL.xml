@@ -216,5 +216,14 @@
         WHERE u.user_id = #{userId}
     </select>
 
+    <!-- 사용자 삭제 (논리 삭제: use_yn='N') -->
+    <update id="deleteUser" parameterType="biz.system.user.vo.UserVO">
+        UPDATE tb_user
+           SET use_yn = 'N',
+               updusr_id = #{updusrId},
+               updt_dt = NOW()
+         WHERE user_id = #{userId}
+    </update>
+
 </mapper>
 

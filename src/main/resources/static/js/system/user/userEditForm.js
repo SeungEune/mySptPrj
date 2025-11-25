@@ -21,9 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
  * 초기화
  */
 function fn_init() {
-    // URL에서 userId 파라미터 추출
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('userId');
+    const userId = document.getElementById('userId').value;
     
     if (Util.isEmpty(userId)) {
         MessageUtil.error('사용자ID가 없습니다.');
@@ -40,11 +38,11 @@ function fn_init() {
  */
 function fn_loadUserInfo(userId) {
     const data = { userId: userId };
-    const url = Util.getRequestUrl('/system/user/getDetail.do');
+    const url = Util.getRequestUrl('/system/user/getUserDetail.do');
     
     callModule.call(url, data, function(result) {
-        if (result && result.vo) {
-            const vo = result.vo;
+        if (result && result.result) {
+            const vo = result.result;
             
             // 기본 정보 설정
             document.getElementById('userId').value = vo.userId || '';
@@ -68,13 +66,18 @@ function fn_loadUserInfo(userId) {
             if (vo.jssfcCd) {
                 document.getElementById('jssfcCd').value = vo.jssfcCd;
             }
+            if (vo.roleCd) {
+                document.getElementById('roleCd').value = vo.roleCd;
+            }
             
             // 라디오 버튼 선택
             if (vo.useYn) {
-                document.querySelector(`input[name="useYn"][value="${vo.useYn}"]`).checked = true;
+                const useYnRadio = document.querySelector(`input[name="useYn"][value="${vo.useYn}"]`);
+                if (useYnRadio) useYnRadio.checked = true;
             }
             if (vo.acntLockYn) {
-                document.querySelector(`input[name="acntLockYn"][value="${vo.acntLockYn}"]`).checked = true;
+                const acntLockYnRadio = document.querySelector(`input[name="acntLockYn"][value="${vo.acntLockYn}"]`);
+                if (acntLockYnRadio) acntLockYnRadio.checked = true;
             }
             
             // 날짜 필드 설정
@@ -105,16 +108,18 @@ function fn_loadUserInfo(userId) {
  */
 function fn_showPasswordInput() {
     const passwordInput = document.getElementById('password');
+    const passwordConfirmInput = document.getElementById('passwordConfirm');
     const changeBtn = document.getElementById('changePasswordBtn');
     
     if (passwordInput.style.display === 'none') {
-        passwordInput.style.display = 'block';
-        passwordInput.required = true;
+        passwordInput.style.display = 'inline-block';
+        passwordConfirmInput.style.display = 'inline-block';
         changeBtn.textContent = '취소';
     } else {
         passwordInput.style.display = 'none';
+        passwordConfirmInput.style.display = 'none';
         passwordInput.value = '';
-        passwordInput.required = false;
+        passwordConfirmInput.value = '';
         changeBtn.textContent = '비밀번호 변경';
     }
 }
@@ -139,8 +144,10 @@ function fn_updateUser(event) {
     const userId = document.getElementById('userId').value.trim();
     const userNm = document.getElementById('userNm').value.trim();
     const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('passwordConfirm').value;
     const userSttusCd = document.getElementById('userSttusCd').value;
-    const useYn = document.querySelector('input[name="useYn"]:checked').value;
+    const roleCd = document.getElementById('roleCd').value;
+    const useYnChecked = document.querySelector('input[name="useYn"]:checked');
     
     // 필수값 검증
     if (Util.isEmpty(userId)) {
@@ -158,6 +165,28 @@ function fn_updateUser(event) {
         return;
     }
     
+    if (Util.isEmpty(roleCd)) {
+        MessageUtil.error('권한을 선택해주세요.');
+        return;
+    }
+    
+    if (!useYnChecked) {
+        MessageUtil.error('사용여부를 선택해주세요.');
+        return;
+    }
+    
+    // 비밀번호 변경 시 검증
+    if (!Util.isEmpty(password)) {
+        if (Util.isEmpty(passwordConfirm)) {
+            MessageUtil.error('비밀번호 확인을 입력해주세요.');
+            return;
+        }
+        if (password !== passwordConfirm) {
+            MessageUtil.error('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+            return;
+        }
+    }
+    
     // 폼 데이터 수집
     const formData = {
         userId: userId,
@@ -166,21 +195,23 @@ function fn_updateUser(event) {
         moblphonNo: document.getElementById('moblphonNo').value.trim(),
         deptCd: document.getElementById('deptCd').value,
         userSttusCd: userSttusCd,
-        sexdstnCd: document.querySelector('input[name="sexdstnCd"]:checked') ? document.querySelector('input[name="sexdstnCd"]:checked').value : '',
+        roleCd: roleCd,
+        sexdstnCd: document.getElementById('sexdstnCd').value,
         brthdy: document.getElementById('brthdy').value,
         jbgdCd: document.getElementById('jbgdCd').value,
         jssfcCd: document.getElementById('jssfcCd').value,
         joinDe: document.getElementById('joinDe').value,
-        acntLockYn: document.querySelector('input[name="acntLockYn"]:checked').value,
-        useYn: useYn
+        acntLockYn: document.querySelector('input[name="acntLockYn"]:checked') ? document.querySelector('input[name="acntLockYn"]:checked').value : 'N',
+        useYn: useYnChecked.value
     };
     
     // 비밀번호 변경이 있는 경우에만 추가
     if (!Util.isEmpty(password)) {
         formData.userPassword = password;
+        formData.passwordConfirm = passwordConfirm;
     }
     
-    const url = Util.getRequestUrl('/system/user/userSave.do');
+    const url = Util.getRequestUrl('/system/user/updateUser.do');
     
     callModule.call(url, formData, function(result) {
         if (result && result.result && result.result.success) {
@@ -204,19 +235,19 @@ function fn_deleteUser() {
         return;
     }
     
-    MessageUtil.confirm('정말 삭제하시겠습니까?', function() {
+    // confirmed는 확인 버튼을 눌렀을 때만 callback 실행
+    MessageUtil.confirmed('정말 삭제하시겠습니까?', function() {
         const data = { userId: userId };
-        const url = Util.getRequestUrl('/system/user/delete.do');
+        const url = Util.getRequestUrl('/system/user/deleteUser.do');
         
         callModule.call(url, data, function(result) {
-            if (result && result.resultValue === true) {
-                MessageUtil.success(result.message || '삭제가 완료되었습니다.', function() {
+            if (result && result.result && result.result.success) {
+                MessageUtil.success(result.status.message || '삭제가 완료되었습니다.', function() {
                     location.href = '/system/user/userListForm.do';
                 });
             } else {
-                MessageUtil.error(result.message || '삭제에 실패하였습니다.');
+                MessageUtil.error((result && result.status && result.status.message) || '삭제에 실패하였습니다.');
             }
         }, true, 'POST');
     });
 }
-

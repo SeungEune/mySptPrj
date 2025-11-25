@@ -86,5 +86,18 @@ public class UserDAO extends EgovAbstractMapper {
     public UserVO selectUserDetail(String userId) {
         return selectOne("userDAO.selectUserDetail", userId);
     }
+
+    /**
+     * 사용자를 삭제한다 (논리 삭제: use_yn='N')
+     * @param userId 사용자 ID
+     * @param updusrId 수정자 ID
+     * @return 삭제 건수
+     */
+    public int deleteUser(String userId, String updusrId) {
+        UserVO userVO = new UserVO();
+        userVO.setUserId(userId);
+        userVO.setUpdusrId(updusrId);
+        return update("userDAO.deleteUser", userVO);
+    }
 }
 

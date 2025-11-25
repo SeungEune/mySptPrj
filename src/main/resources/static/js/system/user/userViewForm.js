@@ -91,8 +91,8 @@ function fn_goEditForm() {
         MessageUtil.error('사용자 정보가 없습니다.');
         return;
     }
-    
+
     const data = { userId: userId };
-    callModule.post(Util.getRequestUrl('/system/user/userForm.do'), data);
+    callModule.post(Util.getRequestUrl('/system/user/userEditForm.do'), data, 'post');
 }
 

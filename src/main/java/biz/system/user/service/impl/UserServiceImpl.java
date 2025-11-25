@@ -119,6 +119,109 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 사용자 정보를 수정한다
+     * @param userVO 사용자 정보
+     * @return 처리 결과
+     * @throws Exception
+     */
+    @Override
+    public ResultVO updateUser(UserVO userVO) throws Exception {
+        ResultVO resultVO = new ResultVO();
+        
+        try {
+            // 로그인 사용자 정보
+            String loginUserId = SessionUtil.getUserId();
+            
+            // 사용자 존재 여부 확인
+            UserVO existingUser = userDAO.selectUserDetail(userVO.getUserId());
+            if (existingUser == null) {
+                resultVO.setResultValue(false);
+                resultVO.setMessage("존재하지 않는 사용자입니다.");
+                return resultVO;
+            }
+            
+            // 비밀번호 변경 시 암호화
+            if (!StringUtil.isEmpty(userVO.getUserPassword())) {
+                String encryptedPassword = EgovFileScrty.encryptPassword(userVO.getUserPassword(), userVO.getUserId());
+                userVO.setUserPassword(encryptedPassword);
+            }
+            
+            // 수정자 정보 설정
+            userVO.setUpdusrId(loginUserId);
+            
+            // 사용자 정보 수정
+            int updateResult = userDAO.updateUser(userVO);
+            if(updateResult > 0){
+                // 기존 권한 삭제 후 새로 등록
+                userDAO.deleteUserRole(userVO.getUserId());
+                userVO.setRegisterId(loginUserId);
+                userDAO.insertUserRole(userVO);
+                
+                resultVO.setResultValue(true);
+                resultVO.setMessage("사용자 정보가 수정되었습니다.");
+            } else {
+                resultVO.setResultValue(false);
+                resultVO.setMessage("사용자 수정에 실패했습니다.");
+            }
+            
+        } catch (Exception e) {
+            log.error("사용자 수정 중 오류 발생", e);
+            resultVO.setResultValue(false);
+            resultVO.setMessage("사용자 수정 중 오류가 발생했습니다.");
+        }
+        
+        return resultVO;
+    }
+
+    /**
+     * 사용자를 삭제한다 (논리 삭제: use_yn='N')
+     * @param userId 사용자 ID
+     * @return 처리 결과
+     * @throws Exception
+     */
+    @Override
+    public ResultVO deleteUser(String userId) throws Exception {
+        ResultVO resultVO = new ResultVO();
+        
+        try {
+            // 로그인 사용자 정보
+            String loginUserId = SessionUtil.getUserId();
+            
+            // 사용자 존재 여부 확인
+            UserVO existingUser = userDAO.selectUserDetail(userId);
+            if (existingUser == null) {
+                resultVO.setResultValue(false);
+                resultVO.setMessage("존재하지 않는 사용자입니다.");
+                return resultVO;
+            }
+            
+            // 본인 삭제 방지
+            if (userId.equals(loginUserId)) {
+                resultVO.setResultValue(false);
+                resultVO.setMessage("본인 계정은 삭제할 수 없습니다.");
+                return resultVO;
+            }
+            
+            // 논리 삭제 (use_yn='N')
+            int deleteResult = userDAO.deleteUser(userId, loginUserId);
+            if(deleteResult > 0){
+                resultVO.setResultValue(true);
+                resultVO.setMessage("사용자가 삭제되었습니다.");
+            } else {
+                resultVO.setResultValue(false);
+                resultVO.setMessage("사용자 삭제에 실패했습니다.");
+            }
+            
+        } catch (Exception e) {
+            log.error("사용자 삭제 중 오류 발생", e);
+            resultVO.setResultValue(false);
+            resultVO.setMessage("사용자 삭제 중 오류가 발생했습니다.");
+        }
+        
+        return resultVO;
+    }
+
+    /**
      * 사용자 상세 정보를 조회한다
      * @param userId 사용자 ID
      * @return 사용자 상세 정보

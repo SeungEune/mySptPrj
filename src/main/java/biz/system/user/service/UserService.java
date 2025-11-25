@@ -46,6 +46,22 @@ public interface UserService {
     ResultVO userSave(UserVO userVO) throws Exception;
 
     /**
+     * 사용자 정보를 수정한다
+     * @param userVO 사용자 정보
+     * @return 처리 결과
+     * @throws Exception
+     */
+    ResultVO updateUser(UserVO userVO) throws Exception;
+
+    /**
+     * 사용자를 삭제한다 (논리 삭제: use_yn='N')
+     * @param userId 사용자 ID
+     * @return 처리 결과
+     * @throws Exception
+     */
+    ResultVO deleteUser(String userId) throws Exception;
+
+    /**
      * 사용자 상세 정보를 조회한다
      * @param userId 사용자 ID
      * @return 사용자 상세 정보
