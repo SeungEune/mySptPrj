@@ -97,7 +97,8 @@
                     TO_CHAR(regist_dt, 'YYYY-MM-DD') AS regist_dt,
                     tree_level,
                     path,
-                    (SELECT COUNT(1) FROM tb_dept WHERE upper_dept_cd = dept_tree.dept_cd AND use_yn = 'Y') AS has_children
+                    (SELECT COUNT(1) FROM tb_dept WHERE upper_dept_cd = dept_tree.dept_cd AND use_yn = 'Y') AS has_children,
+                    (SELECT COUNT(1) FROM tb_user WHERE dept_cd = dept_tree.dept_cd AND use_yn = 'Y') AS member_cnt
                 FROM dept_tree
                 ORDER BY path, dept_order
             </when>
@@ -147,7 +148,8 @@
                     TO_CHAR(regist_dt, 'YYYY-MM-DD') AS regist_dt,
                     tree_level,
                     path,
-                    (SELECT COUNT(1) FROM tb_dept WHERE upper_dept_cd = dept_tree.dept_cd AND use_yn = 'Y') AS has_children
+                    (SELECT COUNT(1) FROM tb_dept WHERE upper_dept_cd = dept_tree.dept_cd AND use_yn = 'Y') AS has_children,
+                    (SELECT COUNT(1) FROM tb_user WHERE dept_cd = dept_tree.dept_cd AND use_yn = 'Y') AS member_cnt
                 FROM dept_tree
                 ORDER BY path, dept_order
             </otherwise>
@@ -168,6 +170,8 @@
              , TO_CHAR(d.regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS regist_dt
              , d.updusr_id
              , TO_CHAR(d.updt_dt, 'YYYY-MM-DD HH24:MI:SS') AS updt_dt
+             , (SELECT COUNT(1) FROM tb_user WHERE dept_cd = d.dept_cd AND use_yn = 'Y') AS member_cnt
+             , (SELECT COUNT(1) FROM tb_dept WHERE upper_dept_cd = d.dept_cd AND use_yn = 'Y') AS has_children
           FROM tb_dept d
           LEFT OUTER JOIN tb_dept ud ON d.upper_dept_cd = ud.dept_cd
          WHERE d.dept_cd = #{deptCd}
@@ -227,13 +231,11 @@
     -->
 
     <!-- 부서 코드 중복 확인 -->
-    <!--
     <select id="checkDeptCodeDuplicate" parameterType="String" resultType="int">
         SELECT COUNT(1)
           FROM tb_dept
          WHERE dept_cd = #{deptCd}
     </select>
-    -->
 
 </mapper>
 

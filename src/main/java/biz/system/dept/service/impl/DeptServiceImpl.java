@@ -56,6 +56,18 @@ public class DeptServiceImpl extends EgovAbstractServiceImpl implements DeptServ
         return deptDAO.selectDeptDetail(deptCd);
     }
 
-    // 추후 부서 관리 기능 구현 시 추가될 메서드들
+    /**
+     * 부서코드 중복 여부를 확인한다
+     * @param deptCd 부서코드
+     * @return 중복이면 true, 사용 가능하면 false
+     * @throws Exception
+     */
+    @Override
+    public boolean checkDeptCodeDuplicate(String deptCd) throws Exception {
+        // DB에서 해당 deptCd가 존재하는지 확인
+        int count = deptDAO.checkDeptCodeDuplicate(deptCd);
+        // 1개 이상 존재하면 중복, 0개면 사용 가능
+        return count > 0;
+    }
 }
 

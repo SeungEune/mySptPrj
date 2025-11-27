@@ -36,9 +36,12 @@ public interface DeptService {
      */
     DeptVO getDeptDetail(String deptCd) throws Exception;
 
-    // 추후 부서 관리 기능 구현 시 사용할 메서드들 (인터페이스만 정의)
-    // ResultVO saveDept(DeptVO deptVO) throws Exception;
-    // ResultVO deleteDept(String deptCd) throws Exception;
-    // boolean checkDeptCodeDuplicate(String deptCd) throws Exception;
+    /**
+     * 부서코드 중복 여부를 확인한다
+     * @param deptCd 부서코드
+     * @return 중복이면 true, 사용 가능하면 false
+     * @throws Exception
+     */
+    boolean checkDeptCodeDuplicate(String deptCd) throws Exception;
 }
 

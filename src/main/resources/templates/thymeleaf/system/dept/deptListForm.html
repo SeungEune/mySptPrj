@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{cmm/layout/subLayout :: layout (
+            contentLink=~{::contentLink},
+            script=~{::script},
+            content=~{::content})}">
+
+<th:block th:fragment="contentLink">
+    <link rel="stylesheet" th:href="@{/css/system/dept/deptList.css}" />
+</th:block>
+
+<th:block th:fragment="script">
+    <script th:src="@{/js/system/dept/deptList.js}"></script>
+</th:block>
+
+<main th:fragment="content">
+    <div class="wrap-inner">
+        <section class="sub-title">
+            <h2 class="txt-h2">부서 관리</h2>
+        </section>
+
+        <section class="sub-contents">
+            <!-- 좌우 분할 레이아웃 -->
+            <div class="dept-list-container">
+                <!-- 좌측: 부서 트리 영역 -->
+                <div class="dept-tree-section">
+                    <div class="item-box">
+                        <!-- 검색 영역 -->
+                        <div class="dept-search-area">
+                            <div class="item-horizontal-box fx-wrap g10">
+                                <div class="input-box flex-1">
+                                    <input type="text" id="searchKeyword" name="searchKeyword" class="input" 
+                                           placeholder="부서명을 입력하세요">
+                                </div>
+                                <div class="select-box w120px">
+                                    <select class="select" id="useYnFilter" name="useYnFilter">
+                                        <option value="">전체</option>
+                                        <option value="Y">사용</option>
+                                        <option value="N">미사용</option>
+                                    </select>
+                                </div>
+                                <button type="button" class="primary-btn" id="searchBtn">검색</button>
+                                <button type="button" class="outline-btn" id="resetBtn">초기화</button>
+                            </div>
+                        </div>
+
+                        <!-- 트리 컨테이너 -->
+                        <div class="dept-tree-container">
+                            <div class="dept-tree-header">
+                                <span class="txt-body-sm">부서 목록</span>
+                                <span class="txt-body-sm" id="treeTotalCount">(0개)</span>
+                            </div>
+                            <div class="dept-tree-list" id="deptTreeList">
+                                <div class="dept-tree-loading">부서 정보를 불러오는 중...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 우측: 부서 상세 정보 영역 -->
+                <div class="dept-detail-section">
+                    <div class="item-box">
+                        <!-- 상단 툴바 -->
+                        <div class="item-horizontal-box jst-end g10 mb-20">
+                            <button type="button" class="primary-btn" id="registerBtn">신규 등록</button>
+                        </div>
+
+                        <!-- 상세 정보 영역 -->
+                        <div id="deptDetailArea" class="dept-detail-area">
+                            <div class="dept-detail-empty">
+                                <p class="txt-body">부서를 선택하세요</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+</html>
+
