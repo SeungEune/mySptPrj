@@ -1,6 +1,7 @@
 package biz.system.dept.service;
 
 import biz.system.dept.vo.DeptVO;
+import egovframework.com.cmm.response.ResultVO;
 
 import java.util.List;
 
@@ -43,5 +44,21 @@ public interface DeptService {
      * @throws Exception
      */
     boolean checkDeptCodeDuplicate(String deptCd) throws Exception;
+
+    /**
+     * 부서 등록/수정 처리
+     * @param deptVO 부서 정보
+     * @return 처리 결과
+     * @throws Exception
+     */
+    ResultVO saveDept(DeptVO deptVO) throws Exception;
+
+    /**
+     * 부서 삭제 처리
+     * @param deptCd 부서코드
+     * @return 처리 결과
+     * @throws Exception
+     */
+    ResultVO deleteDept(String deptCd) throws Exception;
 }
 

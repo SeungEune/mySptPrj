@@ -7,9 +7,11 @@
 
 <th:block th:fragment="contentLink">
     <link rel="stylesheet" th:href="@{/css/system/dept/deptList.css}" />
+    <link rel="stylesheet" th:href="@{/css/system/dept/deptSearchModal.css}" />
 </th:block>
 
 <th:block th:fragment="script">
+    <script th:src="@{/js/system/dept/deptSearchModal.js}"></script>
     <script th:src="@{/js/system/dept/deptList.js}"></script>
 </th:block>
 
@@ -32,15 +34,7 @@
                                     <input type="text" id="searchKeyword" name="searchKeyword" class="input" 
                                            placeholder="부서명을 입력하세요">
                                 </div>
-                                <div class="select-box w120px">
-                                    <select class="select" id="useYnFilter" name="useYnFilter">
-                                        <option value="">전체</option>
-                                        <option value="Y">사용</option>
-                                        <option value="N">미사용</option>
-                                    </select>
-                                </div>
                                 <button type="button" class="primary-btn" id="searchBtn">검색</button>
-                                <button type="button" class="outline-btn" id="resetBtn">초기화</button>
                             </div>
                         </div>
 
@@ -76,7 +70,258 @@
             </div>
         </section>
     </div>
+    
+    <!-- 부서 검색 모달 -->
+    <th:block th:insert="~{system/dept/deptSearchModal :: deptSearchModal}"></th:block>
+    
+    <!-- 템플릿: 조회 모드 -->
+    <template id="deptViewTemplate">
+        <div class="dept-detail-content">
+            <!-- 기본 정보 -->
+            <div class="table-box type01">
+                <div class="table-inner">
+                    <table class="table-type01 form-table dept-detail-table">
+                        <caption class="table-caption">부서 기본 정보</caption>
+                        <colgroup>
+                            <col width="30%"/>
+                            <col width="70%"/>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th>부서코드</th>
+                            <td data-bind="deptCd">-</td>
+                        </tr>
+                        <tr>
+                            <th>부서명</th>
+                            <td data-bind="deptNm">-</td>
+                        </tr>
+                        <tr>
+                            <th>상위부서</th>
+                            <td data-bind="upperDeptNm">-</td>
+                        </tr>
+                        <tr>
+                            <th>부서레벨</th>
+                            <td data-bind="deptLevel">-</td>
+                        </tr>
+                        <tr>
+                            <th>부서순서</th>
+                            <td data-bind="deptOrder">-</td>
+                        </tr>
+                        <tr>
+                            <th>부서담당자</th>
+                            <td data-bind="deptMngrId">-</td>
+                        </tr>
+                        <tr>
+                            <th>사용여부</th>
+                            <td data-bind="useYn">-</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- 통계 정보 -->
+            <div class="dept-stat-info">
+                <div class="stat-item">
+                    <span class="stat-label">소속 인원수</span>
+                    <span class="stat-value" data-bind="memberCnt">0명</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">하위 부서 수</span>
+                    <span class="stat-value" data-bind="hasChildren">0개</span>
+                </div>
+            </div>
+            
+            <!-- 시스템 정보 -->
+            <div class="table-box type01 mt-20">
+                <div class="table-inner">
+                    <table class="table-type01 form-table dept-detail-table">
+                        <caption class="table-caption">시스템 정보</caption>
+                        <colgroup>
+                            <col width="30%"/>
+                            <col width="70%"/>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th>등록자ID</th>
+                            <td class="readonly-field" data-bind="registerId">-</td>
+                        </tr>
+                        <tr>
+                            <th>등록일시</th>
+                            <td class="readonly-field" data-bind="registDt">-</td>
+                        </tr>
+                        <tr>
+                            <th>수정자ID</th>
+                            <td class="readonly-field" data-bind="updusrId">-</td>
+                        </tr>
+                        <tr>
+                            <th>수정일시</th>
+                            <td class="readonly-field" data-bind="updtDt">-</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- 액션 버튼 -->
+            <div class="dept-detail-actions">
+                <button type="button" class="outline-btn" data-action="edit">수정</button>
+                <button type="button" class="outline-btn-Bck" data-action="delete">삭제</button>
+            </div>
+        </div>
+    </template>
+    
+    <!-- 템플릿: 등록 모드 -->
+    <template id="deptRegisterTemplate">
+        <div class="dept-mode-form">
+            <form id="deptForm">
+                <div class="table-box type01">
+                    <div class="table-inner">
+                        <table class="table-type01 form-table dept-detail-table">
+                            <caption class="table-caption">부서 등록</caption>
+                            <colgroup>
+                                <col width="30%"/>
+                                <col width="70%"/>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th><label for="deptCdNumber">부서코드 <span class="required">*</span></label></th>
+                                <td>
+                                    <div class="item-horizontal-box g10 align-items-center">
+                                        <span class="dept-code-prefix">DEPT_</span>
+                                        <input type="text" id="deptCdNumber" name="deptCdNumber" class="input" 
+                                               placeholder="숫자만 입력" required maxlength="10">
+                                        <button type="button" class="outline-btn" onclick="fn_checkDeptCodeDuplicate()">중복확인</button>
+                                    </div>
+                                    <input type="hidden" id="deptCd" name="deptCd">
+                                    <span id="deptCdCheckMsg" class="form-msg"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="deptNm">부서명 <span class="required">*</span></label></th>
+                                <td>
+                                    <input type="text" id="deptNm" name="deptNm" class="input" 
+                                           placeholder="부서명을 입력하세요" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="upperDeptCd">상위부서</label></th>
+                                <td>
+                                    <div class="item-horizontal-box g10">
+                                        <input type="text" id="upperDeptCd" name="upperDeptCd" class="input" readonly>
+                                        <input type="hidden" id="upperDeptCdHidden" name="upperDeptCdHidden">
+                                        <input type="hidden" id="upperDeptNm" name="upperDeptNm">
+                                        <button type="button" class="outline-btn" onclick="fn_openDeptSearchModal()">부서 선택</button>
+                                        <button type="button" class="outline-btn-Bck" onclick="fn_clearUpperDept()">초기화</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="deptOrder">부서순서</label></th>
+                                <td>
+                                    <input type="number" id="deptOrder" name="deptOrder" class="input" 
+                                           placeholder="1" value="1" min="1">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="useYn">사용여부</label></th>
+                                <td>
+                                    <div class="radio-group">
+                                        <label class="radio-label">
+                                            <input type="radio" name="useYn" value="Y" checked> 사용
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="useYn" value="N"> 미사용
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="dept-form-actions">
+                    <button type="button" class="primary-btn" onclick="fn_saveDept()">저장</button>
+                    <button type="button" class="outline-btn" onclick="fn_cancelForm()">취소</button>
+                </div>
+            </form>
+        </div>
+    </template>
+    
+    <!-- 템플릿: 수정 모드 -->
+    <template id="deptEditTemplate">
+        <div class="dept-mode-form">
+            <form id="deptForm">
+                <input type="hidden" id="deptCd" name="deptCd" data-bind="deptCd">
+                
+                <div class="table-box type01">
+                    <div class="table-inner">
+                        <table class="table-type01 form-table dept-detail-table">
+                            <caption class="table-caption">부서 수정</caption>
+                            <colgroup>
+                                <col width="30%"/>
+                                <col width="70%"/>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th>부서코드</th>
+                                <td class="readonly-field" data-bind="deptCd">-</td>
+                            </tr>
+                            <tr>
+                                <th><label for="deptNm">부서명 <span class="required">*</span></label></th>
+                                <td>
+                                    <input type="text" id="deptNm" name="deptNm" class="input" 
+                                           data-bind="deptNm" placeholder="부서명을 입력하세요" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="upperDeptCd">상위부서</label></th>
+                                <td>
+                                    <div class="item-horizontal-box g10">
+                                        <input type="text" id="upperDeptCd" name="upperDeptCd" class="input" 
+                                               data-bind="upperDeptNm" readonly>
+                                        <input type="hidden" id="upperDeptCdHidden" name="upperDeptCd" data-bind="upperDeptCd">
+                                        <input type="hidden" id="upperDeptNm" name="upperDeptNm" data-bind="upperDeptNm">
+                                        <button type="button" class="outline-btn" onclick="fn_openDeptSearchModal()">부서 선택</button>
+                                        <button type="button" class="outline-btn-Bck" onclick="fn_clearUpperDept()">초기화</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="deptOrder">부서순서</label></th>
+                                <td>
+                                    <input type="number" id="deptOrder" name="deptOrder" class="input" 
+                                           data-bind="deptOrder" min="1">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="useYn">사용여부</label></th>
+                                <td>
+                                    <div class="radio-group">
+                                        <label class="radio-label">
+                                            <input type="radio" name="useYn" value="Y" data-bind-radio="useYn-Y"> 사용
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="useYn" value="N" data-bind-radio="useYn-N"> 미사용
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="dept-form-actions">
+                    <button type="button" class="primary-btn" onclick="fn_saveDept()">저장</button>
+                    <button type="button" class="outline-btn" onclick="fn_cancelForm()">취소</button>
+                </div>
+            </form>
+        </div>
+    </template>
 </main>
 
 </html>
+
 

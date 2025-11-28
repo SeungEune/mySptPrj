@@ -4,7 +4,7 @@ import biz.system.dept.service.DeptService;
 import biz.system.dept.vo.DeptVO;
 import biz.util.StringUtil;
 import egovframework.com.cmm.response.ApiResponseVO;
-import egovframework.com.cmm.response.PagingVO;
+import egovframework.com.cmm.response.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -151,6 +151,71 @@ public class DeptController {
         } catch (Exception e) {
             log.error("부서 목록 조회 중 오류 발생", e);
             return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "조회 중 오류가 발생했습니다.");
+        }
+    }
+
+    /**
+     * 부서 등록/수정 처리 (POST + JSON)
+     * @param deptVO 부서 정보
+     * @return 처리 결과
+     */
+    @ResponseBody
+    @PostMapping("/saveDept.do")
+    public ResponseEntity saveDept(@RequestBody DeptVO deptVO) {
+        try {
+            ResultVO resultVO = deptService.saveDept(deptVO);
+            
+            Map<String, Object> resultMap = new HashMap<>();
+            if (resultVO.isResultValue()) {
+                resultMap.put("success", true);
+                return ApiResponseVO.apiResponse(resultMap, HttpStatus.OK.value(), resultVO.getMessage());
+            } else {
+                resultMap.put("success", false);
+                return ApiResponseVO.apiResponse(resultMap, HttpStatus.BAD_REQUEST.value(), resultVO.getMessage());
+            }
+            
+        } catch (Exception e) {
+            log.error("부서 저장 중 오류 발생", e);
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("success", false);
+            return ApiResponseVO.apiResponse(resultMap, HttpStatus.INTERNAL_SERVER_ERROR.value(), "부서 저장 중 오류가 발생했습니다.");
+        }
+    }
+
+    /**
+     * 부서 삭제 처리 (POST + JSON)
+     * @param params 부서코드를 포함한 파라미터
+     * @return 처리 결과
+     */
+    @ResponseBody
+    @PostMapping("/deleteDept.do")
+    public ResponseEntity deleteDept(@RequestBody Map<String, String> params) {
+        try {
+            String deptCd = params.get("deptCd");
+            
+            // deptCd 유효성 검증
+            if (StringUtil.isEmpty(deptCd)) {
+                Map<String, Object> resultMap = new HashMap<>();
+                resultMap.put("success", false);
+                return ApiResponseVO.apiResponse(resultMap, HttpStatus.BAD_REQUEST.value(), "부서코드는 필수입니다.");
+            }
+            
+            ResultVO resultVO = deptService.deleteDept(deptCd);
+            
+            Map<String, Object> resultMap = new HashMap<>();
+            if (resultVO.isResultValue()) {
+                resultMap.put("success", true);
+                return ApiResponseVO.apiResponse(resultMap, HttpStatus.OK.value(), resultVO.getMessage());
+            } else {
+                resultMap.put("success", false);
+                return ApiResponseVO.apiResponse(resultMap, HttpStatus.BAD_REQUEST.value(), resultVO.getMessage());
+            }
+            
+        } catch (Exception e) {
+            log.error("부서 삭제 중 오류 발생", e);
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("success", false);
+            return ApiResponseVO.apiResponse(resultMap, HttpStatus.INTERNAL_SERVER_ERROR.value(), "부서 삭제 중 오류가 발생했습니다.");
         }
     }
 }

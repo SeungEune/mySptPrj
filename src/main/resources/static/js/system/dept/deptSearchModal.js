@@ -24,7 +24,10 @@ const DeptSearchModal = {
      */
     close: function() {
         document.getElementById('deptSearchModal').classList.remove('show');
-        document.getElementById('deptTreeList').innerHTML = '<div class="dept-tree-loading">부서 정보를 불러오는 중...</div>';
+        const modalTreeList = document.getElementById('modalDeptTreeList');
+        if (modalTreeList) {
+            modalTreeList.innerHTML = '<div class="dept-tree-loading">부서 정보를 불러오는 중...</div>';
+        }
         this.callback = null;
         this.deptData = [];
     },
@@ -47,10 +50,26 @@ const DeptSearchModal = {
         callModule.call(url, data, (result) => {
             if (result && result.result && result.result.list) {
                 this.deptData = result.result.list;
+                
+                // 검색 키워드가 있을 때 부모 노드 자동 확장
+                if (!Util.isEmpty(deptNm)) {
+                    const parentPaths = this.collectParentPaths(this.deptData);
+                    this.expandedNodes = parentPaths;
+                } else {
+                    // 검색 키워드가 없으면 확장 상태 초기화
+                    this.expandedNodes = [];
+                }
+                
                 this.renderTree(this.deptData);
             } else {
-                document.getElementById('deptTreeList').innerHTML = '<div class="dept-tree-empty">조회 결과가 없습니다.</div>';
-                document.getElementById('deptTotalCount').textContent = '전체 0개';
+                const modalTreeList = document.getElementById('modalDeptTreeList');
+                const modalTotalCount = document.getElementById('modalDeptTotalCount');
+                if (modalTreeList) {
+                    modalTreeList.innerHTML = '<div class="dept-tree-empty">조회 결과가 없습니다.</div>';
+                }
+                if (modalTotalCount) {
+                    modalTotalCount.textContent = '전체 0개';
+                }
             }
         }, true, 'POST');
     },
@@ -60,12 +79,20 @@ const DeptSearchModal = {
      * @param deptList 부서 목록
      */
     renderTree: function(deptList) {
-        const treeContainer = document.getElementById('deptTreeList');
+        const treeContainer = document.getElementById('modalDeptTreeList');
+        if (!treeContainer) {
+            console.error('모달 트리 컨테이너를 찾을 수 없습니다.');
+            return;
+        }
+        
         treeContainer.innerHTML = '';
         
         if (!deptList || deptList.length === 0) {
             treeContainer.innerHTML = '<div class="dept-tree-empty">조회 결과가 없습니다.</div>';
-            document.getElementById('deptTotalCount').textContent = '전체 0개';
+            const modalTotalCount = document.getElementById('modalDeptTotalCount');
+            if (modalTotalCount) {
+                modalTotalCount.textContent = '전체 0개';
+            }
             return;
         }
         
@@ -78,7 +105,10 @@ const DeptSearchModal = {
         });
         
         // 전체 개수 표시
-        document.getElementById('deptTotalCount').textContent = `전체 ${deptList.length}개`;
+        const modalTotalCount = document.getElementById('modalDeptTotalCount');
+        if (modalTotalCount) {
+            modalTotalCount.textContent = `전체 ${deptList.length}개`;
+        }
     },
     
     /**
@@ -168,7 +198,11 @@ const DeptSearchModal = {
      * @param deptCd 부서코드
      */
     toggleNode: function(deptCd) {
-        const item = document.querySelector(`[data-dept-cd="${deptCd}"]`);
+        // 모달 컨테이너 내부에서만 검색
+        const modalContainer = document.getElementById('deptSearchModal');
+        if (!modalContainer) return;
+        
+        const item = modalContainer.querySelector(`[data-dept-cd="${deptCd}"]`);
         if (!item) return;
         
         const childrenContainer = item.querySelector('.dept-tree-children');
@@ -198,6 +232,55 @@ const DeptSearchModal = {
             if (!this.expandedNodes.includes(deptCd)) {
                 this.expandedNodes.push(deptCd);
             }
+        }
+    },
+    
+    /**
+     * 검색 결과에 포함된 부서들의 모든 부모 노드 경로 수집
+     * @param deptList 서버에서 반환된 부서 목록 (검색 결과 + 부모 경로 포함)
+     * @return 확장해야 할 부서 코드 배열
+     */
+    collectParentPaths: function(deptList) {
+        if (!deptList || deptList.length === 0) {
+            return [];
+        }
+        
+        const expandedSet = new Set();
+        
+        // 검색 결과에 포함된 부서들 중 2뎁스 이상 부서 찾기 (treeLevel > 0)
+        const deepDepts = deptList.filter(dept => {
+            return (dept.treeLevel || 0) > 0 && dept.upperDeptCd;
+        });
+        
+        // 각 깊은 부서의 부모 경로 수집
+        deepDepts.forEach(dept => {
+            this.collectParentRecursive(dept.upperDeptCd, deptList, expandedSet);
+        });
+        
+        return Array.from(expandedSet);
+    },
+    
+    /**
+     * 재귀적으로 부모 부서 경로 수집
+     * @param deptCd 현재 부서 코드
+     * @param allDepts 전체 부서 목록
+     * @param expandedSet 확장할 부서 코드 Set
+     */
+    collectParentRecursive: function(deptCd, allDepts, expandedSet) {
+        if (!deptCd || expandedSet.has(deptCd)) {
+            return;
+        }
+        
+        const dept = allDepts.find(d => d.deptCd === deptCd);
+        if (!dept) {
+            return;
+        }
+        
+        expandedSet.add(deptCd);
+        
+        // 상위 부서가 있으면 재귀 호출
+        if (dept.upperDeptCd) {
+            this.collectParentRecursive(dept.upperDeptCd, allDepts, expandedSet);
         }
     },
     

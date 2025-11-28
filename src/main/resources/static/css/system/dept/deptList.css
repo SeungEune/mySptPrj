@@ -283,6 +283,104 @@
     }
 }
 
+/* 폼 모드 스타일 */
+.dept-mode-form {
+    width: 100%;
+}
+
+.dept-mode-form .form-table th {
+    width: 150px;
+    background-color: #F8F9FA;
+    font-weight: 600;
+    color: #2D3436;
+}
+
+.dept-mode-form .form-table td {
+    color: #2D3436;
+}
+
+.dept-mode-form .input {
+    width: 100%;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid #DFE6E9;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #2D3436;
+    transition: border-color 0.2s;
+}
+
+.dept-mode-form .input:focus {
+    outline: none;
+    border-color: #666BE1;
+    box-shadow: 0 0 0 2px rgba(102, 107, 225, 0.1);
+}
+
+.dept-mode-form .input:read-only {
+    background-color: #F8F9FA;
+    color: #636E72;
+    cursor: not-allowed;
+}
+
+.dept-mode-form .required {
+    color: #E74C3C;
+    margin-left: 4px;
+}
+
+.dept-mode-form .form-msg {
+    display: block;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.dept-mode-form .form-msg.success {
+    color: #27AE60;
+}
+
+.dept-mode-form .form-msg.error {
+    color: #E74C3C;
+}
+
+.dept-mode-form .radio-group {
+    display: flex;
+    gap: 20px;
+}
+
+.dept-mode-form .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #2D3436;
+}
+
+.dept-mode-form .radio-label input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.dept-form-actions {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #DFE6E9;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* 부서코드 prefix 스타일 */
+.dept-code-prefix {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2D3436;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
 @media (max-width: 768px) {
     .dept-tree-section {
         height: 300px;
@@ -292,4 +390,5 @@
         min-height: 300px;
     }
 }
+
 

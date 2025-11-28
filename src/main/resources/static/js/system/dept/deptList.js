@@ -6,12 +6,13 @@
 let deptData = [];           // 전체 부서 데이터
 let expandedNodes = [];      // 확장된 노드 목록
 let selectedDeptCd = null;   // 선택된 부서코드
+let currentMode = 'view';    // 현재 모드: 'view' | 'register' | 'edit'
 
 document.addEventListener('DOMContentLoaded', () => {
     fn_init();
     
     // 신규 등록 버튼 이벤트
-    document.getElementById('registerBtn').addEventListener('click', fn_goRegisterForm);
+    document.getElementById('registerBtn').addEventListener('click', fn_switchToRegisterMode);
     
     // 검색 버튼 이벤트
     document.getElementById('searchBtn').addEventListener('click', () => {
@@ -24,9 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
             fn_searchDeptList();
         }
     });
-    
-    // 초기화 버튼 이벤트
-    document.getElementById('resetBtn').addEventListener('click', fn_resetSearch);
 });
 
 /**
@@ -41,7 +39,6 @@ function fn_init() {
  */
 function fn_resetSearch() {
     document.getElementById('searchKeyword').value = '';
-    document.getElementById('useYnFilter').value = '';
     fn_searchDeptList();
 }
 
@@ -50,10 +47,8 @@ function fn_resetSearch() {
  */
 function fn_searchDeptList() {
     const searchKeyword = document.getElementById('searchKeyword').value.trim();
-    const useYn = document.getElementById('useYnFilter').value;
     
     const data = {
-        useYn: Util.isEmpty(useYn) ? null : useYn,
         searchVO: {
             searchKeyword: Util.isEmpty(searchKeyword) ? null : searchKeyword
         }
@@ -251,22 +246,32 @@ function fn_selectDept(deptCd) {
         currentItem.classList.add('selected');
     }
     
-    // 상세 정보 조회
-    fn_loadDeptDetail(deptCd);
+    // 조회 모드로 전환
+    fn_switchToViewMode(deptCd);
 }
 
 /**
- * 부서 상세 정보 조회
+ * 조회 모드로 전환
  * @param deptCd 부서코드
  */
-function fn_loadDeptDetail(deptCd) {
+function fn_switchToViewMode(deptCd) {
+    currentMode = 'view';
+    currentDeptCd = deptCd;
+    
+    if (Util.isEmpty(deptCd)) {
+        document.getElementById('deptDetailArea').innerHTML = 
+            '<div class="dept-detail-empty"><p class="txt-body">부서를 선택하세요</p></div>';
+        return;
+    }
+    
+    // 부서 상세 정보 조회
     const data = { deptCd: deptCd };
     const url = Util.getRequestUrl('/system/dept/getDeptDetail.do');
     
     callModule.call(url, data, (result) => {
         if (result && result.result) {
             const dept = result.result;
-            fn_renderDeptDetail(dept);
+            fn_renderViewMode(dept);
         } else {
             document.getElementById('deptDetailArea').innerHTML = 
                 '<div class="dept-detail-empty"><p class="txt-body">부서 정보를 조회할 수 없습니다.</p></div>';
@@ -275,145 +280,437 @@ function fn_loadDeptDetail(deptCd) {
 }
 
 /**
- * 부서 상세 정보 렌더링
+ * 등록 모드로 전환
+ */
+function fn_switchToRegisterMode() {
+    currentMode = 'register';
+    currentDeptCd = null;
+    fn_renderRegisterMode();
+}
+
+/**
+ * 수정 모드로 전환
+ * @param deptCd 부서코드
+ */
+function fn_switchToEditMode(deptCd) {
+    if (Util.isEmpty(deptCd)) {
+        MessageUtil.error('부서코드가 없습니다.');
+        return;
+    }
+    
+    currentMode = 'edit';
+    currentDeptCd = deptCd;
+    
+    // 부서 상세 정보 조회 후 수정 폼 렌더링
+    const data = { deptCd: deptCd };
+    const url = Util.getRequestUrl('/system/dept/getDeptDetail.do');
+    
+    callModule.call(url, data, (result) => {
+        if (result && result.result) {
+            const dept = result.result;
+            fn_renderEditMode(dept);
+        } else {
+            MessageUtil.error('부서 정보를 조회할 수 없습니다.');
+        }
+    }, true, 'POST');
+}
+
+/**
+ * 부서 상세 정보 렌더링 (조회 모드)
  * @param dept 부서 정보
  */
-function fn_renderDeptDetail(dept) {
+function fn_renderViewMode(dept) {
     const detailArea = document.getElementById('deptDetailArea');
+    const template = document.getElementById('deptViewTemplate');
     
-    let html = `
-        <div class="dept-detail-content">
-            <!-- 기본 정보 -->
-            <div class="table-box type01">
-                <div class="table-inner">
-                    <table class="table-type01 form-table dept-detail-table">
-                        <caption class="hidden">부서 기본 정보</caption>
-                        <colgroup>
-                            <col width="30%"/>
-                            <col width="70%"/>
-                        </colgroup>
-                        <tbody>
-                        <tr>
-                            <th>부서코드</th>
-                            <td>${dept.deptCd || '-'}</td>
-                        </tr>
-                        <tr>
-                            <th>부서명</th>
-                            <td>${dept.deptNm || '-'}</td>
-                        </tr>
-                        <tr>
-                            <th>상위부서</th>
-                            <td>${dept.upperDeptNm || '-'}</td>
-                        </tr>
-                        <tr>
-                            <th>부서레벨</th>
-                            <td>${dept.deptLevel || '-'}</td>
-                        </tr>
-                        <tr>
-                            <th>부서순서</th>
-                            <td>${dept.deptOrder || '-'}</td>
-                        </tr>
-                        <tr>
-                            <th>부서담당자</th>
-                            <td>${dept.deptMngrId || '-'}</td>
-                        </tr>
-                        <tr>
-                            <th>사용여부</th>
-                            <td>${dept.useYn === 'Y' ? '사용' : dept.useYn === 'N' ? '미사용' : '-'}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <!-- 통계 정보 -->
-            <div class="dept-stat-info">
-                <div class="stat-item">
-                    <span class="stat-label">소속 인원수</span>
-                    <span class="stat-value">${dept.memberCnt || 0}명</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">하위 부서 수</span>
-                    <span class="stat-value">${(dept.hasChildren || 0) > 0 ? dept.hasChildren : 0}개</span>
-                </div>
-            </div>
-            
-            <!-- 시스템 정보 -->
-            <div class="table-box type01 mt-20">
-                <div class="table-inner">
-                    <table class="table-type01 form-table dept-detail-table">
-                        <caption class="hidden">시스템 정보</caption>
-                        <colgroup>
-                            <col width="30%"/>
-                            <col width="70%"/>
-                        </colgroup>
-                        <tbody>
-                        <tr>
-                            <th>등록자ID</th>
-                            <td class="readonly-field">${dept.registerId || '-'}</td>
-                        </tr>
-                        <tr>
-                            <th>등록일시</th>
-                            <td class="readonly-field">${dept.registDt || '-'}</td>
-                        </tr>
-                        <tr>
-                            <th>수정자ID</th>
-                            <td class="readonly-field">${dept.updusrId || '-'}</td>
-                        </tr>
-                        <tr>
-                            <th>수정일시</th>
-                            <td class="readonly-field">${dept.updtDt || '-'}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <!-- 액션 버튼 -->
-            <div class="dept-detail-actions">
-                <button type="button" class="outline-btn" onclick="fn_goEditForm('${dept.deptCd}')">수정</button>
-                <button type="button" class="outline-btn" onclick="fn_goViewForm('${dept.deptCd}')">상세보기</button>
-                <button type="button" class="outline-btn-Bck" onclick="fn_deleteDept('${dept.deptCd}')">삭제</button>
-            </div>
-        </div>
-    `;
+    if (!template) {
+        console.error('조회 모드 템플릿을 찾을 수 없습니다.');
+        return;
+    }
     
-    detailArea.innerHTML = html;
+    // 템플릿 복제
+    const clone = template.content.cloneNode(true);
+    
+    // 데이터 바인딩
+    const bindValue = (selector, value, formatter) => {
+        const element = clone.querySelector(`[data-bind="${selector}"]`);
+        if (element) {
+            element.textContent = formatter ? formatter(value) : (value || '-');
+        }
+    };
+    
+    bindValue('deptCd', dept.deptCd);
+    bindValue('deptNm', dept.deptNm);
+    bindValue('upperDeptNm', dept.upperDeptNm);
+    bindValue('deptLevel', dept.deptLevel);
+    bindValue('deptOrder', dept.deptOrder);
+    bindValue('deptMngrId', dept.deptMngrId);
+    bindValue('useYn', dept.useYn, (val) => {
+        if (val === 'Y') return '사용';
+        if (val === 'N') return '미사용';
+        return '-';
+    });
+    bindValue('memberCnt', dept.memberCnt, (val) => `${val || 0}명`);
+    bindValue('hasChildren', dept.hasChildren, (val) => `${(val || 0) > 0 ? val : 0}개`);
+    bindValue('registerId', dept.registerId);
+    bindValue('registDt', dept.registDt);
+    bindValue('updusrId', dept.updusrId);
+    bindValue('updtDt', dept.updtDt);
+    
+    // 액션 버튼 이벤트 바인딩
+    const editBtn = clone.querySelector('[data-action="edit"]');
+    if (editBtn) {
+        editBtn.onclick = () => fn_switchToEditMode(dept.deptCd);
+    }
+    
+    const deleteBtn = clone.querySelector('[data-action="delete"]');
+    if (deleteBtn) {
+        deleteBtn.onclick = () => fn_deleteDept(dept.deptCd);
+    }
+    
+    // 기존 내용 제거 후 추가
+    detailArea.innerHTML = '';
+    detailArea.appendChild(clone);
 }
 
 /**
- * 신규 등록 화면으로 이동
+ * 등록 모드 렌더링
  */
-function fn_goRegisterForm() {
-    location.href = '/system/dept/deptRegisterForm.do';
+function fn_renderRegisterMode() {
+    const detailArea = document.getElementById('deptDetailArea');
+    const template = document.getElementById('deptRegisterTemplate');
+    
+    if (!template) {
+        console.error('등록 모드 템플릿을 찾을 수 없습니다.');
+        return;
+    }
+    
+    // 템플릿 복제
+    const clone = template.content.cloneNode(true);
+    
+    // 부서코드 입력 필드에 숫자만 입력 가능하도록 이벤트 리스너 추가
+    const deptCdNumberInput = clone.querySelector('#deptCdNumber');
+    const deptCdHidden = clone.querySelector('#deptCd');
+    
+    if (deptCdNumberInput && deptCdHidden) {
+        // 숫자만 입력 가능하도록 처리
+        deptCdNumberInput.addEventListener('input', function(e) {
+            // 숫자가 아닌 문자 제거
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            e.target.value = value;
+            
+            // DEPT_ + 숫자 조합하여 hidden 필드에 저장
+            if (value) {
+                deptCdHidden.value = 'DEPT_' + value;
+            } else {
+                deptCdHidden.value = '';
+            }
+        });
+        
+        // 키보드 이벤트로 숫자만 입력 가능하도록 제한
+        deptCdNumberInput.addEventListener('keydown', function(e) {
+            // 숫자 키, 백스페이스, 삭제, 탭, 화살표 키만 허용
+            const allowedKeys = [
+                'Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 
+                'ArrowUp', 'ArrowDown', 'Home', 'End'
+            ];
+            
+            if (allowedKeys.includes(e.key)) {
+                return;
+            }
+            
+            // Ctrl/Cmd + A, C, V, X 허용
+            if ((e.ctrlKey || e.metaKey) && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) {
+                return;
+            }
+            
+            // 숫자 키만 허용
+            if (!/[0-9]/.test(e.key)) {
+                e.preventDefault();
+            }
+        });
+        
+        // 붙여넣기 이벤트 처리
+        deptCdNumberInput.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+            const numbersOnly = pastedText.replace(/[^0-9]/g, '');
+            e.target.value = numbersOnly;
+            
+            // DEPT_ + 숫자 조합하여 hidden 필드에 저장
+            if (numbersOnly) {
+                deptCdHidden.value = 'DEPT_' + numbersOnly;
+            } else {
+                deptCdHidden.value = '';
+            }
+        });
+    }
+    
+    // 기존 내용 제거 후 추가
+    detailArea.innerHTML = '';
+    detailArea.appendChild(clone);
 }
 
 /**
- * 수정 화면으로 이동
- * @param deptCd 부서코드
+ * 수정 모드 렌더링
+ * @param dept 부서 정보
  */
-function fn_goEditForm(deptCd) {
+function fn_renderEditMode(dept) {
+    const detailArea = document.getElementById('deptDetailArea');
+    const template = document.getElementById('deptEditTemplate');
+    
+    if (!template) {
+        console.error('수정 모드 템플릿을 찾을 수 없습니다.');
+        return;
+    }
+    
+    // 템플릿 복제
+    const clone = template.content.cloneNode(true);
+    
+    // 데이터 바인딩
+    const bindValue = (selector, value) => {
+        const elements = clone.querySelectorAll(`[data-bind="${selector}"]`);
+        elements.forEach(element => {
+            if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                element.value = value || '';
+            } else {
+                element.textContent = value || '-';
+            }
+        });
+    };
+    
+    bindValue('deptCd', dept.deptCd);
+    bindValue('deptNm', dept.deptNm);
+    bindValue('upperDeptNm', dept.upperDeptNm);
+    bindValue('upperDeptCd', dept.upperDeptCd);
+    bindValue('deptOrder', dept.deptOrder);
+    
+    // 라디오 버튼 처리
+    const useYnRadioY = clone.querySelector('[data-bind-radio="useYn-Y"]');
+    const useYnRadioN = clone.querySelector('[data-bind-radio="useYn-N"]');
+    if (useYnRadioY && useYnRadioN) {
+        if (dept.useYn === 'Y') {
+            useYnRadioY.checked = true;
+            useYnRadioN.checked = false;
+        } else if (dept.useYn === 'N') {
+            useYnRadioY.checked = false;
+            useYnRadioN.checked = true;
+        }
+    }
+    
+    // 기존 내용 제거 후 추가
+    detailArea.innerHTML = '';
+    detailArea.appendChild(clone);
+}
+
+/**
+ * 부서 저장 (등록/수정)
+ */
+function fn_saveDept() {
+    const form = document.getElementById('deptForm');
+    if (!form) {
+        MessageUtil.error('폼을 찾을 수 없습니다.');
+        return;
+    }
+    
+    // 필수값 검증
+    let deptCd = '';
+    const deptCdHidden = document.getElementById('deptCd');
+    const deptCdNumber = document.getElementById('deptCdNumber');
+    
+    // 등록 모드인 경우 hidden 필드 또는 숫자 필드에서 부서코드 조합
+    if (currentMode === 'register') {
+        if (deptCdHidden && deptCdHidden.value) {
+            deptCd = deptCdHidden.value.trim();
+        } else if (deptCdNumber && deptCdNumber.value) {
+            deptCd = 'DEPT_' + deptCdNumber.value.trim();
+        }
+    } else {
+        // 수정 모드인 경우 기존 방식
+        deptCd = document.getElementById('deptCd')?.value?.trim();
+    }
+    
+    const deptNm = document.getElementById('deptNm')?.value?.trim();
+    
     if (Util.isEmpty(deptCd)) {
-        MessageUtil.error('부서코드가 없습니다.');
+        MessageUtil.error('부서코드는 필수입니다.');
+        return;
+    }
+    if (Util.isEmpty(deptNm)) {
+        MessageUtil.error('부서명은 필수입니다.');
+        return;
+    }
+    
+    // 등록 모드인 경우 중복 체크 필요 (이미 체크했는지 확인)
+    if (currentMode === 'register') {
+        const checkMsg = document.getElementById('deptCdCheckMsg');
+        if (!checkMsg || !checkMsg.textContent.includes('사용 가능')) {
+            MessageUtil.error('부서코드 중복 확인을 해주세요.');
+            return;
+        }
+    }
+    
+    // 폼 데이터 수집
+    const upperDeptCdHidden = document.getElementById('upperDeptCdHidden');
+    let upperDeptCd = null;
+    
+    // 상위부서 코드는 hidden 필드에서만 가져옴 (텍스트 필드에는 부서명이 있음)
+    if (upperDeptCdHidden && upperDeptCdHidden.value) {
+        const value = upperDeptCdHidden.value.trim();
+        upperDeptCd = Util.isEmpty(value) ? null : value;
+    }
+    
+    // 부서순서 검증
+    const deptOrderInput = document.getElementById('deptOrder');
+    const deptOrder = parseInt(deptOrderInput?.value || '1');
+    if (deptOrder < 1) {
+        MessageUtil.error('부서순서는 1 이상이어야 합니다.');
+        if (deptOrderInput) {
+            deptOrderInput.focus();
+        }
+        return;
+    }
+    
+    const formData = {
+        deptCd: deptCd,
+        deptNm: deptNm,
+        upperDeptCd: upperDeptCd,
+        deptOrder: deptOrder,
+        useYn: document.querySelector('input[name="useYn"]:checked')?.value || 'Y'
+    };
+    
+    // 빈 문자열을 null로 변환
+    if (Util.isEmpty(formData.upperDeptCd)) {
+        formData.upperDeptCd = null;
+    }
+    
+    const url = Util.getRequestUrl('/system/dept/saveDept.do');
+    
+    callModule.call(url, formData, (result) => {
+        if (result && result.result && result.result.success) {
+            MessageUtil.success(result.status.message || '저장이 완료되었습니다.', function() {
+                // 트리 새로고침
+                fn_searchDeptList();
+                // 저장된 부서ㅣ 선택 상태 유지
+                if (currentMode === 'register') {
+                    // 등록 모드인 경우 새로 등록된 부서 선택
+                    setTimeout(() => {
+                        fn_switchToViewMode(formData.deptCd);
+                    }, 100);
+                } else {
+                    // 수정 모드인 경우 기존 부서 선택 상태 유지
+                    fn_switchToViewMode(formData.deptCd);
+                }
+            });
+        } else {
+            MessageUtil.error((result && result.status && result.status.message) || '저장에 실패하였습니다.');
+        }
+    }, true, 'POST');
+}
+
+/**
+ * 폼 취소
+ */
+function fn_cancelForm() {
+    if (currentMode === 'register') {
+        // 등록 모드 취소 시 빈 화면
+        document.getElementById('deptDetailArea').innerHTML = 
+            '<div class="dept-detail-empty"><p class="txt-body">부서를 선택하세요</p></div>';
+        currentMode = 'view';
+        currentDeptCd = null;
+    } else if (currentMode === 'edit' && currentDeptCd) {
+        // 수정 모드 취소 시 조회 모드로 복귀
+        fn_switchToViewMode(currentDeptCd);
+    }
+}
+
+/**
+ * 부서코드 중복 확인
+ */
+function fn_checkDeptCodeDuplicate() {
+    // 등록 모드인 경우 hidden 필드의 값을 사용
+    const deptCdHidden = document.getElementById('deptCd');
+    const deptCdNumber = document.getElementById('deptCdNumber');
+    const checkMsg = document.getElementById('deptCdCheckMsg');
+    
+    let deptCd = '';
+    if (deptCdHidden && deptCdHidden.value) {
+        // 등록 모드: hidden 필드에서 전체 부서코드 가져오기
+        deptCd = deptCdHidden.value.trim();
+    } else if (deptCdNumber && deptCdNumber.value) {
+        // 폴백: 숫자만 입력된 경우 DEPT_ 추가
+        deptCd = 'DEPT_' + deptCdNumber.value.trim();
+    }
+    
+    if (Util.isEmpty(deptCd)) {
+        MessageUtil.error('부서코드를 입력해주세요.');
         return;
     }
     
     const data = { deptCd: deptCd };
-    callModule.post(Util.getRequestUrl('/system/dept/deptEditForm.do'), data, 'post');
+    const url = Util.getRequestUrl('/system/dept/checkDeptCodeDuplicate.do');
+    
+    callModule.call(url, data, (result) => {
+        if (result && result.result) {
+            const isDuplicate = result.result.duplicate;
+            if (checkMsg) {
+                if (isDuplicate) {
+                    checkMsg.textContent = '이미 사용 중인 부서코드입니다.';
+                    checkMsg.className = 'form-msg error';
+                } else {
+                    checkMsg.textContent = '사용 가능한 부서코드입니다.';
+                    checkMsg.className = 'form-msg success';
+                }
+            }
+        }
+    }, true, 'POST');
 }
 
 /**
- * 상세보기 화면으로 이동
- * @param deptCd 부서코드
+ * 부서 검색 모달 열기
  */
-function fn_goViewForm(deptCd) {
-    if (Util.isEmpty(deptCd)) {
-        MessageUtil.error('부서코드가 없습니다.');
-        return;
+function fn_openDeptSearchModal() {
+    if (typeof DeptSearchModal !== 'undefined') {
+        DeptSearchModal.open(function(deptCd, deptNm) {
+            // 선택한 부서 정보를 폼에 반영
+            const upperDeptCdInput = document.getElementById('upperDeptCd');
+            const upperDeptCdHidden = document.getElementById('upperDeptCdHidden');
+            const upperDeptNmInput = document.getElementById('upperDeptNm');
+            
+            if (upperDeptCdInput) {
+                upperDeptCdInput.value = deptNm || '';
+            }
+            if (upperDeptCdHidden) {
+                upperDeptCdHidden.value = deptCd || '';
+            } else if (upperDeptCdInput && upperDeptCdInput.type === 'hidden') {
+                upperDeptCdInput.value = deptCd || '';
+            }
+            if (upperDeptNmInput) {
+                upperDeptNmInput.value = deptNm || '';
+            }
+        });
+    } else {
+        MessageUtil.error('부서 검색 모달을 사용할 수 없습니다.');
     }
+}
+
+/**
+ * 상위부서 초기화
+ */
+function fn_clearUpperDept() {
+    const upperDeptCdInput = document.getElementById('upperDeptCd');
+    const upperDeptCdHidden = document.getElementById('upperDeptCdHidden');
+    const upperDeptNmInput = document.getElementById('upperDeptNm');
     
-    const data = { deptCd: deptCd };
-    callModule.post(Util.getRequestUrl('/system/dept/deptViewForm.do'), data, 'post');
+    if (upperDeptCdInput) {
+        upperDeptCdInput.value = '';
+    }
+    if (upperDeptCdHidden) {
+        upperDeptCdHidden.value = '';
+    }
+    if (upperDeptNmInput) {
+        upperDeptNmInput.value = '';
+    }
 }
 
 /**
@@ -433,9 +730,32 @@ function fn_deleteDept(deptCd) {
         return;
     }
     
+    if (dept && (dept.memberCnt || 0) > 0) {
+        MessageUtil.error('소속 인원이 존재하여 삭제할 수 없습니다.');
+        return;
+    }
+    
     MessageUtil.confirmed('정말 삭제하시겠습니까?', function() {
-        // TODO: 삭제 API 호출 (추후 구현)
-        MessageUtil.success('삭제 기능은 추후 구현 예정입니다.');
+        const data = { deptCd: deptCd };
+        const url = Util.getRequestUrl('/system/dept/deleteDept.do');
+        
+        callModule.call(url, data, (result) => {
+            if (result && result.result && result.result.success) {
+                MessageUtil.success(result.status.message || '삭제가 완료되었습니다.', function() {
+                    // 트리 새로고침
+                    fn_searchDeptList();
+                    // 상세 영역 초기화
+                    document.getElementById('deptDetailArea').innerHTML = 
+                        '<div class="dept-detail-empty"><p class="txt-body">부서를 선택하세요</p></div>';
+                    selectedDeptCd = null;
+                    currentMode = 'view';
+                    currentDeptCd = null;
+                });
+            } else {
+                MessageUtil.error((result && result.status && result.status.message) || '삭제에 실패하였습니다.');
+            }
+        }, true, 'POST');
     });
 }
+
 

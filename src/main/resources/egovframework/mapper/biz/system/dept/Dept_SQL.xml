@@ -177,10 +177,7 @@
          WHERE d.dept_cd = #{deptCd}
     </select>
 
-    <!-- 추후 부서 관리 기능 구현 시 사용할 쿼리들 -->
-    
     <!-- 부서 등록 -->
-    <!--
     <insert id="insertDept" parameterType="biz.system.dept.vo.DeptVO">
         INSERT INTO tb_dept (
                dept_cd
@@ -197,17 +194,15 @@
              , #{deptNm}
              , #{upperDeptCd}
              , #{deptLevel}
-             , #{deptOrder}
+             , COALESCE(#{deptOrder}, 0)
              , #{deptMngrId}
              , COALESCE(#{useYn}, 'Y')
              , #{registerId}
              , CURRENT_TIMESTAMP
         )
     </insert>
-    -->
 
     <!-- 부서 수정 -->
-    <!--
     <update id="updateDept" parameterType="biz.system.dept.vo.DeptVO">
         UPDATE tb_dept
            SET dept_nm = #{deptNm}
@@ -220,15 +215,12 @@
              , updt_dt = CURRENT_TIMESTAMP
          WHERE dept_cd = #{deptCd}
     </update>
-    -->
 
     <!-- 부서 삭제 -->
-    <!--
     <delete id="deleteDept" parameterType="String">
         DELETE FROM tb_dept
          WHERE dept_cd = #{deptCd}
     </delete>
-    -->
 
     <!-- 부서 코드 중복 확인 -->
     <select id="checkDeptCodeDuplicate" parameterType="String" resultType="int">
