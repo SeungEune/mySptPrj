@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="menuDAO">
+
+    <!--
+        권한별 메뉴 목록 조회 (모든 레벨)
+        - tb_menu와 tb_role_menu_author를 조인하여 권한이 있는 메뉴만 조회
+        - 사용 여부가 'Y'이고 읽기 권한이 'Y'인 메뉴만 표시
+        - 모든 레벨의 메뉴 조회
+        - 정렬: menu_level, menu_order
+    -->
+    <select id="selectMenuListByRole" parameterType="String" resultType="biz.system.menu.vo.MenuVO">
+        <!-- 권한별 메뉴 목록 조회 -->
+        SELECT 
+            m.menu_id,
+            m.menu_nm,
+            m.upper_menu_id,
+            m.menu_level,
+            m.menu_order,
+            m.menu_url,
+            m.menu_icon,
+            m.use_yn
+        FROM tb_menu m
+        INNER JOIN tb_role_menu_author rma ON m.menu_id = rma.menu_id
+        WHERE m.use_yn = 'Y'
+          AND rma.role_cd = #{roleCd}
+          AND rma.read_author_yn = 'Y'
+        ORDER BY m.menu_level, m.menu_order
+    </select>
+    
+    <!-- 관리자용 전체 메뉴 목록 조회 -->
+    <select id="selectMenuList" parameterType="biz.system.menu.vo.MenuVO" resultType="biz.system.menu.vo.MenuVO">
+        SELECT 
+            m.menu_id,
+            m.menu_nm,
+            m.upper_menu_id,
+            (SELECT menu_nm FROM tb_menu WHERE menu_id = m.upper_menu_id) AS upper_menu_nm,
+            m.menu_level,
+            m.menu_order,
+            m.menu_url,
+            m.menu_icon,
+            m.use_yn,
+            TO_CHAR(m.regist_dt, 'YYYY-MM-DD') AS regist_dt
+        FROM tb_menu m
+        WHERE 1=1
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND m.menu_nm LIKE CONCAT('%', #{searchKeyword}, '%')
+        </if>
+        ORDER BY m.menu_level, m.menu_order
+    </select>
+
+    <!-- 메뉴 상세 조회 -->
+    <select id="selectMenuDetail" parameterType="String" resultType="biz.system.menu.vo.MenuVO">
+        SELECT 
+            m.menu_id,
+            m.menu_nm,
+            m.upper_menu_id,
+            (SELECT menu_nm FROM tb_menu WHERE menu_id = m.upper_menu_id) AS upper_menu_nm,
+            m.menu_level,
+            m.menu_order,
+            m.menu_url,
+            m.menu_icon,
+            m.use_yn,
+            m.register_id,
+            TO_CHAR(m.regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS regist_dt,
+            m.updusr_id,
+            TO_CHAR(m.updt_dt, 'YYYY-MM-DD HH24:MI:SS') AS updt_dt
+        FROM tb_menu m
+        WHERE m.menu_id = #{menuId}
+    </select>
+
+    <!-- 메뉴 등록 -->
+    <insert id="insertMenu" parameterType="biz.system.menu.vo.MenuVO">
+        INSERT INTO tb_menu (
+            menu_id,
+            menu_nm,
+            upper_menu_id,
+            menu_level,
+            menu_order,
+            menu_url,
+            menu_icon,
+            use_yn,
+            register_id,
+            regist_dt
+        ) VALUES (
+            #{menuId},
+            #{menuNm},
+            #{upperMenuId},
+            #{menuLevel},
+            COALESCE(#{menuOrder}, 0),
+            #{menuUrl},
+            #{menuIcon},
+            COALESCE(#{useYn}, 'Y'),
+            #{registerId},
+            NOW()
+        )
+    </insert>
+
+    <!-- 메뉴 수정 -->
+    <update id="updateMenu" parameterType="biz.system.menu.vo.MenuVO">
+        UPDATE tb_menu
+        SET 
+            menu_nm = #{menuNm},
+            upper_menu_id = #{upperMenuId},
+            menu_level = #{menuLevel},
+            menu_order = #{menuOrder},
+            menu_url = #{menuUrl},
+            menu_icon = #{menuIcon},
+            use_yn = #{useYn},
+            updusr_id = #{updusrId},
+            updt_dt = NOW()
+        WHERE menu_id = #{menuId}
+    </update>
+
+    <!-- 메뉴 삭제 -->
+    <delete id="deleteMenu" parameterType="String">
+        DELETE FROM tb_menu
+        WHERE menu_id = #{menuId}
+    </delete>
+
+    <!-- 특정 메뉴에 대한 모든 권한 그룹 목록 조회 -->
+    <select id="selectRoleListByMenu" parameterType="String" resultType="biz.system.menu.vo.MenuAuthVO">
+        SELECT 
+            r.role_cd,
+            r.role_nm,
+            COALESCE(rma.role_menu_author_sn, 0) AS role_menu_author_sn,
+            COALESCE(rma.read_author_yn, 'N') AS read_author_yn,
+            COALESCE(rma.creat_author_yn, 'N') AS creat_author_yn,
+            COALESCE(rma.updt_author_yn, 'N') AS updt_author_yn,
+            COALESCE(rma.delete_author_yn, 'N') AS delete_author_yn
+        FROM tb_role r
+        LEFT JOIN tb_role_menu_author rma ON r.role_cd = rma.role_cd AND rma.menu_id = #{menuId}
+        WHERE r.use_yn = 'Y'
+        ORDER BY r.role_cd
+    </select>
+
+    <!-- 특정 권한 그룹에 속한 사용자 목록 조회 -->
+    <select id="selectUserListByRole" parameterType="String" resultType="biz.system.menu.vo.UserRoleVO">
+        SELECT 
+            ur.user_role_sn,
+            u.user_id,
+            u.user_nm,
+            ur.role_cd,
+            r.role_nm,
+            ur.register_id,
+            TO_CHAR(ur.regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS regist_dt
+        FROM tb_user_role ur
+        JOIN tb_user u ON ur.user_id = u.user_id
+        JOIN tb_role r ON ur.role_cd = r.role_cd
+        WHERE ur.role_cd = #{roleCd} 
+          AND u.use_yn = 'Y' 
+          AND r.use_yn = 'Y'
+        ORDER BY u.user_nm
+    </select>
+
+    <!-- 메뉴-권한 매핑 저장 (UPSERT) -->
+    <insert id="insertOrUpdateMenuAuth" parameterType="biz.system.menu.vo.MenuAuthVO">
+        INSERT INTO tb_role_menu_author (
+            role_cd,
+            menu_id,
+            read_author_yn,
+            creat_author_yn,
+            updt_author_yn,
+            delete_author_yn,
+            register_id,
+            regist_dt
+        ) VALUES (
+            #{roleCd},
+            #{menuId},
+            COALESCE(#{readAuthorYn}, 'N'),
+            COALESCE(#{creatAuthorYn}, 'N'),
+            COALESCE(#{updtAuthorYn}, 'N'),
+            COALESCE(#{deleteAuthorYn}, 'N'),
+            #{registerId},
+            NOW()
+        )
+        ON CONFLICT ON CONSTRAINT uk_role_menu
+        DO UPDATE SET
+            read_author_yn = COALESCE(#{readAuthorYn}, 'N'),
+            creat_author_yn = COALESCE(#{creatAuthorYn}, 'N'),
+            updt_author_yn = COALESCE(#{updtAuthorYn}, 'N'),
+            delete_author_yn = COALESCE(#{deleteAuthorYn}, 'N')
+    </insert>
+
+    <!-- 메뉴-권한 매핑 삭제 -->
+    <delete id="deleteMenuAuth" parameterType="biz.system.menu.vo.MenuAuthVO">
+        DELETE FROM tb_role_menu_author
+        WHERE role_cd = #{roleCd}
+          AND menu_id = #{menuId}
+    </delete>
+
+</mapper>

@@ -1,4 +1,4 @@
-package biz.menu.vo;
+package biz.system.menu.vo;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +22,9 @@ public class MenuVO {
     /** 상위메뉴ID */
     private String upperMenuId;
     
+    /** 상위메뉴명 */
+    private String upperMenuNm;
+    
     /** 메뉴레벨 */
     private Integer menuLevel;
     
@@ -37,6 +40,24 @@ public class MenuVO {
     /** 사용여부 */
     private String useYn;
     
+    /** 등록자ID */
+    private String registerId;
+    
+    /** 등록일시 */
+    private String registDt;
+    
+    /** 수정자ID */
+    private String updusrId;
+    
+    /** 수정일시 */
+    private String updtDt;
+    
+    /** 검색어 */
+    private String searchKeyword;
+    
+    /** 저장 모드 (insert/update) */
+    private String mode;
+    
     /** 하위 메뉴 목록 */
     private List<MenuVO> subMenuList;
     
@@ -50,4 +71,3 @@ public class MenuVO {
         return subMenuList;
     }
 }
-

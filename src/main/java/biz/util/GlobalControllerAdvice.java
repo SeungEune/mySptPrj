@@ -1,8 +1,8 @@
 package biz.util;
 
 import biz.login.vo.LoginVO;
-import biz.menu.service.MenuService;
-import biz.menu.vo.MenuVO;
+import biz.system.menu.service.MenuService;
+import biz.system.menu.vo.MenuVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,7 +18,7 @@ import java.util.List;
 @ControllerAdvice
 public class GlobalControllerAdvice {
     
-    @Resource(name = "MenuService")
+    @Resource(name = "menuService")
     private MenuService menuService;
     
     /**

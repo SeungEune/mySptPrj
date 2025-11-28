@@ -1,0 +1,329 @@
+@charset "utf-8";
+
+/* 메뉴 및 권한 관리 화면 스타일 (2행 2열 구조) */
+
+.menu-auth-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    min-height: 800px; /* 전체 최소 높이 확보 */
+}
+
+/* 공통 행/열 스타일 */
+.row-section {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+.col-section {
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* Flex overflow 방지 */
+}
+
+.item-box {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    padding: 20px; /* 기본 패딩 추가 */
+    border-radius: 6px; /* 둥근 모서리 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 가벼운 그림자 */
+}
+
+/* 섹션 헤더 스타일 추가 */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px; /* 여백 증가 */
+    flex-shrink: 0; /* 높이 고정 */
+}
+
+.section-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+}
+
+.section-actions {
+    display: flex;
+    gap: 5px;
+}
+
+/* 1행: 메뉴 관리 영역 */
+.menu-section {
+    height: 500px; /* 고정 높이로 충분한 공간 확보 */
+}
+
+.menu-tree-area {
+    width: 350px;
+    flex-shrink: 0;
+}
+
+.menu-detail-area {
+    flex: 1;
+}
+
+/* 2행: 권한 관리 영역 */
+.auth-section {
+    height: 500px; /* 고정 높이 */
+}
+
+.role-group-area {
+    flex: 1;
+}
+
+.user-list-area {
+    flex: 1;
+}
+
+/* 메뉴 트리 스타일 */
+.menu-tree-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #eee; /* 테두리 연하게 */
+    border-radius: 4px;
+    min-height: 0;
+}
+
+.menu-tree-header {
+    padding: 10px;
+    background-color: #F8F9FA;
+    border-bottom: 1px solid #eee;
+    font-weight: 600;
+    color: #555;
+}
+
+.menu-tree-container {
+    flex: 1;
+    overflow-y: auto;
+    background-color: #fff;
+    padding: 10px 0;
+}
+
+.menu-tree-item .menu-tree-row {
+    padding: 6px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.menu-tree-item .menu-tree-row:hover {
+    background-color: #F0F4F8;
+}
+
+.menu-tree-item .menu-tree-row.selected {
+    background-color: #E1E8ED;
+    font-weight: bold;
+    color: #333;
+}
+
+.menu-tree-toggle {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    cursor: pointer;
+    margin-right: 5px;
+    flex-shrink: 0;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    background-color: #fff;
+    font-weight: bold;
+    line-height: 18px;
+    color: #666BE1;
+}
+
+.menu-tree-toggle:hover {
+    background-color: #666BE1;
+    color: #fff;
+    border-color: #666BE1;
+}
+
+.menu-tree-toggle.no-children {
+    visibility: hidden; /* 자식 없는 노드의 토글 버튼 숨김 */
+}
+
+.menu-tree-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+.menu-tree-label .menu-name {
+    margin-right: 5px;
+}
+
+.menu-tree-label .menu-code {
+    color: #999;
+    font-size: 12px;
+}
+
+/* 트리 자식 노드 컨테이너 */
+.menu-tree-children {
+    display: none; /* 기본 숨김 */
+}
+
+.menu-tree-children.expanded {
+    display: block; /* 확장 시 표시 */
+}
+
+/* 트리 빈 상태 및 로딩 */
+.menu-tree-empty,
+.menu-tree-loading {
+    padding: 20px;
+    text-align: center;
+    color: #999;
+}
+
+/* 상세 정보 영역 스타일 */
+.menu-detail-content-area {
+    flex: 1;
+    overflow: hidden; /* 내부 테이블 스크롤 사용 */
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-detail-form {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-detail-empty {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+}
+
+/* 테이블 내부 스타일 개선 */
+.table-box {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    /* 중복 테두리 제거 */
+    border: none; 
+    padding: 0;
+}
+
+.table-inner {
+    flex: 1;
+    overflow-y: auto;
+    /* 테두리 제거 및 상단 라인만 유지 */
+    border: none;
+    border-top: 2px solid #333; 
+}
+
+.table-type01 {
+    width: 100%;
+    table-layout: fixed; /* 컬럼 너비 고정 */
+    border-collapse: collapse;
+}
+
+.table-type01 caption {
+    display: none; /* 캡션 숨김 */
+}
+
+.table-type01 th {
+    background-color: #F8F9FA;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #eee; /* 경계 연하게 */
+    height: 40px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    vertical-align: middle;
+    color: #333;
+    font-weight: 600;
+}
+
+.table-type01 td {
+    border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee; /* 경계 연하게 */
+    height: 40px;
+    padding: 4px 10px;
+    box-sizing: border-box;
+    vertical-align: middle;
+    color: #555;
+}
+
+.table-type01 th:last-child,
+.table-type01 td:last-child {
+    border-right: none;
+}
+
+/* 입력 폼 스타일 */
+.input {
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
+.input.w100 { width: 100%; }
+.tar { text-align: right; }
+.mt-10 { margin-top: 10px; }
+.mb-10 { margin-bottom: 10px; }
+.g5 { gap: 5px; }
+
+/* 버튼 영역 스타일 */
+.menu-form-actions {
+    padding-top: 15px;
+    /* border-top 제거하여 깔끔하게 */
+    flex-shrink: 0; /* 스크롤 영역 밖 고정 */
+}
+
+/* 테이블 행 선택 효과 */
+#roleGroupTable tbody tr.selected,
+#userListTable tbody tr.selected {
+    background-color: #E1E8ED;
+}
+
+#roleGroupTable tbody tr,
+#userListTable tbody tr {
+    cursor: pointer;
+}
+
+#roleGroupTable tbody tr:hover,
+#userListTable tbody tr:hover {
+    background-color: #F0F4F8;
+}
+
+/* 버튼 스타일 보완 */
+.sm-btn, .sm-btn-Bck {
+    padding: 0 10px;
+    height: 32px; /* input 높이와 통일 */
+    line-height: 30px;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    cursor: pointer;
+    box-sizing: border-box;
+    vertical-align: middle;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    min-width: 50px; /* 최소 너비 확보 */
+}
+
+.sm-btn { background-color: #fff; }
+.sm-btn-Bck { background-color: #f5f5f5; }
+
+.item-horizontal-box {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap; /* 줄바꿈 방지 */
+}
