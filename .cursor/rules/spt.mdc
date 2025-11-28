@@ -52,7 +52,7 @@ public List<UserVO> getUserList(SearchVO searchVO) {
 ### 5. 아키텍처 패턴
 - Controller → Service → DAO(CommonMapper) → MyBatis XML → DB
 - VO/DTO로 계층 간 데이터 전달, 검색 조건은 `SearchVO` 또는 VO 내 `searchVO`
-- 트랜잭션: ServiceImpl에서 `@Transactional(rollbackFor = Exception.class)` 기본
+- 트랜잭션: `EgovConfigAppTransaction.java`의 AOP 설정으로 `*Impl` 클래스 메서드에 자동 적용됨. `@Transactional` 어노테이션을 별도로 선언하지 않아도 되고, 모든 Exception 발생 시 rollback 처리됨.
 - 공통 예외: `BadRequestException`, `BusinessException`, `UnauthorizedException`
 - **의존성 주입**: `@Resource(name = "빈이름")` 어노테이션 사용 (생성자 주입 방식 대신)
   ```java
