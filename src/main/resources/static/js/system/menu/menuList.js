@@ -14,7 +14,18 @@ let changedAuthList = [];    // 변경된 권한 매핑 정보 배열
 document.addEventListener('DOMContentLoaded', () => {
     fn_init();
     
-    // 메뉴 상세 정보 접기/펼치기 관련 리스너 제거 (2행 레이아웃에서 불필요)
+    // 검색 버튼 클릭 이벤트
+    document.getElementById('searchBtn').addEventListener('click', () => fn_searchMenuList());
+    
+    // 검색어 입력 후 Enter 키 이벤트
+    document.getElementById('searchKeyword').addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            fn_searchMenuList();
+        }
+    });
+    
+    // 신규 등록 버튼 이벤트
+    document.getElementById('registerBtn').addEventListener('click', fn_switchToRegisterMode);
     
     // 사용자 추가/삭제 버튼 이벤트
     const addUserBtn = document.getElementById('addUserBtn');
@@ -38,16 +49,58 @@ function fn_init() {
  * 메뉴 목록 조회
  */
 function fn_searchMenuList() {
+    const searchKeyword = document.getElementById('searchKeyword').value;
+    
     const data = {
-        searchKeyword: ''
+        searchKeyword: Util.isEmpty(searchKeyword) ? null : searchKeyword
     };
 
     const callback = function(result) {
         menuData = result.result || [];
+        
+        // 검색어가 있으면 모든 노드 펼침
+        if (!Util.isEmpty(searchKeyword)) {
+            expandedNodes.clear();
+            fn_expandAllNodes(menuData);
+        }
+        
         fn_renderTree();
+        
+        // 전체 메뉴 개수 업데이트
+        const totalCount = fn_countTotalMenus(menuData);
+        document.getElementById('treeTotalCount').textContent = `(${totalCount})`;
     };
     
     callModule.call(Util.getRequestUrl('/system/menu/getMenuList.do'), data, callback, true, 'POST');
+}
+
+/**
+ * 모든 노드 펼침 (재귀)
+ */
+function fn_expandAllNodes(menus) {
+    if (!menus) return;
+    menus.forEach(menu => {
+        if (menu.subMenuList && menu.subMenuList.length > 0) {
+            expandedNodes.add(menu.menuId);
+            fn_expandAllNodes(menu.subMenuList);
+        }
+    });
+}
+
+/**
+ * 전체 메뉴 개수 계산 (재귀)
+ */
+function fn_countTotalMenus(menus) {
+    let count = 0;
+    if (!menus) return count;
+    
+    menus.forEach(menu => {
+        count++;
+        if (menu.subMenuList && menu.subMenuList.length > 0) {
+            count += fn_countTotalMenus(menu.subMenuList);
+        }
+    });
+    return count;
 }
 
 /**
@@ -110,11 +163,23 @@ function createTreeItem(menu) {
     nameSpan.className = 'menu-name';
     nameSpan.textContent = menu.menuNm;
     
+    // 미사용 메뉴 표시
+    if (menu.useYn === 'N') {
+        nameSpan.classList.add('menu-disabled');
+        
+        const disabledBadge = document.createElement('span');
+        disabledBadge.className = 'menu-disabled-badge';
+        disabledBadge.textContent = '미사용';
+        labelDiv.appendChild(nameSpan);
+        labelDiv.appendChild(disabledBadge);
+    } else {
+        labelDiv.appendChild(nameSpan);
+    }
+    
     const codeSpan = document.createElement('span');
     codeSpan.className = 'menu-code';
     codeSpan.textContent = `(${menu.menuId})`;
     
-    labelDiv.appendChild(nameSpan);
     labelDiv.appendChild(codeSpan);
     rowDiv.appendChild(labelDiv);
     
@@ -264,7 +329,7 @@ function fn_renderRoleList() {
     tbody.innerHTML = '';
     
     if (!roleList || roleList.length === 0) {
-        tbody.innerHTML = '<tr><td class="tc" colspan="5" style="height:350px;">권한 그룹이 없습니다.</td></tr>';
+        tbody.innerHTML = '<tr><td class="tc" colspan="6" style="height:350px;">권한 그룹이 없습니다.</td></tr>';
         return;
     }
     
@@ -299,6 +364,13 @@ function fn_renderRoleList() {
                        data-auth-type="updt" 
                        ${role.updtAuthorYn === 'Y' ? 'checked' : ''}
                        onclick="event.stopPropagation(); fn_changeAuth('${role.roleCd}', 'updt', this.checked)">
+            </td>
+            <td>
+                <input type="checkbox" 
+                       data-role-cd="${role.roleCd}" 
+                       data-auth-type="delete" 
+                       ${role.deleteAuthorYn === 'Y' ? 'checked' : ''}
+                       onclick="event.stopPropagation(); fn_changeAuth('${role.roleCd}', 'delete', this.checked)">
             </td>
         `;
         
@@ -406,10 +478,17 @@ function fn_changeAuth(roleCd, authType, checked) {
     
     const authValue = checked ? 'Y' : 'N';
     
+    // 권한 타입에 따른 필드명 매핑
+    const authFieldMap = {
+        'read': 'readAuthorYn',
+        'creat': 'creatAuthorYn',
+        'updt': 'updtAuthorYn',
+        'delete': 'deleteAuthorYn'
+    };
+    
     if (existingIndex >= 0) {
         // 기존 변경 사항 업데이트
-        changedAuthList[existingIndex][authType === 'read' ? 'readAuthorYn' : 
-                                       authType === 'creat' ? 'creatAuthorYn' : 'updtAuthorYn'] = authValue;
+        changedAuthList[existingIndex][authFieldMap[authType]] = authValue;
     } else {
         // 새 변경 사항 추가
         const role = roleList.find(r => r.roleCd === roleCd);
@@ -419,7 +498,7 @@ function fn_changeAuth(roleCd, authType, checked) {
             readAuthorYn: authType === 'read' ? authValue : (role.readAuthorYn || 'N'),
             creatAuthorYn: authType === 'creat' ? authValue : (role.creatAuthorYn || 'N'),
             updtAuthorYn: authType === 'updt' ? authValue : (role.updtAuthorYn || 'N'),
-            deleteAuthorYn: role.deleteAuthorYn || 'N'
+            deleteAuthorYn: authType === 'delete' ? authValue : (role.deleteAuthorYn || 'N')
         });
     }
     
@@ -429,6 +508,7 @@ function fn_changeAuth(roleCd, authType, checked) {
         if (authType === 'read') role.readAuthorYn = authValue;
         else if (authType === 'creat') role.creatAuthorYn = authValue;
         else if (authType === 'updt') role.updtAuthorYn = authValue;
+        else if (authType === 'delete') role.deleteAuthorYn = authValue;
     }
 }
 
@@ -482,10 +562,20 @@ function fn_saveAllAuth() {
 // }
 
 /**
- * 메뉴 검색 모달 (추후 구현)
+ * 상위 메뉴 검색 모달 열기
  */
 function fn_openMenuSearchModal() {
-    MessageUtil.alert('메뉴 검색 모달은 추후 구현 예정입니다.');
+    MenuSearchModal.open(function(menuId, menuNm) {
+        // 선택된 메뉴 ID를 상위 메뉴 입력 필드에 설정
+        document.getElementById('upperMenuId').value = menuId;
+        
+        // 선택된 상위 메뉴의 하위 메뉴 개수 + 1로 정렬순서 자동 설정
+        const subMenuCount = fn_countSubMenus(menuId);
+        const menuOrderEl = document.getElementById('menuOrder');
+        if (menuOrderEl) {
+            menuOrderEl.value = subMenuCount + 1;
+        }
+    });
 }
 
 /**
@@ -497,6 +587,45 @@ function fn_clearUpperMenu() {
         const el = document.getElementById(id);
         if (el) el.value = '';
     });
+    
+    // 정렬순서도 1로 초기화 (최상위 메뉴가 되므로)
+    const menuOrderEl = document.getElementById('menuOrder');
+    if (menuOrderEl) {
+        menuOrderEl.value = '1';
+    }
+}
+
+/**
+ * 특정 메뉴의 하위 메뉴 개수 계산
+ * @param upperMenuId 상위 메뉴 ID
+ * @return 하위 메뉴 개수
+ */
+function fn_countSubMenus(upperMenuId) {
+    const menu = fn_findMenuById(menuData, upperMenuId);
+    if (menu && menu.subMenuList) {
+        return menu.subMenuList.length;
+    }
+    return 0;
+}
+
+/**
+ * 메뉴 ID로 메뉴 찾기 (재귀)
+ * @param menus 메뉴 목록
+ * @param menuId 찾을 메뉴 ID
+ * @return 찾은 메뉴 또는 null
+ */
+function fn_findMenuById(menus, menuId) {
+    if (!menus) return null;
+    for (const menu of menus) {
+        if (menu.menuId === menuId) {
+            return menu;
+        }
+        if (menu.subMenuList && menu.subMenuList.length > 0) {
+            const found = fn_findMenuById(menu.subMenuList, menuId);
+            if (found) return found;
+        }
+    }
+    return null;
 }
 
 /**
@@ -525,8 +654,11 @@ function fn_saveMenu() {
         return;
     }
     
-    // 모드 설정
-    data.mode = 'update'; // 상세 정보에서 수정하는 경우
+    // 모드 설정: selectedMenuId가 없으면 신규 등록, 있으면 수정
+    data.mode = selectedMenuId ? 'update' : 'insert';
+    
+    // 권한 데이터 수집
+    data.authList = fn_collectAuthData();
     
     callModule.call(Util.getRequestUrl('/system/menu/saveMenu.do'), data, function(result) {
         MessageUtil.alert(result.message, function() {
@@ -534,6 +666,30 @@ function fn_saveMenu() {
             fn_selectMenu(data.menuId);
         });
     }, true, 'POST');
+}
+
+/**
+ * 권한 그룹 테이블에서 현재 권한 데이터 수집
+ * @return 권한 데이터 배열
+ */
+function fn_collectAuthData() {
+    const authList = [];
+    
+    if (!roleList || roleList.length === 0) {
+        return authList;
+    }
+    
+    roleList.forEach(role => {
+        authList.push({
+            roleCd: role.roleCd,
+            readAuthorYn: role.readAuthorYn || 'N',
+            creatAuthorYn: role.creatAuthorYn || 'N',
+            updtAuthorYn: role.updtAuthorYn || 'N',
+            deleteAuthorYn: role.deleteAuthorYn || 'N'
+        });
+    });
+    
+    return authList;
 }
 
 /**
@@ -610,6 +766,9 @@ function fn_deleteMenu(menuId) {
  */
 function fn_switchToRegisterMode() {
     selectedMenuId = null;
+    selectedRoleCd = null;
+    changedAuthList = [];
+    
     // 행 선택 해제
     document.querySelectorAll('.menu-tree-row').forEach(r => r.classList.remove('selected'));
     
@@ -620,6 +779,8 @@ function fn_switchToRegisterMode() {
     // 기본값 설정
     clone.querySelector('#menuId').value = '';
     clone.querySelector('#menuNm').value = '';
+    clone.querySelector('#upperMenuId').value = '';
+    clone.querySelector('#menuUrl').value = '';
     clone.querySelector('#menuOrder').value = '1';
     clone.querySelector('input[name="useYn"][value="Y"]').checked = true;
     
@@ -628,6 +789,22 @@ function fn_switchToRegisterMode() {
     
     detailArea.innerHTML = '';
     detailArea.appendChild(clone);
+    
+    // 전체 권한 그룹 목록 조회 (모든 권한 'N'으로 초기화)
+    fn_loadAllRoleListForNew();
+}
+
+/**
+ * 신규 등록용 전체 권한 그룹 목록 조회
+ */
+function fn_loadAllRoleListForNew() {
+    const data = { menuId: '' };  // 빈 문자열로 전달하면 모든 권한이 'N'으로 조회됨
+    
+    callModule.call(Util.getRequestUrl('/system/menu/getRoleListByMenu.do'), data, function(result) {
+        roleList = result.result || [];
+        fn_renderRoleList();
+        fn_clearUserList();
+    }, true, 'POST');
 }
 
 // 전역 함수로 노출 (HTML에서 호출 가능하도록)

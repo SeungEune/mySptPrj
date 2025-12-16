@@ -61,6 +61,9 @@ public class MenuVO {
     /** 하위 메뉴 목록 */
     private List<MenuVO> subMenuList;
     
+    /** 권한 목록 (메뉴 저장 시 함께 저장) */
+    private List<MenuAuthVO> authList;
+    
     /**
      * 하위 메뉴 목록 초기화
      */
@@ -69,5 +72,15 @@ public class MenuVO {
             subMenuList = new ArrayList<>();
         }
         return subMenuList;
+    }
+    
+    /**
+     * 권한 목록 초기화
+     */
+    public List<MenuAuthVO> getAuthList() {
+        if (authList == null) {
+            authList = new ArrayList<>();
+        }
+        return authList;
     }
 }

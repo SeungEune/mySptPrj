@@ -13,8 +13,11 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 메뉴 관리를 위한 Service 구현체
@@ -47,16 +50,62 @@ public class MenuServiceImpl implements MenuService {
 
     /**
      * 관리자용 전체 메뉴 목록 조회 (계층 구조)
+     * 검색어가 있는 경우 검색된 메뉴와 상위 메뉴를 함께 반환
      * @param menuVO 검색 조건
      * @return 계층 구조로 구성된 메뉴 목록
      */
     @Override
     public List<MenuVO> getMenuList(MenuVO menuVO) {
-        // 모든 메뉴 조회
-        List<MenuVO> allMenus = menuDAO.selectMenuList(menuVO);
+        // 검색어가 있는 경우
+        if (menuVO.getSearchKeyword() != null && !menuVO.getSearchKeyword().isEmpty()) {
+            // 1. 전체 메뉴 조회 (검색 조건 없이)
+            MenuVO allSearchVO = new MenuVO();
+            List<MenuVO> allMenus = menuDAO.selectMenuList(allSearchVO);
+            
+            // 2. 검색 조건에 맞는 메뉴 ID 수집 (대소문자 구분 없이 검색)
+            String keyword = menuVO.getSearchKeyword().toLowerCase();
+            Set<String> matchedMenuIds = new HashSet<>();
+            for (MenuVO menu : allMenus) {
+                if (menu.getMenuNm() != null && 
+                    menu.getMenuNm().toLowerCase().contains(keyword)) {
+                    matchedMenuIds.add(menu.getMenuId());
+                }
+            }
+            
+            // 3. 검색된 메뉴의 상위 경로 메뉴 ID 수집
+            Set<String> requiredMenuIds = new HashSet<>(matchedMenuIds);
+            for (String menuId : matchedMenuIds) {
+                collectParentMenuIds(allMenus, menuId, requiredMenuIds);
+            }
+            
+            // 4. 필요한 메뉴만 필터링
+            List<MenuVO> filteredMenus = allMenus.stream()
+                .filter(m -> requiredMenuIds.contains(m.getMenuId()))
+                .collect(Collectors.toList());
+            
+            // 5. 계층 구조로 변환
+            return convertToHierarchy(filteredMenus);
+        }
         
-        // 계층 구조로 변환
+        // 검색어가 없는 경우 기존 로직
+        List<MenuVO> allMenus = menuDAO.selectMenuList(menuVO);
         return convertToHierarchy(allMenus);
+    }
+    
+    /**
+     * 상위 메뉴 ID를 재귀적으로 수집
+     * @param allMenus 전체 메뉴 목록
+     * @param menuId 현재 메뉴 ID
+     * @param result 수집된 메뉴 ID Set
+     */
+    private void collectParentMenuIds(List<MenuVO> allMenus, String menuId, Set<String> result) {
+        for (MenuVO menu : allMenus) {
+            if (menu.getMenuId().equals(menuId) && 
+                menu.getUpperMenuId() != null && !menu.getUpperMenuId().isEmpty()) {
+                result.add(menu.getUpperMenuId());
+                collectParentMenuIds(allMenus, menu.getUpperMenuId(), result);
+            }
+        }
     }
 
     /**
@@ -80,6 +129,23 @@ public class MenuServiceImpl implements MenuService {
         String userId = SessionUtil.getUserId();
         
         try {
+            // 상위 메뉴 ID 빈 문자열 처리 (최상위 메뉴는 NULL로 설정)
+            if (menuVO.getUpperMenuId() != null && menuVO.getUpperMenuId().trim().isEmpty()) {
+                menuVO.setUpperMenuId(null);
+            }
+            
+            // 메뉴 레벨 자동 계산: 상위 메뉴가 있으면 상위 메뉴 레벨 + 1, 없으면 1
+            if (menuVO.getUpperMenuId() != null && !menuVO.getUpperMenuId().isEmpty()) {
+                MenuVO upperMenu = menuDAO.selectMenuDetail(menuVO.getUpperMenuId());
+                if (upperMenu != null && upperMenu.getMenuLevel() != null) {
+                    menuVO.setMenuLevel(upperMenu.getMenuLevel() + 1);
+                } else {
+                    menuVO.setMenuLevel(2); // 상위 메뉴가 있지만 레벨 정보가 없는 경우
+                }
+            } else {
+                menuVO.setMenuLevel(1); // 최상위 메뉴
+            }
+            
             if ("insert".equals(menuVO.getMode())) {
                 // 중복 체크
                 MenuVO existing = menuDAO.selectMenuDetail(menuVO.getMenuId());
@@ -98,6 +164,16 @@ public class MenuServiceImpl implements MenuService {
                 menuDAO.updateMenu(menuVO);
                 result.setMessage("메뉴가 수정되었습니다.");
             }
+            
+            // 권한 정보 저장 (authList가 있는 경우)
+            if (menuVO.getAuthList() != null && !menuVO.getAuthList().isEmpty()) {
+                for (MenuAuthVO authVO : menuVO.getAuthList()) {
+                    authVO.setMenuId(menuVO.getMenuId());
+                    authVO.setRegisterId(userId);
+                    menuDAO.insertOrUpdateMenuAuth(authVO);
+                }
+            }
+            
             result.setResultValue(true);
         } catch (Exception e) {
             log.error("메뉴 저장 중 오류 발생", e);

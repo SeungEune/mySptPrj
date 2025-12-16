@@ -88,8 +88,8 @@
             #{menuId},
             #{menuNm},
             #{upperMenuId},
-            #{menuLevel},
-            COALESCE(#{menuOrder}, 0),
+            CAST(#{menuLevel} AS INTEGER),
+            COALESCE(CAST(#{menuOrder} AS INTEGER), 0),
             #{menuUrl},
             #{menuIcon},
             COALESCE(#{useYn}, 'Y'),
@@ -103,9 +103,16 @@
         UPDATE tb_menu
         SET 
             menu_nm = #{menuNm},
-            upper_menu_id = #{upperMenuId},
-            menu_level = #{menuLevel},
-            menu_order = #{menuOrder},
+            <choose>
+                <when test="upperMenuId != null and upperMenuId != ''">
+                    upper_menu_id = #{upperMenuId},
+                </when>
+                <otherwise>
+                    upper_menu_id = NULL,
+                </otherwise>
+            </choose>
+            menu_level = CAST(#{menuLevel} AS INTEGER),
+            menu_order = COALESCE(CAST(#{menuOrder} AS INTEGER), 0),
             menu_url = #{menuUrl},
             menu_icon = #{menuIcon},
             use_yn = #{useYn},

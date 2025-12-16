@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<!-- 메뉴 검색 모달 Fragment -->
+<div th:fragment="menuSearchModal" id="menuSearchModal" class="menu-modal">
+    <div class="menu-modal-overlay" onclick="MenuSearchModal.close()"></div>
+    <div class="menu-modal-container">
+        <div class="menu-modal-header">
+            <h3>상위 메뉴 검색</h3>
+            <button type="button" class="menu-modal-close" onclick="MenuSearchModal.close()">&times;</button>
+        </div>
+        <div class="menu-modal-body">
+            <!-- 검색 영역 -->
+            <div class="menu-search-box">
+                <input type="text" id="modalMenuNm" placeholder="메뉴명을 입력하세요"
+                       onkeypress="if(event.key==='Enter') MenuSearchModal.searchMenuList();">
+                <button type="button" onclick="MenuSearchModal.searchMenuList();">검색</button>
+            </div>
+            <!-- 트리 컨테이너 -->
+            <div class="menu-modal-tree-container">
+                <div class="menu-search-result-info">
+                    <span id="modalMenuTotalCount">전체 0개</span>
+                </div>
+                <div class="menu-modal-tree-list" id="modalMenuTreeList">
+                    <div class="menu-tree-loading">메뉴 정보를 불러오는 중...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>
+
