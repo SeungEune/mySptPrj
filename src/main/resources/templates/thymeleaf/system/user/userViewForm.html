@@ -11,139 +11,135 @@
     <input type="hidden" id="userId" th:value="${userId}">
 </th:block>
 
-<main th:fragment="content">
-    <div class="wrap-inner">
-        <section class="sub-title">
-            <h2 class="txt-h2">사용자 상세조회</h2>
-        </section>
+<div th:fragment="content" class="wrap-inner">
+  <section class="sub-title">
+    <h2 class="txt-head-md">사용자 상세조회</h2>
+  </section>
 
-        <section class="sub-contents">
-            <div class="item-box">
-                <!-- 기본 정보 섹션 -->
-                <div class="table-box type01">
-                    <div class="table-inner">
-                        <table class="table-type01 form-table">
-                            <caption class="table-caption">사용자 기본 정보</caption>
-                            <colgroup>
-                                <col width="15%"/>
-                                <col width="35%"/>
-                                <col width="15%"/>
-                                <col width="35%"/>
-                            </colgroup>
-                            <tbody>
-                            <tr>
-                                <th>사용자ID</th>
-                                <td id="userIdDisplay">-</td>
-                                <th>사용자명</th>
-                                <td id="userNm">-</td>
-                            </tr>
-                            <tr>
-                                <th>이메일주소</th>
-                                <td id="emailAdres">-</td>
-                                <th>휴대전화번호</th>
-                                <td id="moblphonNo">-</td>
-                            </tr>
-                            <tr>
-                                <th>부서</th>
-                                <td id="deptNm">-</td>
-                                <th>사용자상태</th>
-                                <td id="userSttusCdNm">-</td>
-                            </tr>
-                            <tr>
-                                <th>사용여부</th>
-                                <td id="useYn">-</td>
-                                <th>권한</th>
-                                <td id="roleNm">-</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 개인 정보 섹션 -->
-                <div class="table-box type01 mt-30">
-                    <div class="table-inner">
-                        <table class="table-type01 form-table">
-                            <caption class="table-caption">사용자 개인 정보</caption>
-                            <colgroup>
-                                <col width="15%"/>
-                                <col width="35%"/>
-                                <col width="15%"/>
-                                <col width="35%"/>
-                            </colgroup>
-                            <tbody>
-                            <tr>
-                                <th>성별</th>
-                                <td id="sexdstnCdNm">-</td>
-                                <th>생년월일</th>
-                                <td id="brthdy">-</td>
-                            </tr>
-                            <tr>
-                                <th>직급</th>
-                                <td id="jbgdCdNm">-</td>
-                                <th>직책</th>
-                                <td id="jssfcCdNm">-</td>
-                            </tr>
-                            <tr>
-                                <th>입사일</th>
-                                <td id="joinDe">-</td>
-                                <th>계정잠금여부</th>
-                                <td id="acntLockYn">-</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 시스템 정보 섹션 -->
-                <div class="table-box type01 mt-30">
-                    <div class="table-inner">
-                        <table class="table-type01 form-table">
-                            <caption class="table-caption">시스템 정보</caption>
-                            <colgroup>
-                                <col width="15%"/>
-                                <col width="35%"/>
-                                <col width="15%"/>
-                                <col width="35%"/>
-                            </colgroup>
-                            <tbody>
-                            <tr>
-                                <th>등록자ID</th>
-                                <td id="registerId">-</td>
-                                <th>등록일시</th>
-                                <td id="registDt">-</td>
-                            </tr>
-                            <tr>
-                                <th>수정자ID</th>
-                                <td id="updusrId">-</td>
-                                <th>수정일시</th>
-                                <td id="updtDt">-</td>
-                            </tr>
-                            <tr>
-                                <th>마지막로그인일시</th>
-                                <td id="lastLoginDt">-</td>
-                                <th>로그인실패횟수</th>
-                                <td id="loginFailCo">-</td>
-                            </tr>
-                            <tr>
-                                <th>비밀번호변경일</th>
-                                <td id="passwordChangeDe">-</td>
-                                <td colspan="2"></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 하단 액션 버튼 -->
-                <div class="item-horizontal-box jst-end g10 mt-30">
-                    <button type="button" class="outline-btn" id="listBtn">목록</button>
-                    <button type="button" class="primary-btn" id="editBtn">수정</button>
-                </div>
-            </div>
-        </section>
+  <section class="sub-contents">
+    <!-- 기본 정보 섹션 -->
+    <div class="table-box">
+      <div class="table-inner">
+        <table class="table-type01 form-table">
+          <caption class="table-caption">사용자 기본 정보</caption>
+          <colgroup>
+            <col width="15%"/>
+            <col width="35%"/>
+            <col width="15%"/>
+            <col width="35%"/>
+          </colgroup>
+          <tbody>
+          <tr>
+            <th>사용자ID</th>
+            <td id="userIdDisplay">-</td>
+            <th>사용자명</th>
+            <td id="userNm">-</td>
+          </tr>
+          <tr>
+            <th>이메일주소</th>
+            <td id="emailAdres">-</td>
+            <th>휴대전화번호</th>
+            <td id="moblphonNo">-</td>
+          </tr>
+          <tr>
+            <th>부서</th>
+            <td id="deptNm">-</td>
+            <th>사용자상태</th>
+            <td id="userSttusCdNm">-</td>
+          </tr>
+          <tr>
+            <th>사용여부</th>
+            <td id="useYn">-</td>
+            <th>권한</th>
+            <td id="roleNm">-</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-</main>
+
+    <!-- 개인 정보 섹션 -->
+    <div class="table-box">
+      <div class="table-inner">
+        <table class="table-type01 form-table">
+          <caption class="table-caption">사용자 개인 정보</caption>
+          <colgroup>
+            <col width="15%"/>
+            <col width="35%"/>
+            <col width="15%"/>
+            <col width="35%"/>
+          </colgroup>
+          <tbody>
+          <tr>
+            <th>성별</th>
+            <td id="sexdstnCdNm">-</td>
+            <th>생년월일</th>
+            <td id="brthdy">-</td>
+          </tr>
+          <tr>
+            <th>직급</th>
+            <td id="jbgdCdNm">-</td>
+            <th>직책</th>
+            <td id="jssfcCdNm">-</td>
+          </tr>
+          <tr>
+            <th>입사일</th>
+            <td id="joinDe">-</td>
+            <th>계정잠금여부</th>
+            <td id="acntLockYn">-</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 시스템 정보 섹션 -->
+    <div class="table-box">
+      <div class="table-inner">
+        <table class="table-type01 form-table">
+          <caption class="table-caption">시스템 정보</caption>
+          <colgroup>
+            <col width="15%"/>
+            <col width="35%"/>
+            <col width="15%"/>
+            <col width="35%"/>
+          </colgroup>
+          <tbody>
+          <tr>
+            <th>등록자ID</th>
+            <td id="registerId">-</td>
+            <th>등록일시</th>
+            <td id="registDt">-</td>
+          </tr>
+          <tr>
+            <th>수정자ID</th>
+            <td id="updusrId">-</td>
+            <th>수정일시</th>
+            <td id="updtDt">-</td>
+          </tr>
+          <tr>
+            <th>마지막로그인일시</th>
+            <td id="lastLoginDt">-</td>
+            <th>로그인실패횟수</th>
+            <td id="loginFailCo">-</td>
+          </tr>
+          <tr>
+            <th>비밀번호변경일</th>
+            <td id="passwordChangeDe">-</td>
+            <td colspan="2"></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 하단 액션 버튼 -->
+    <div class="item-horizontal-box jst-end mb-24">
+      <button type="button" class="tertiary-button" id="listBtn">목록</button>
+      <button type="button" class="primary-button" id="editBtn">수정</button>
+    </div>
+  </section>
+</div>
 
 </html>
 

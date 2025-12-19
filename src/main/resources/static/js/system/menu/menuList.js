@@ -329,7 +329,7 @@ function fn_renderRoleList() {
     tbody.innerHTML = '';
     
     if (!roleList || roleList.length === 0) {
-        tbody.innerHTML = '<tr><td class="tc" colspan="6" style="height:350px;">권한 그룹이 없습니다.</td></tr>';
+        tbody.innerHTML = '<tr><td class="no-data-table" colspan="6">권한 그룹이 없습니다.</td></tr>';
         return;
     }
     
@@ -413,7 +413,7 @@ function fn_renderUserList() {
     tbody.innerHTML = '';
     
     if (!userList || userList.length === 0) {
-        tbody.innerHTML = '<tr><td class="tc" colspan="4" style="height:350px;">사용자가 없습니다.</td></tr>';
+        tbody.innerHTML = '<tr><td class="no-data-table" colspan="4">사용자가 없습니다.</td></tr>';
         return;
     }
     
@@ -458,7 +458,7 @@ function fn_renderUserList() {
  */
 function fn_clearUserList() {
     const tbody = document.getElementById('userListTbody');
-    tbody.innerHTML = '<tr><td class="tc" colspan="4" style="height:350px;">권한 그룹을 선택하세요</td></tr>';
+    tbody.innerHTML = '<tr><td class="no-data-table" colspan="4">권한 그룹을 선택하세요</td></tr>';
     userList = [];
 }
 

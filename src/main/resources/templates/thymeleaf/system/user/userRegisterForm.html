@@ -12,207 +12,213 @@
     <script th:src="@{/js/system/user/userRegisterForm.js}"></script>
 </th:block>
 
-<main th:fragment="content">
-    <div class="wrap-inner">
-        <section class="sub-title">
-            <h2 class="txt-h2">사용자 등록</h2>
-        </section>
+<div th:fragment="content" class="wrap-inner">
+  <section class="sub-title">
+    <h2 class="txt-head-md">사용자 등록</h2>
+  </section>
 
-        <section class="sub-contents">
-            <form id="userForm" class="item-box">
-                <!-- 기본 정보 섹션 -->
-                <div class="table-box type01">
-                    <div class="table-inner">
-                        <table class="table-type01 form-table">
-                            <caption class="table-caption">사용자 기본 정보 입력</caption>
-                            <colgroup>
-                                <col width="15%"/>
-                                <col width="35%"/>
-                                <col width="15%"/>
-                                <col width="35%"/>
-                            </colgroup>
-                            <tbody>
-                            <tr>
-                                <th><label for="userId">사용자ID <span class="required">*</span></label></th>
-                                <td>
-                                    <div class="input-group">
-                                        <input type="text" id="userId" name="userId" class="input" 
-                                               placeholder="사용자ID를 입력하세요" required>
-                                        <button type="button" class="outline-btn" id="checkIdBtn">중복확인</button>
-                                    </div>
-                                </td>
-                                <th><label for="userNm">사용자명 <span class="required">*</span></label></th>
-                                <td>
-                                    <input type="text" id="userNm" name="userNm" class="input" 
-                                           placeholder="사용자명을 입력하세요" required>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="password">비밀번호 <span class="required">*</span></label></th>
-                                <td>
-                                    <input type="password" id="password" name="password" class="input" 
-                                           placeholder="비밀번호를 입력하세요" required>
-                                </td>
-                                <th><label for="passwordConfirm">비밀번호 확인 <span class="required">*</span></label></th>
-                                <td>
-                                    <input type="password" id="passwordConfirm" name="passwordConfirm" class="input" 
-                                           placeholder="비밀번호를 다시 입력하세요" required>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="emailAdres">이메일주소</label></th>
-                                <td>
-                                    <input type="email" id="emailAdres" name="emailAdres" class="input" 
-                                           placeholder="이메일주소를 입력하세요">
-                                </td>
-                                <th><label for="moblphonNo">휴대전화번호</label></th>
-                                <td>
-                                    <input type="tel" id="moblphonNo" name="moblphonNo" class="input" 
-                                           placeholder="휴대전화번호를 입력하세요 (예: 010-1234-5678)">
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="deptCd">부서</label></th>
-                                <td>
-                                    <div class="input-group">
-                                        <input type="text" id="deptNm" name="deptNm" class="input" 
-                                               placeholder="부서를 선택하세요" readonly>
-                                        <input type="hidden" id="deptCd" name="deptCd">
-                                        <button type="button" class="outline-btn" id="deptSearchBtn">검색</button>
-                                    </div>
-                                </td>
-                                <th><label for="roleCd">권한 <span class="required">*</span></label></th>
-                                <td>
-                                    <div class="select-box">
-                                        <select id="roleCd" name="roleCd" class="select" required>
-                                            <option value="">선택하세요</option>
-                                            <th:block th:each="role : ${roleCodeList}">
-                                                <option th:value="${role.roleCd}" th:text="${role.roleNm}"></option>
-                                            </th:block>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="userSttusCd">사용자상태 <span class="required">*</span></label></th>
-                                <td>
-                                    <div class="select-box">
-                                        <select id="userSttusCd" name="userSttusCd" class="select" required>
-                                            <option value="">선택하세요</option>
-                                            <th:block th:each="code : ${userSttusCodeList}">
-                                                <option th:value="${code.code}" th:text="${code.codeNm}"></option>
-                                            </th:block>
-                                        </select>
-                                    </div>
-                                </td>
-                                <th><label for="useYn">사용여부 <span class="required">*</span></label></th>
-                                <td>
-                                    <div class="radio-group">
-                                        <label class="radio-label">
-                                            <input type="radio" name="useYn" value="Y" checked>
-                                            <span>사용</span>
-                                        </label>
-                                        <label class="radio-label">
-                                            <input type="radio" name="useYn" value="N">
-                                            <span>미사용</span>
-                                        </label>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+  <section class="sub-contents">
+    <form id="userForm" class="item-box">
+      <!-- 기본 정보 섹션 -->
+      <div class="table-box">
+        <div class="table-inner">
+          <table class="table-type01 form-table">
+            <caption class="table-caption">사용자 기본 정보 입력</caption>
+            <colgroup>
+              <col width="15%"/>
+              <col width="35%"/>
+              <col width="15%"/>
+              <col width="35%"/>
+            </colgroup>
+            <tbody>
+              <tr>
+                <th><label for="userId">사용자ID <span class="required">*</span></label></th>
+                <td>
+                  <div class="input-group">
+                    <input type="text" id="userId" name="userId" class="input"
+                           placeholder="사용자ID를 입력하세요" required>
+                    <button type="button" class="tertiary-button" id="checkIdBtn">중복확인</button>
+                  </div>
+                </td>
+                <th><label for="userNm">사용자명 <span class="required">*</span></label></th>
+                <td>
+                  <input type="text" id="userNm" name="userNm" class="input"
+                         placeholder="사용자명을 입력하세요" required>
+                </td>
+              </tr>
+              <tr>
+                <th><label for="password">비밀번호 <span class="required">*</span></label></th>
+                <td>
+                  <input type="password" id="password" name="password" class="input"
+                         placeholder="비밀번호를 입력하세요" required>
+                </td>
+                <th><label for="passwordConfirm">비밀번호 확인 <span class="required">*</span></label></th>
+                <td>
+                  <input type="password" id="passwordConfirm" name="passwordConfirm" class="input"
+                         placeholder="비밀번호를 다시 입력하세요" required>
+                </td>
+              </tr>
+              <tr>
+                <th><label for="emailAdres">이메일주소</label></th>
+                <td>
+                  <input type="email" id="emailAdres" name="emailAdres" class="input"
+                         placeholder="이메일주소를 입력하세요">
+                </td>
+                <th><label for="moblphonNo">휴대전화번호</label></th>
+                <td>
+                  <input type="tel" id="moblphonNo" name="moblphonNo" class="input"
+                         placeholder="휴대전화번호를 입력하세요 (예: 010-1234-5678)">
+                </td>
+              </tr>
+              <tr>
+                <th><label for="deptCd">부서</label></th>
+                <td>
+                  <div class="input-group">
+                    <input type="text" id="deptNm" name="deptNm" class="input"
+                           placeholder="부서를 선택하세요" readonly>
+                    <input type="hidden" id="deptCd" name="deptCd">
+                    <button type="button" class="tertiary-button" id="deptSearchBtn">검색</button>
+                  </div>
+                </td>
+                <th><label for="roleCd">권한 <span class="required">*</span></label></th>
+                <td>
+                  <div class="select-box">
+                    <select id="roleCd" name="roleCd" class="select" required>
+                      <option value="">선택하세요</option>
+                      <th:block th:each="role : ${roleCodeList}">
+                        <option th:value="${role.roleCd}" th:text="${role.roleNm}"></option>
+                      </th:block>
+                    </select>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th><label for="userSttusCd">사용자상태 <span class="required">*</span></label></th>
+                <td>
+                  <div class="select-box">
+                    <select id="userSttusCd" name="userSttusCd" class="select" required>
+                      <option value="">선택하세요</option>
+                      <th:block th:each="code : ${userSttusCodeList}">
+                        <option th:value="${code.code}" th:text="${code.codeNm}"></option>
+                      </th:block>
+                    </select>
+                  </div>
+                </td>
+                <th>
+                  <label for="useYn">사용여부 <span class="required">*</span></label>
+                </th>
+                <td>
+                  <div class="radio-group">
+                    <label class="radio-label">
+                      <input type="radio" id="useYn" name="useYn" value="Y" checked>
+                      <span>사용</span>
+                    </label>
+                    <label class="radio-label">
+                      <input type="radio" name="useYn" value="N">
+                      <span>미사용</span>
+                    </label>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-                <!-- 개인 정보 섹션 -->
-                <div class="table-box type01 mt-30">
-                    <div class="table-inner">
-                        <table class="table-type01 form-table">
-                            <caption class="table-caption">사용자 개인 정보 입력</caption>
-                            <colgroup>
-                                <col width="15%"/>
-                                <col width="35%"/>
-                                <col width="15%"/>
-                                <col width="35%"/>
-                            </colgroup>
-                            <tbody>
-                            <tr>
-                                <th><label>성별</label></th>
-                                <td>
-                                    <div class="radio-group">
-                                        <th:block th:each="code, stat : ${sexdstnCodeList}">
-                                            <label class="radio-label">
-                                                <input type="radio" name="sexdstnCd" th:value="${code.code}" th:checked="${stat.first}">
-                                                <span th:text="${code.codeNm}"></span>
-                                            </label>
-                                        </th:block>
-                                    </div>
-                                </td>
-                                <th><label for="brthdy">생년월일</label></th>
-                                <td>
-                                    <input type="date" id="brthdy" name="brthdy" class="input">
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="jbgdCd">직급</label></th>
-                                <td>
-                                    <div class="select-box">
-                                        <select id="jbgdCd" name="jbgdCd" class="select">
-                                            <option value="">선택하세요</option>
-                                            <th:block th:each="code : ${jbgdCodeList}">
-                                                <option th:value="${code.code}" th:text="${code.codeNm}"></option>
-                                            </th:block>
-                                        </select>
-                                    </div>
-                                </td>
-                                <th><label for="jssfcCd">직책</label></th>
-                                <td>
-                                    <div class="select-box">
-                                        <select id="jssfcCd" name="jssfcCd" class="select">
-                                            <option value="">선택하세요</option>
-                                            <th:block th:each="code : ${jssfcCodeList}">
-                                                <option th:value="${code.code}" th:text="${code.codeNm}"></option>
-                                            </th:block>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="joinDe">입사일</label></th>
-                                <td>
-                                    <input type="date" id="joinDe" name="joinDe" class="input">
-                                </td>
-                                <th><label for="acntLockYn">계정잠금여부</label></th>
-                                <td>
-                                    <div class="radio-group">
-                                        <label class="radio-label">
-                                            <input type="radio" name="acntLockYn" value="N" checked>
-                                            <span>정상</span>
-                                        </label>
-                                        <label class="radio-label">
-                                            <input type="radio" name="acntLockYn" value="Y">
-                                            <span>잠금</span>
-                                        </label>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+      <!-- 개인 정보 섹션 -->
+      <div class="table-box">
+        <div class="table-inner">
+          <table class="table-type01 form-table">
+            <caption class="table-caption">사용자 개인 정보 입력</caption>
+            <colgroup>
+              <col width="15%"/>
+              <col width="35%"/>
+              <col width="15%"/>
+              <col width="35%"/>
+            </colgroup>
+            <tbody>
+            <tr>
+              <th>
+                <label>성별</label>
+              </th>
+              <td>
+                <div class="radio-group">
+                  <th:block th:each="code, stat : ${sexdstnCodeList}">
+                    <label class="radio-label">
+                      <input type="radio" name="sexdstnCd" th:value="${code.code}" th:checked="${stat.first}">
+                      <span th:text="${code.codeNm}"></span>
+                    </label>
+                  </th:block>
                 </div>
+              </td>
+              <th><label for="brthdy">생년월일</label></th>
+              <td>
+                <input type="date" id="brthdy" name="brthdy" class="input">
+              </td>
+            </tr>
+            <tr>
+              <th><label for="jbgdCd">직급</label></th>
+              <td>
+                <div class="select-box">
+                  <select id="jbgdCd" name="jbgdCd" class="select">
+                    <option value="">선택하세요</option>
+                    <th:block th:each="code : ${jbgdCodeList}">
+                      <option th:value="${code.code}" th:text="${code.codeNm}"></option>
+                    </th:block>
+                  </select>
+                </div>
+              </td>
+              <th><label for="jssfcCd">직책</label></th>
+              <td>
+                <div class="select-box">
+                  <select id="jssfcCd" name="jssfcCd" class="select">
+                    <option value="">선택하세요</option>
+                    <th:block th:each="code : ${jssfcCodeList}">
+                      <option th:value="${code.code}" th:text="${code.codeNm}"></option>
+                    </th:block>
+                  </select>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                <label for="joinDe">입사일</label>
+              </th>
+              <td>
+                <input type="date" id="joinDe" name="joinDe" class="input">
+              </td>
+              <th>
+                <label for="acntLockYn">계정잠금여부</label>
+              </th>
+              <td>
+                <div class="radio-group">
+                  <label class="radio-label">
+                    <input type="radio" id="acntLockYn" name="acntLockYn" value="N" checked>
+                    <span>정상</span>
+                  </label>
+                  <label class="radio-label">
+                    <input type="radio" name="acntLockYn" value="Y">
+                    <span>잠금</span>
+                  </label>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-                <!-- 하단 액션 버튼 -->
-                <div class="item-horizontal-box jst-end g10 mt-30">
-                    <button type="button" class="outline-btn" onclick="location.href='/system/user/userListForm.do'">목록</button>
-                    <button type="submit" class="primary-btn">저장</button>
-                </div>
-            </form>
-        </section>
-    </div>
+      <!-- 하단 액션 버튼 -->
+      <div class="item-horizontal-box jst-end mb-24">
+        <button type="button" class="tertiary-button" onclick="location.href='/system/user/userListForm.do'">목록</button>
+        <button type="submit" class="primary-button">저장</button>
+      </div>
+    </form>
+  </section>
 
     <!-- 부서 검색 모달 -->
     <th:block th:insert="~{system/dept/deptSearchModal :: deptSearchModal}"></th:block>
-</main>
+</div>
 
 </html>
 

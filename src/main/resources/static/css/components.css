@@ -5,9 +5,52 @@
    추후 공통 컴포넌트 스타일이 필요할 경우 이곳에 작성합니다.
 */
 
-/* ==========================================================================
-   Pagination
-   ========================================================================== */
+/* icon */
+.icon{
+  width: 24px;
+  height: 24px;
+}
+.icon-plus::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_plus.svg")no-repeat center;
+  background-size: 100%;
+}
+.icon-minus::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_dash.svg")no-repeat center;
+  background-size: 100%;
+}
+.icon-drop-down::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_arrow_drop_down.svg")no-repeat center;
+  background-size: 100%;
+}
+.icon-arrow-up::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_arrow_up.svg")no-repeat center;
+  background-size: 100%;
+}
+.icon-arrow-down::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_arrow_down.svg")no-repeat center;
+  background-size: 100%;
+}
+/* Pagination */
 .pagination {
   display: flex;
   align-items: center;
@@ -59,32 +102,32 @@
 }
 
 .pagination a.disabled_prev_page.prev_page {
-  background: url('/images/img/Arrow_left_disabled.svg') no-repeat center;
+  background: url('../images/pagination/arrow_back_disabled.svg') no-repeat center;
   cursor: default;
 }
 
 .pagination a.prev_page {
-  background: url('/images/img/Arrow_left.svg') no-repeat center;
+  background: url('../images/pagination/arrow_back.svg') no-repeat center;
   cursor: pointer;
 }
 
 .pagination a.prev_page.no-active {
-    background: url('/images/img/Arrow_left_disabled.svg') no-repeat center;
+    background: url('../images/pagination/arrow_back_disabled.svg') no-repeat center;
     cursor: default;
 }
 
 .pagination a.next_page {
-  background: url('/images/img/Arrow_right.svg') no-repeat center;
+  background: url('../images/pagination/arrow_forward.svg') no-repeat center;
   cursor: pointer;
 }
 
 .pagination a.next_page.no-active {
-    background: url('/images/img/Arrow_right_disabled.svg') no-repeat center;
+    background: url('../images/pagination/arrow_forward_disabled.svg') no-repeat center;
     cursor: default;
 }
 
 .pagination a.disabled_next_page {
-  background: url('/images/img/Arrow_right_disabled.svg') no-repeat center;
+  background: url('../images/pagination/arrow_forward_disabled.svg') no-repeat center;
   cursor: default;
 }
 
@@ -106,4 +149,97 @@
 a.disabled_prev_page:hover,
 a.disabled_next_page:hover{
   background-color: transparent;
+}
+
+/*tree menu*/
+.dept-tree-list {
+  padding: 10px 0;
+}
+.dept-tree-item {
+  position: relative;
+}
+.dept-tree-row {
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+  transition: background-color 0.2s;
+}
+.dept-tree-row:hover {
+  background-color: #F8F9FF;
+}
+.dept-tree-indent {
+  display: inline-block;
+  flex-shrink: 0;
+}
+.dept-tree-toggle{
+  width: 20px;
+  height: 20px;
+  border: 1px solid #DFE6E9;
+  background-color: #FFFFFF;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-right: 8px;
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: bold;
+  color: #666BE1;
+  transition: all 0.2s;
+  padding: 0;
+  line-height: 1;
+}
+button.dept-tree-toggle>i{
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.dept-tree-toggle:hover{
+  background-color: #666BE1;
+  color: #FFFFFF;
+}
+.dept-tree-toggle:hover>i{
+  filter: invert(100%) sepia(0%) saturate(100%) hue-rotate(0deg) brightness(300%) contrast(100%);
+}
+.dept-tree-toggle.no-children{
+  visibility: hidden;
+}
+.dept-tree-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  cursor: pointer;
+}
+.dept-name {
+  font-size: 14px;
+  color: #2D3436;
+  font-weight: 500;
+}
+.dept-code {
+  font-size: 12px;
+  color: #95A5A6;
+}
+.dept-count {
+  font-size: 12px;
+  color: #666BE1;
+  margin-left: auto;
+}
+.dept-tree-children {
+  display: none;
+}
+.dept-tree-children.expanded {
+  display: block;
+}
+.dept-tree-loading {
+  text-align: center;
+  padding: 20px;
+  color: #95A5A6;
+}
+.dept-tree-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #95A5A6;
+  font-size: 14px;
 }

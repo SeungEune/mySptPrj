@@ -136,7 +136,6 @@ function fn_createTreeItem(dept, allDepts) {
         
         const icon = document.createElement('i');
         icon.className = isExpanded ? 'icon-minus' : 'icon-plus';
-        icon.textContent = isExpanded ? '−' : '+';
         toggle.appendChild(icon);
     }
     row.appendChild(toggle);
@@ -207,7 +206,6 @@ function fn_toggleNode(deptCd) {
         childrenContainer.classList.remove('expanded');
         toggleButton.dataset.expanded = 'false';
         icon.className = 'icon-plus';
-        icon.textContent = '+';
         
         const index = expandedNodes.indexOf(deptCd);
         if (index > -1) {
@@ -218,7 +216,6 @@ function fn_toggleNode(deptCd) {
         childrenContainer.classList.add('expanded');
         toggleButton.dataset.expanded = 'true';
         icon.className = 'icon-minus';
-        icon.textContent = '−';
         
         if (!expandedNodes.includes(deptCd)) {
             expandedNodes.push(deptCd);

@@ -13,101 +13,101 @@
     <script th:src="@{/js/system/user/userList.js}"></script>
 </th:block>
 
-<main th:fragment="content">
-    <div class="wrap-inner">
-        <section class="sub-title">
-            <h2 class="txt-h2">사용자 관리</h2>
-        </section>
+<div th:fragment="content" class="wrap-inner">
 
-        <section class="sub-contents">
-            <!-- 검색 영역 -->
-            <div class="item-box">
-                <div id="searchForm" class="search-form">
-                    <div class="item-horizontal-box fx-wrap g10">
-                        <div class="select-box w150px">
-                            <select class="select" id="searchType" name="searchType">
-                                <option value="userNm">이름</option>
-                                <option value="userId">아이디</option>
-                                <option value="deptNm">부서</option>
-                            </select>
-                        </div>
-                        <div class="input-box">
-                            <input type="text" id="searchKeyword" name="searchKeyword" class="input" placeholder="검색어를 입력하세요">
-                        </div>
-                        <div class="select-box w150px">
-                            <select class="select" id="status" name="status">
-                                <option value="">전체</option>
-                                <option value="ACTIVE">재직</option>
-                                <option value="LEAVE">휴직</option>
-                                <option value="RETIRE">퇴사</option>
-                            </select>
-                        </div>
-                        <button type="button" class="primary-btn" id="searchBtn">검색</button>
-                        <button type="button" class="outline-btn" id="resetBtn">초기화</button>
-                    </div>
-                </div>
+    <section class="sub-title">
+        <h2 class="txt-head-md">사용자 관리</h2>
+    </section>
+
+    <section class="sub-contents">
+        <!-- 검색 영역 -->
+        <div class="conts-wrap">
+          <div id="searchForm" class="search-form">
+            <div class="select-group">
+              <div class="select-box">
+                <select class="select" id="searchType" name="searchType">
+                  <option value="userNm">이름</option>
+                  <option value="userId">아이디</option>
+                  <option value="deptNm">부서</option>
+                </select>
+              </div>
+              <div class="select-box">
+                <select class="select" id="status" name="status">
+                  <option value="">전체</option>
+                  <option value="ACTIVE">재직</option>
+                  <option value="LEAVE">휴직</option>
+                  <option value="RETIRE">퇴사</option>
+                </select>
+              </div>
+            </div>
+            <div class="input-box">
+              <input type="text" id="searchKeyword" name="searchKeyword" class="input" placeholder="검색어를 입력하세요">
+            </div>
+            <div class="button-group">
+              <button type="button" class="primary-button" id="searchBtn">검색</button>
+              <button type="button" class="tertiary-button" id="resetBtn">초기화</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 목록 영역 -->
+        <div class="conts-wrap table-box">
+            <!-- 상단 툴바 -->
+            <div class="item-horizontal-box jst-btw align-ct mb-10">
+              <div class="total-count">
+                <span class="txt-body-sm">Total: <strong id="totalCount">0</strong>건</span>
+              </div>
+              <div class="item-horizontal-box g10">
+                <button type="button" class="primary-button" id="registerBtn">신규 등록</button>
+              </div>
             </div>
 
-            <!-- 목록 영역 -->
-            <div class="item-box">
-                <!-- 상단 툴바 -->
-                <div class="item-horizontal-box jst-btw align-ct mb-10">
-                    <div class="total-count">
-                        <span class="txt-body-sm">Total: <strong id="totalCount">0</strong>건</span>
-                    </div>
-                    <div class="item-horizontal-box g10">
-                        <button type="button" class="primary-btn" id="registerBtn">신규 등록</button>
-                    </div>
-                </div>
+            <!-- 데이터 테이블 -->
+            <div class="table-inner">
+              <table class="table-type01 click" id="userTable">
+                <colgroup>
+                    <col width="5%"/>
+                    <col width="12%"/>
+                    <col width="10%"/>
+                    <col width="12%"/>
+                    <col width="10%"/>
+                    <col width="15%"/>
+                    <col width="10%"/>
+                    <col width="14%"/>
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th class="tc">No</th>
+                    <th class="tc">아이디</th>
+                    <th class="tc">이름</th>
+                    <th class="tc">부서</th>
+                    <th class="tc">직급/역할</th>
+                    <th class="tc">이메일</th>
+                    <th class="tc">상태</th>
+                    <th class="tc">등록일</th>
+                  </tr>
+                </thead>
+                <tbody id="userListBody">
+                  <tr>
+                    <td class="no-data-table" colspan="8">조회 결과가 없습니다.</td>
+                  </tr>
+                </tbody>
+            </table>
+          </div>
 
-                <!-- 데이터 테이블 -->
-                <div class="table-box type01">
-                    <div class="table-inner">
-                        <table class="table-type01" id="userTable">
-                            <colgroup>
-                                <col width="5%"/>
-                                <col width="12%"/>
-                                <col width="10%"/>
-                                <col width="12%"/>
-                                <col width="10%"/>
-                                <col width="15%"/>
-                                <col width="10%"/>
-                                <col width="14%"/>
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th class="tc">No</th>
-                                <th class="tc">아이디</th>
-                                <th class="tc">이름</th>
-                                <th class="tc">부서</th>
-                                <th class="tc">직급/역할</th>
-                                <th class="tc">이메일</th>
-                                <th class="tc">상태</th>
-                                <th class="tc">등록일</th>
-                            </tr>
-                            </thead>
-                            <tbody id="userListBody">
-                            <tr>
-                                <td class="tc" colspan="8" style="height:350px;">조회 결과가 없습니다.</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+          <!-- 페이징 -->
+          <div class="item-box jst-ct mt-20">
+            <div id="paginationArea" class="pagination"></div>
+            <input type="hidden" id="searchPageNo" value="1">
+          </div>
+        </div>
+    </section>
 
-                <!-- 페이징 -->
-                <div class="item-box align-ct mt-20">
-                    <div id="paginationArea" class="pagination"></div>
-                    <input type="hidden" id="searchPageNo" value="1">
-                </div>
-            </div>
-        </section>
-    </div>
     
     <!-- jQuery tmpl 템플릿 -->
     <script type="text/x-jquery-tmpl" id="emptyTemplate">
         <tr>
-            <td class="tc" colspan="8" style="height:350px;">조회 결과가 없습니다.</td>
+            <td class="no-data-table" colspan="8">조회 결과가 없습니다.</td>
         </tr>
     </script>
 
@@ -123,6 +123,6 @@
             <td>{{html registDt}}</td>
         </tr>
     </script>
-</main>
+</div>
 
 </html>

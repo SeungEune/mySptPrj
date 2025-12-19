@@ -7,9 +7,9 @@
 
     <div class="wrap-inner">
         <section class="sub-title">
-            <div class="item-box">
-                <h2 class="txt-h2">대시보드</h2>
-                <p class="txt-body-sm">
+            <div class="conts-wrap">
+                <h2 class="txt-head-md">대시보드</h2>
+                <p class="txt-body-md">
                     환영합니다,
                     <span class="fw-bold" th:text="${loginVO.userNm}">사용자</span>
                     님
@@ -18,8 +18,8 @@
         </section>
 
         <section class="sub-contents">
-            <div class="item-horizontal-box fx-wrap g20">
-                <div class="table-box type01 w50">
+            <div class="item-horizontal-box">
+                <div class="table-box fx-1">
                     <div class="table-inner">
                         <table class="table-type01">
                             <colgroup>
@@ -57,88 +57,84 @@
                     </div>
                 </div>
 
-                <div class="item-box w50">
-                    <p class="txt-h3">빠른 메뉴</p>
-                    <div class="item-horizontal-box fx-wrap g10">
-                        <a href="/notice/noticeList.do" class="primary-btn w150px tc">공지사항</a>
-                        <a href="/office/officeEqpmnList.do" class="outline-btn w150px tc">장비 관리</a>
-                        <a href="/cmm/fms/selectFileInfs.do" class="outline-btn-Bck w150px tc">파일 관리</a>
-                        <a href="/menu/menuList.do" class="outline-btn-Gr w150px tc">메뉴 설정</a>
+                <div class="conts-wrap fx-1">
+                    <p class="txt-head-sm">빠른 메뉴</p>
+                    <div class="item-horizontal-box">
+                        <a href="/notice/noticeList.do" class="primary-button">공지사항</a>
+                        <a href="/office/officeEqpmnList.do" class="primary-button">장비 관리</a>
+                        <a href="/cmm/fms/selectFileInfs.do" class="primary-button">파일 관리</a>
+                        <a href="/menu/menuList.do" class="primary-button">메뉴 설정</a>
                     </div>
                 </div>
             </div>
 
-            <div class="item-box">
-                <div class="item-horizontal-box jst-btw align-ct">
-                    <p class="txt-h3 mb-0">공지사항</p>
-                    <a href="/notice/noticeList.do" class="txt-link">더보기</a>
-                </div>
-                <div class="table-box type01 mt-10">
-                    <div class="table-inner">
-                        <table class="table-type01">
-                            <colgroup>
-                                <col width="15%"/>
-                                <col/>
-                                <col width="20%"/>
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th>구분</th>
-                                <th>제목</th>
-                                <th>등록일</th>
-                            </tr>
-                            </thead>
-                            <tbody id="noticeList">
-                            <tr>
-                                <td class="tc" colspan="3">공지사항을 불러오는 중입니다.</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div class="conts-wrap table-box">
+              <div class="item-horizontal-box jst-btw align-ct">
+                <p class="txt-head-sm mb-0">공지사항</p>
+                <a href="/notice/noticeList.do" class="txt-link">더보기</a>
+              </div>
+              <div class="table-inner">
+                <table class="table-type01">
+                  <colgroup>
+                    <col width="15%"/>
+                    <col/>
+                    <col width="20%"/>
+                  </colgroup>
+                  <thead>
+                  <tr>
+                    <th>구분</th>
+                    <th>제목</th>
+                    <th>등록일</th>
+                  </tr>
+                  </thead>
+                  <tbody id="noticeList">
+                  <tr>
+                    <td class="tc" colspan="3">공지사항을 불러오는 중입니다.</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
 
-            <div class="item-box">
-                <p class="txt-h3">주요 현황</p>
-                <div class="table-box type01 mt-10">
-                    <div class="table-inner">
-                        <table class="table-type01">
-                            <colgroup>
-                                <col width="30%"/>
-                                <col/>
-                            </colgroup>
-                            <tbody>
-                            <tr>
-                                <th>전체 사용자</th>
-                                <td>
-                                    <div class="item-box g5">
-                                        <p class="txt-h2 fc-primary">150명</p>
-                                        <p class="txt-body-xs fc-gr">전일 대비 +5</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>등록된 장비</th>
-                                <td>
-                                    <div class="item-box g5">
-                                        <p class="txt-h2">45대</p>
-                                        <p class="txt-body-xs fc-gr">전 장비 정상 운영</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>공지 게시물</th>
-                                <td>
-                                    <div class="item-box g5">
-                                        <p class="txt-h2">12건</p>
-                                        <p class="txt-body-xs fc-gr">최근 7일 내 3건 등록</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div class="conts-wrap table-box">
+              <p class="txt-head-sm">주요 현황</p>
+              <div class="table-inner">
+                <table class="table-type01">
+                  <colgroup>
+                    <col width="30%"/>
+                    <col/>
+                  </colgroup>
+                  <tbody>
+                  <tr>
+                    <th>전체 사용자</th>
+                    <td>
+                      <div class="item-box g-8 align-ct">
+                        <p class="txt-head-md fc-primary">150명</p>
+                        <p class="txt-body-xs fc-gr">전일 대비 +5</p>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>등록된 장비</th>
+                    <td>
+                      <div class="item-box g-8 align-ct">
+                        <p class="txt-head-md">45대</p>
+                        <p class="txt-body-xs fc-gr">전 장비 정상 운영</p>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>공지 게시물</th>
+                    <td>
+                      <div class="item-box g-8 align-ct">
+                        <p class="txt-head-md">12건</p>
+                        <p class="txt-body-xs fc-gr">최근 7일 내 3건 등록</p>
+                      </div>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
         </section>
     </div>

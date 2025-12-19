@@ -2,26 +2,6 @@
 
 /* 사용자 관리 페이지 전용 스타일 */
 
-/* 검색 폼 스타일 */
-.search-form {
-    width: 100%;
-}
-
-.search-form .input-box {
-    flex: 1;
-    min-width: 200px;
-}
-
-/* 테이블 행 클릭 효과 */
-.table-type01 tbody tr {
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.table-type01 tbody tr:hover {
-    background-color: #F4F6F8;
-}
-
 /* 관리 버튼 그룹 */
 .action-buttons {
     display: flex;
@@ -34,40 +14,3 @@
     font-size: 12px;
     height: 28px;
 }
-
-/* 총 건수 스타일 */
-.total-count strong {
-    color: #666BE1;
-    font-weight: 700;
-}
-
-/* 폼 테이블 스타일 */
-.form-table {
-    margin-bottom: 0;
-}
-
-.form-table th {
-    background-color: #F8F9FA;
-    font-weight: 600;
-    text-align: left;
-    vertical-align: middle;
-}
-
-.form-table td {
-    padding: 15px;
-    vertical-align: middle;
-}
-
-/* 읽기 전용 필드 스타일 */
-.readonly-field {
-    color: #636E72;
-    background-color: #F4F6F8;
-    padding: 8px 12px;
-    border-radius: 4px;
-}
-
-/* 섹션 간격 */
-.mt-30 {
-    margin-top: 30px;
-}
-

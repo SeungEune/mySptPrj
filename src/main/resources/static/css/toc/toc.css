@@ -52,9 +52,10 @@
 
 /* 서브메뉴 화살표 */
 .submenu-arrow {
-    margin-left: auto;
-    font-size: 10px;
-    transition: transform 0.2s;
+  width: 24px;
+  height: 24px;
+  margin-left: auto;
+  transition: transform 0.2s;
 }
 .sidebar-menu-item.active .submenu-arrow {
     transform: rotate(180deg);

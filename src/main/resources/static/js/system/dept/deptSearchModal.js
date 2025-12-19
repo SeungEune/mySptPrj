@@ -149,7 +149,6 @@ const DeptSearchModal = {
             
             const icon = document.createElement('i');
             icon.className = isExpanded ? 'icon-minus' : 'icon-plus';
-            icon.textContent = isExpanded ? '−' : '+';
             toggle.appendChild(icon);
         }
         row.appendChild(toggle);
@@ -216,7 +215,6 @@ const DeptSearchModal = {
             childrenContainer.classList.remove('expanded');
             toggleButton.dataset.expanded = 'false';
             icon.className = 'icon-plus';
-            icon.textContent = '+';
             
             const index = this.expandedNodes.indexOf(deptCd);
             if (index > -1) {
@@ -227,7 +225,6 @@ const DeptSearchModal = {
             childrenContainer.classList.add('expanded');
             toggleButton.dataset.expanded = 'true';
             icon.className = 'icon-minus';
-            icon.textContent = '−';
             
             if (!this.expandedNodes.includes(deptCd)) {
                 this.expandedNodes.push(deptCd);
