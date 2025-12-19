@@ -1,259 +1,114 @@
 @charset "utf-8";
-
-/* 메뉴 검색 모달 스타일 */
-
-.menu-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 9999;
-}
-
-.menu-modal.show {
-    display: block;
-}
-
-.menu-modal-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-.menu-modal-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 700px;
-    max-height: 90vh;
-    background-color: #FFFFFF;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-}
-
-.menu-modal-header {
-    padding: 20px 24px;
-    border-bottom: 1px solid #DFE6E9;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-.menu-modal-header h3 {
-    font-size: 18px;
-    font-weight: 700;
-    color: #2D3436;
-    margin: 0;
-}
-
-.menu-modal-close {
-    width: 32px;
-    height: 32px;
-    border: none;
-    background: none;
-    font-size: 28px;
-    color: #636E72;
-    cursor: pointer;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.2s;
-}
-
-.menu-modal-close:hover {
-    color: #2D3436;
-}
-
-.menu-modal-body {
-    padding: 20px 24px;
-    overflow-y: auto;
-    flex: 1;
-}
-
-.menu-search-box {
-    margin-bottom: 20px;
-    display: flex;
-    gap: 8px;
-}
-
-.menu-search-box input {
-    flex: 1;
-    height: 40px;
-    padding: 0 12px;
-    border: 1px solid #DFE6E9;
-    border-radius: 6px;
-    font-size: 14px;
-    color: #2D3436;
-}
-
-.menu-search-box input:focus {
-    outline: none;
-    border-color: #666BE1;
-    box-shadow: 0 0 0 2px rgba(102, 107, 225, 0.1);
-}
-
-.menu-search-box button {
-    height: 40px;
-    padding: 0 20px;
-    background-color: #666BE1;
-    color: #FFFFFF;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.menu-search-box button:hover {
-    background-color: #5558CC;
-}
-
 /* 트리 컨테이너 */
 .menu-modal-tree-container {
-    max-height: 500px;
-    overflow-y: auto;
-    border: 1px solid #DFE6E9;
-    border-radius: 6px;
-    background-color: #FFFFFF;
+  max-height: 500px;
+  overflow-y: auto;
+  border: 1px solid #DFE6E9;
+  border-radius: 6px;
+  background-color: #FFFFFF;
 }
-
 /* 검색 결과 정보 */
 .menu-search-result-info {
-    padding: 10px 15px;
-    background-color: #F8F9FA;
-    border-bottom: 1px solid #DFE6E9;
-    font-size: 13px;
-    color: #636E72;
+  padding: 10px 15px;
+  background-color: #F8F9FA;
+  border-bottom: 1px solid #DFE6E9;
+  font-size: 13px;
+  color: #636E72;
 }
 
+
+/*******트리 통합 필요 및 추후 삭제*******/
 /* 트리 리스트 */
 .menu-modal-tree-list {
-    padding: 10px 0;
+  padding: 10px 0;
 }
-
 /* 트리 아이템 */
 .menu-modal-tree-item {
-    position: relative;
+  position: relative;
 }
-
 /* 트리 행 */
 .menu-modal-tree-row {
-    display: flex;
-    align-items: center;
-    padding: 8px 15px;
-    transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+  transition: background-color 0.2s;
 }
-
 .menu-modal-tree-row:hover {
-    background-color: #F8F9FF;
+  background-color: #F8F9FF;
 }
-
 /* 들여쓰기 */
 .menu-modal-tree-indent {
-    display: inline-block;
-    flex-shrink: 0;
+  display: inline-block;
+  flex-shrink: 0;
 }
-
 /* 토글 버튼 (+/-) */
 .menu-modal-tree-toggle {
-    width: 20px;
-    height: 20px;
-    border: 1px solid #DFE6E9;
-    background-color: #FFFFFF;
-    border-radius: 3px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    margin-right: 8px;
-    flex-shrink: 0;
-    font-size: 14px;
-    font-weight: bold;
-    color: #666BE1;
-    transition: all 0.2s;
-    padding: 0;
-    line-height: 1;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #DFE6E9;
+  background-color: #FFFFFF;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-right: 8px;
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: bold;
+  color: #666BE1;
+  transition: all 0.2s;
+  padding: 0;
+  line-height: 1;
 }
-
 .menu-modal-tree-toggle:hover {
-    background-color: #666BE1;
-    color: #FFFFFF;
+  background-color: #666BE1;
+  color: #FFFFFF;
 }
-
 .menu-modal-tree-toggle.no-children {
-    visibility: hidden;
+  visibility: hidden;
 }
-
 /* 라벨 */
 .menu-modal-tree-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: 1;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  cursor: pointer;
 }
-
 .menu-modal-name {
-    font-size: 14px;
-    color: #2D3436;
-    font-weight: 500;
+  font-size: 14px;
+  color: #2D3436;
+  font-weight: 500;
 }
-
 .menu-modal-code {
-    font-size: 12px;
-    color: #95A5A6;
+  font-size: 12px;
+  color: #95A5A6;
 }
-
 /* 하위 메뉴 컨테이너 */
 .menu-modal-tree-children {
-    display: none;
+  display: none;
 }
-
 .menu-modal-tree-children.expanded {
-    display: block;
+  display: block;
 }
-
 /* 로딩 상태 */
 .menu-tree-loading {
-    text-align: center;
-    padding: 20px;
-    color: #95A5A6;
+  text-align: center;
+  padding: 20px;
+  color: #95A5A6;
 }
-
 /* 빈 결과 */
 .menu-tree-empty {
-    text-align: center;
-    padding: 40px 20px;
-    color: #95A5A6;
-    font-size: 14px;
+  text-align: center;
+  padding: 40px 20px;
+  color: #95A5A6;
+  font-size: 14px;
 }
 
 /* 반응형 */
 @media (max-width: 768px) {
-    .menu-modal-container {
-        width: 95%;
-        max-height: 95vh;
-    }
-
-    .menu-modal-header,
-    .menu-modal-body {
-        padding: 16px 20px;
-    }
-    
-    .menu-modal-tree-container {
-        max-height: 400px;
-    }
+  .menu-modal-tree-container {
+    max-height: 400px;
+  }
 }
-

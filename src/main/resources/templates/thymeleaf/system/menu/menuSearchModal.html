@@ -2,19 +2,19 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <!-- 메뉴 검색 모달 Fragment -->
-<div th:fragment="menuSearchModal" id="menuSearchModal" class="menu-modal">
-    <div class="menu-modal-overlay" onclick="MenuSearchModal.close()"></div>
-    <div class="menu-modal-container">
-        <div class="menu-modal-header">
-            <h3>상위 메뉴 검색</h3>
-            <button type="button" class="menu-modal-close" onclick="MenuSearchModal.close()">&times;</button>
+<div th:fragment="menuSearchModal" id="menuSearchModal" class="menu-modal spt-modal">
+    <div class="menu-modal-overlay spt-modal-overlay" onclick="MenuSearchModal.close()"></div>
+    <div class="menu-modal-container spt-modal-container">
+        <div class="menu-modal-header spt-modal-header">
+            <h3 class="txt-head-sm">상위 메뉴 검색</h3>
+            <button type="button" class="menu-modal-close spt-modal-close" onclick="MenuSearchModal.close()">&times;</button>
         </div>
-        <div class="menu-modal-body">
+        <div class="menu-modal-body spt-modal-body">
             <!-- 검색 영역 -->
-            <div class="menu-search-box">
-                <input type="text" id="modalMenuNm" placeholder="메뉴명을 입력하세요"
+            <div class="modal-search-area">
+                <input type="text" id="modalMenuNm" class="input" placeholder="메뉴명을 입력하세요"
                        onkeypress="if(event.key==='Enter') MenuSearchModal.searchMenuList();">
-                <button type="button" onclick="MenuSearchModal.searchMenuList();">검색</button>
+                <button type="button" class="primary-button" onclick="MenuSearchModal.searchMenuList();">검색</button>
             </div>
             <!-- 트리 컨테이너 -->
             <div class="menu-modal-tree-container">

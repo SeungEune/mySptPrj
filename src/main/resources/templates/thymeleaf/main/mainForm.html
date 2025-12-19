@@ -3,143 +3,143 @@
       xmlns:th="http://www.thymeleaf.org">
 <body th:fragment="content">
 
-    <link type="text/css" rel="stylesheet" href="/css/main/dashboard.css" >
+<link type="text/css" rel="stylesheet" href="/css/main/dashboard.css" >
 
-    <div class="wrap-inner">
-        <section class="sub-title">
-            <div class="conts-wrap">
-                <h2 class="txt-head-md">대시보드</h2>
-                <p class="txt-body-md">
-                    환영합니다,
-                    <span class="fw-bold" th:text="${loginVO.userNm}">사용자</span>
-                    님
-                </p>
-            </div>
-        </section>
+  <div class="wrap-inner">
+    <section class="sub-title">
+      <div class="conts-wrap">
+        <h2 class="txt-head-md">대시보드</h2>
+        <p class="txt-body-md">
+          환영합니다,
+          <span class="fw-bold" th:text="${loginVO.userNm}">사용자</span>
+          님
+        </p>
+      </div>
+    </section>
 
-        <section class="sub-contents">
-            <div class="item-horizontal-box">
-                <div class="table-box fx-1">
-                    <div class="table-inner">
-                        <table class="table-type01">
-                            <colgroup>
-                                <col width="30%"/>
-                                <col/>
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th colspan="2" class="tl">내 정보</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th>이름</th>
-                                <td th:text="${loginVO.userNm}">홍길동</td>
-                            </tr>
-                            <tr>
-                                <th>아이디</th>
-                                <td th:text="${loginVO.userId}">spatialt</td>
-                            </tr>
-                            <tr>
-                                <th>부서</th>
-                                <td th:text="${loginVO.deptNm}">디지털혁신팀</td>
-                            </tr>
-                            <tr>
-                                <th>역할</th>
-                                <td th:text="${loginVO.roleNm}">관리자</td>
-                            </tr>
-                            <tr>
-                                <th>이메일</th>
-                                <td th:text="${loginVO.emailAdres}">user@spatialt.com</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+    <section class="sub-contents">
+      <div class="item-horizontal-box">
+        <div class="table-box fx-1">
+          <div class="table-inner">
+            <table class="table-type01">
+              <colgroup>
+                <col width="30%"/>
+                <col/>
+              </colgroup>
+              <thead>
+              <tr>
+                <th colspan="2" class="tl">내 정보</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <th>이름</th>
+                <td th:text="${loginVO.userNm}">홍길동</td>
+              </tr>
+              <tr>
+                <th>아이디</th>
+                <td th:text="${loginVO.userId}">spatialt</td>
+              </tr>
+              <tr>
+                <th>부서</th>
+                <td th:text="${loginVO.deptNm}">디지털혁신팀</td>
+              </tr>
+              <tr>
+                <th>역할</th>
+                <td th:text="${loginVO.roleNm}">관리자</td>
+              </tr>
+              <tr>
+                <th>이메일</th>
+                <td th:text="${loginVO.emailAdres}">user@spatialt.com</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="conts-wrap fx-1">
+          <p class="txt-head-sm">빠른 메뉴</p>
+          <div class="item-horizontal-box">
+            <a href="/notice/noticeList.do" class="primary-button">공지사항</a>
+            <a href="/office/officeEqpmnList.do" class="primary-button">장비 관리</a>
+            <a href="/cmm/fms/selectFileInfs.do" class="primary-button">파일 관리</a>
+            <a href="/menu/menuList.do" class="primary-button">메뉴 설정</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="conts-wrap table-box">
+        <div class="item-horizontal-box jst-btw align-ct">
+          <p class="txt-head-sm mb-0">공지사항</p>
+          <a href="/notice/noticeList.do" class="txt-link">더보기</a>
+        </div>
+        <div class="table-inner">
+          <table class="table-type01">
+            <colgroup>
+              <col width="15%"/>
+              <col/>
+              <col width="20%"/>
+            </colgroup>
+            <thead>
+            <tr>
+              <th>구분</th>
+              <th>제목</th>
+              <th>등록일</th>
+            </tr>
+            </thead>
+            <tbody id="noticeList">
+            <tr>
+              <td class="tc" colspan="3">공지사항을 불러오는 중입니다.</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="conts-wrap table-box">
+        <p class="txt-head-sm">주요 현황</p>
+        <div class="table-inner">
+          <table class="table-type01">
+            <colgroup>
+              <col width="30%"/>
+              <col/>
+            </colgroup>
+            <tbody>
+            <tr>
+              <th>전체 사용자</th>
+              <td>
+                <div class="item-horizontal-box g-8 align-ct">
+                  <p class="txt-head-md fc-primary">150명</p>
+                  <p class="txt-body-xs fc-gr">전일 대비 +5</p>
                 </div>
-
-                <div class="conts-wrap fx-1">
-                    <p class="txt-head-sm">빠른 메뉴</p>
-                    <div class="item-horizontal-box">
-                        <a href="/notice/noticeList.do" class="primary-button">공지사항</a>
-                        <a href="/office/officeEqpmnList.do" class="primary-button">장비 관리</a>
-                        <a href="/cmm/fms/selectFileInfs.do" class="primary-button">파일 관리</a>
-                        <a href="/menu/menuList.do" class="primary-button">메뉴 설정</a>
-                    </div>
+              </td>
+            </tr>
+            <tr>
+              <th>등록된 장비</th>
+              <td>
+                <div class="item-horizontal-box g-8 align-ct">
+                  <p class="txt-head-md">45대</p>
+                  <p class="txt-body-xs fc-gr">전 장비 정상 운영</p>
                 </div>
-            </div>
+              </td>
+            </tr>
+            <tr>
+              <th>공지 게시물</th>
+              <td>
+                <div class="item-horizontal-box g-8 align-ct">
+                  <p class="txt-head-md">12건</p>
+                  <p class="txt-body-xs fc-gr">최근 7일 내 3건 등록</p>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
 
-            <div class="conts-wrap table-box">
-              <div class="item-horizontal-box jst-btw align-ct">
-                <p class="txt-head-sm mb-0">공지사항</p>
-                <a href="/notice/noticeList.do" class="txt-link">더보기</a>
-              </div>
-              <div class="table-inner">
-                <table class="table-type01">
-                  <colgroup>
-                    <col width="15%"/>
-                    <col/>
-                    <col width="20%"/>
-                  </colgroup>
-                  <thead>
-                  <tr>
-                    <th>구분</th>
-                    <th>제목</th>
-                    <th>등록일</th>
-                  </tr>
-                  </thead>
-                  <tbody id="noticeList">
-                  <tr>
-                    <td class="tc" colspan="3">공지사항을 불러오는 중입니다.</td>
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div class="conts-wrap table-box">
-              <p class="txt-head-sm">주요 현황</p>
-              <div class="table-inner">
-                <table class="table-type01">
-                  <colgroup>
-                    <col width="30%"/>
-                    <col/>
-                  </colgroup>
-                  <tbody>
-                  <tr>
-                    <th>전체 사용자</th>
-                    <td>
-                      <div class="item-box g-8 align-ct">
-                        <p class="txt-head-md fc-primary">150명</p>
-                        <p class="txt-body-xs fc-gr">전일 대비 +5</p>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>등록된 장비</th>
-                    <td>
-                      <div class="item-box g-8 align-ct">
-                        <p class="txt-head-md">45대</p>
-                        <p class="txt-body-xs fc-gr">전 장비 정상 운영</p>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>공지 게시물</th>
-                    <td>
-                      <div class="item-box g-8 align-ct">
-                        <p class="txt-head-md">12건</p>
-                        <p class="txt-body-xs fc-gr">최근 7일 내 3건 등록</p>
-                      </div>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-        </section>
-    </div>
-
-    <script th:src="@{/js/main/dashboard.js}"></script>
-    <script th:src="@{/js/toc/toc.js}"></script>
+<script th:src="@{/js/main/dashboard.js}"></script>
+<script th:src="@{/js/toc/toc.js}"></script>
 </body>
 </html>
