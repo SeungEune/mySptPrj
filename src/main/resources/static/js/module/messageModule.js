@@ -24,8 +24,10 @@ class MessageUtil {
                 popup: 'dr-customPopup max420'
             },
         }).then((result) => {
-            if (callback && callback instanceof Function) {
-                callback(result.value === true ? true : false);
+            if (result.isConfirmed) {
+                if (callback && callback instanceof Function) {
+                    callback();
+                }
             }
         });
     };
