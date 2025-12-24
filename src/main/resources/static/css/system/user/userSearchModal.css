@@ -1,99 +1,9 @@
 @charset "utf-8";
 
-/* 사용자 검색 모달 기본 스타일 */
-.user-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 10000;
-}
-
-.user-modal.show {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-}
-
-.user-modal-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-.user-modal-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 900px;
-    max-height: 90vh;
-    background-color: #FFFFFF;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    display: flex;
-    flex-direction: column;
-    z-index: 10001;
-}
-
-.user-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 24px;
-    border-bottom: 1px solid #DFE6E9;
-}
-
-.user-modal-header h3 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 600;
-    color: #2D3436;
-}
-
-.user-modal-close {
-    background: none;
-    border: none;
-    font-size: 28px;
-    color: #95A5A6;
-    cursor: pointer;
-    padding: 0;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.2s;
-}
-
-.user-modal-close:hover {
-    color: #2D3436;
-}
-
-.user-modal-body {
-    padding: 24px;
-    overflow-y: auto;
-    flex: 1;
-}
-
 /* 테이블 컨테이너 */
 .user-modal-table-container {
     max-height: 400px;
     overflow-y: auto;
-}
-/* 버튼 영역 */
-.user-modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    padding-top: 20px;
-    border-top: 1px solid #DFE6E9;
 }
 
 /* 반응형 */

@@ -693,6 +693,18 @@ button.dept-tree-toggle>i{
   display: flex;
   flex-direction: column;
 }
+.spt-modal.sm .spt-modal-container {
+  max-width: 500px;
+}
+.spt-modal.md .spt-modal-container {
+  max-width: 700px;
+}
+.spt-modal.lg .spt-modal-container {
+  max-width: 900px;
+}
+.spt-modal.xl .spt-modal-container {
+  max-width: 1000px;
+}
 .spt-modal-header {
   padding: var(--spt-number-3);
   border-bottom: 1px solid var(--spt-border-line-1);
@@ -729,6 +741,13 @@ button.dept-tree-toggle>i{
 .modal-search-area{
   display: flex;
   gap: var(--spt-number-1);
+}
+.spt-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 20px;
+  border-top: 1px solid #DFE6E9;
 }
 
 @media (max-width: 768px) {

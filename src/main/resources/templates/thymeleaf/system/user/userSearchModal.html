@@ -2,14 +2,14 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <!-- 사용자 검색 모달 Fragment -->
-<div th:fragment="userSearchModal" id="userSearchModal" class="user-modal spt-modal">
-    <div class="user-modal-overlay spt-modal-overlay" onclick="UserSearchModal.close()"></div>
-    <div class="user-modal-container spt-modal-container">
-        <div class="user-modal-header spt-modal-header">
+<div th:fragment="userSearchModal" id="userSearchModal" class="user-modal spt-modal lg">
+    <div class="spt-modal-overlay" onclick="UserSearchModal.close()"></div>
+    <div class="spt-modal-container">
+        <div class="spt-modal-header">
             <h3 class="txt-head-sm">사용자 검색</h3>
             <button type="button" class="user-modal-close spt-modal-close" onclick="UserSearchModal.close()">&times;</button>
         </div>
-        <div class="user-modal-body spt-modal-body">
+        <div class="spt-modal-body">
             <!-- 검색 영역 -->
             <div class="modal-search-area">
                 <div class="select-box w150px">
@@ -57,7 +57,7 @@
                 </div>
             </div>
             <!-- 버튼 영역 -->
-            <div class="user-modal-footer spt-modal-footer">
+            <div class="spt-modal-footer">
                 <button type="button" class="primary-button" onclick="UserSearchModal.confirmSelection();">확인</button>
                 <button type="button" class="secondary-button" onclick="UserSearchModal.close();">취소</button>
             </div>
