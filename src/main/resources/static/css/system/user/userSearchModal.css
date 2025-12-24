@@ -8,21 +8,8 @@
 
 /* 반응형 */
 @media (max-width: 768px) {
-    .user-modal-container {
-        width: 95%;
-        max-height: 95vh;
-    }
-    
     .user-modal-table-container {
         max-height: 300px;
-    }
-    
-    .modal-search-area {
-        flex-direction: column;
-    }
-    
-    .modal-search-area .select-box {
-        width: 100%;
     }
 }
 

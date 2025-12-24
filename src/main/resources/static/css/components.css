@@ -759,5 +759,7 @@ button.dept-tree-toggle>i{
   .spt-modal-body {
     padding: var(--spt-number-2) var(--spt-number-3);
   }
-
+  .modal-search-area {
+    flex-direction: column;
+  }
 }
