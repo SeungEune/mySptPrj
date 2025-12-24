@@ -5,94 +5,6 @@
   width: 350px;
   flex-shrink: 0;
 }
-/* 메뉴 트리 스타일 - 부서관리 트리랑 통합 이후 삭제 필요 */
-.menu-tree-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #eee; /* 테두리 연하게 */
-  border-radius: 4px;
-  min-height: 0;
-}
-.menu-tree-header {
-  padding: 10px;
-  background-color: #F8F9FA;
-  border-bottom: 1px solid #eee;
-  font-weight: 600;
-  color: #555;
-}
-.menu-tree-container {
-  flex: 1;
-  overflow-y: auto;
-  background-color: #fff;
-  padding: 10px 0;
-}
-.menu-tree-item .menu-tree-row {
-  padding: 6px 10px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.menu-tree-item .menu-tree-row:hover {
-  background-color: #F0F4F8;
-}
-.menu-tree-item .menu-tree-row.selected {
-  background-color: #E1E8ED;
-  font-weight: bold;
-  color: #333;
-}
-.menu-tree-toggle {
-  width: 20px;
-  height: 20px;
-  text-align: center;
-  cursor: pointer;
-  margin-right: 5px;
-  flex-shrink: 0;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  background-color: #fff;
-  font-weight: bold;
-  line-height: 18px;
-  color: #666BE1;
-}
-.menu-tree-toggle:hover {
-  background-color: #666BE1;
-  color: #fff;
-  border-color: #666BE1;
-}
-.menu-tree-toggle.no-children {
-  visibility: hidden; /* 자식 없는 노드의 토글 버튼 숨김 */
-}
-.menu-tree-label {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: pointer;
-}
-.menu-tree-label .menu-name {
-  margin-right: 5px;
-}
-.menu-tree-label .menu-code {
-  color: #999;
-  font-size: 12px;
-}
-/* 트리 자식 노드 컨테이너 */
-.menu-tree-children {
-  display: none; /* 기본 숨김 */
-}
-.menu-tree-children.expanded {
-  display: block; /* 확장 시 표시 */
-}
-/* 트리 빈 상태 및 로딩 */
-.menu-tree-empty,
-.menu-tree-loading {
-  padding: 20px;
-  text-align: center;
-  color: #999;
-}
-
 /* 상세 정보 영역 스타일 */
 .menu-detail-content-area {
   flex: 1;
@@ -119,19 +31,4 @@
 .menu-search-area {
   padding-bottom: 15px;
   border-bottom: 1px solid #DFE6E9;
-}
-/* 미사용 메뉴 스타일 */
-.menu-name.menu-disabled {
-  color: #999;
-}
-.menu-disabled-badge {
-  display: inline-block;
-  margin-left: 6px;
-  padding: 2px 6px;
-  font-size: 10px;
-  font-weight: 600;
-  color: #fff;
-  background-color: #B2BEC3;
-  border-radius: 3px;
-  vertical-align: middle;
 }

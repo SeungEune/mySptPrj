@@ -111,7 +111,7 @@ function fn_renderTree() {
     treeContainer.innerHTML = '';
     
     if (!menuData || menuData.length === 0) {
-        treeContainer.innerHTML = '<div class="menu-tree-empty">조회 결과가 없습니다.</div>';
+        treeContainer.innerHTML = '<div class="spt-tree-empty">조회 결과가 없습니다.</div>';
         return;
     }
     
@@ -125,16 +125,16 @@ function fn_renderTree() {
  */
 function createTreeItem(menu) {
     const itemDiv = document.createElement('div');
-    itemDiv.className = 'menu-tree-item';
+    itemDiv.className = 'spt-tree-item';
     
     const rowDiv = document.createElement('div');
-    rowDiv.className = 'menu-tree-row';
+    rowDiv.className = 'spt-tree-row';
     if (menu.menuId === selectedMenuId) {
         rowDiv.classList.add('selected');
     }
     rowDiv.dataset.id = menu.menuId;
     rowDiv.onclick = (e) => {
-        if (e.target.classList.contains('menu-tree-toggle')) return;
+        if (e.target.classList.contains('spt-tree-toggle')) return;
         fn_selectMenu(menu.menuId);
     };
     
@@ -145,7 +145,7 @@ function createTreeItem(menu) {
     // 토글 버튼
     const hasChildren = menu.subMenuList && menu.subMenuList.length > 0;
     const toggleBtn = document.createElement('div');
-    toggleBtn.className = `menu-tree-toggle ${hasChildren ? '' : 'no-children'}`;
+    toggleBtn.className = `spt-tree-toggle ${hasChildren ? '' : 'no-children'}`;
     toggleBtn.textContent = hasChildren ? (expandedNodes.has(menu.menuId) ? '-' : '+') : '';
     if (hasChildren) {
         toggleBtn.onclick = (e) => {
@@ -157,18 +157,18 @@ function createTreeItem(menu) {
     
     // 라벨 (메뉴명 + ID)
     const labelDiv = document.createElement('div');
-    labelDiv.className = 'menu-tree-label';
+    labelDiv.className = 'spt-tree-label';
     
     const nameSpan = document.createElement('span');
-    nameSpan.className = 'menu-name';
+    nameSpan.className = 'dep-name';
     nameSpan.textContent = menu.menuNm;
     
     // 미사용 메뉴 표시
     if (menu.useYn === 'N') {
-        nameSpan.classList.add('menu-disabled');
+        nameSpan.classList.add('dep-disabled');
         
         const disabledBadge = document.createElement('span');
-        disabledBadge.className = 'menu-disabled-badge';
+        disabledBadge.className = 'dep-disabled-badge';
         disabledBadge.textContent = '미사용';
         labelDiv.appendChild(nameSpan);
         labelDiv.appendChild(disabledBadge);
@@ -177,7 +177,7 @@ function createTreeItem(menu) {
     }
     
     const codeSpan = document.createElement('span');
-    codeSpan.className = 'menu-code';
+    codeSpan.className = 'dep-code';
     codeSpan.textContent = `(${menu.menuId})`;
     
     labelDiv.appendChild(codeSpan);
@@ -188,7 +188,7 @@ function createTreeItem(menu) {
     // 자식 컨테이너
     if (hasChildren) {
         const childrenDiv = document.createElement('div');
-        childrenDiv.className = 'menu-tree-children';
+        childrenDiv.className = 'spt-tree-children';
         childrenDiv.id = `children-${menu.menuId}`;
         if (expandedNodes.has(menu.menuId)) {
             childrenDiv.classList.add('expanded');
@@ -222,8 +222,8 @@ function fn_selectMenu(menuId) {
     selectedMenuId = menuId;
     
     // 행 하이라이트 처리
-    document.querySelectorAll('.menu-tree-row').forEach(r => r.classList.remove('selected'));
-    const selectedRow = document.querySelector(`.menu-tree-row[data-id="${menuId}"]`);
+    document.querySelectorAll('.spt-tree-row').forEach(r => r.classList.remove('selected'));
+    const selectedRow = document.querySelector(`.spt-tree-row[data-id="${menuId}"]`);
     if (selectedRow) selectedRow.classList.add('selected');
     
     // 메뉴 상세 조회
@@ -942,7 +942,7 @@ function fn_switchToRegisterMode() {
     changedAuthList = [];
     
     // 행 선택 해제
-    document.querySelectorAll('.menu-tree-row').forEach(r => r.classList.remove('selected'));
+    document.querySelectorAll('.spt-tree-row').forEach(r => r.classList.remove('selected'));
     
     const detailArea = document.getElementById('menuDetailArea');
     const template = document.getElementById('menuDetailEditTemplate');

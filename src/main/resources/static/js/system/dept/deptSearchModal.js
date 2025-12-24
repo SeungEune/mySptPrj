@@ -26,7 +26,7 @@ const DeptSearchModal = {
         document.getElementById('deptSearchModal').classList.remove('show');
         const modalTreeList = document.getElementById('modalDeptTreeList');
         if (modalTreeList) {
-            modalTreeList.innerHTML = '<div class="dept-tree-loading">부서 정보를 불러오는 중...</div>';
+            modalTreeList.innerHTML = '<div class="spt-tree-loading">부서 정보를 불러오는 중...</div>';
         }
         this.callback = null;
         this.deptData = [];
@@ -65,7 +65,7 @@ const DeptSearchModal = {
                 const modalTreeList = document.getElementById('modalDeptTreeList');
                 const modalTotalCount = document.getElementById('modalDeptTotalCount');
                 if (modalTreeList) {
-                    modalTreeList.innerHTML = '<div class="dept-tree-empty">조회 결과가 없습니다.</div>';
+                    modalTreeList.innerHTML = '<div class="spt-tree-empty">조회 결과가 없습니다.</div>';
                 }
                 if (modalTotalCount) {
                     modalTotalCount.textContent = '전체 0개';
@@ -88,7 +88,7 @@ const DeptSearchModal = {
         treeContainer.innerHTML = '';
         
         if (!deptList || deptList.length === 0) {
-            treeContainer.innerHTML = '<div class="dept-tree-empty">조회 결과가 없습니다.</div>';
+            treeContainer.innerHTML = '<div class="spt-tree-empty">조회 결과가 없습니다.</div>';
             const modalTotalCount = document.getElementById('modalDeptTotalCount');
             if (modalTotalCount) {
                 modalTotalCount.textContent = '전체 0개';
@@ -119,7 +119,7 @@ const DeptSearchModal = {
      */
     createTreeItem: function(dept, allDepts) {
         const item = document.createElement('div');
-        item.className = 'dept-tree-item';
+        item.className = 'spt-tree-item';
         item.dataset.deptCd = dept.deptCd;
         item.dataset.level = dept.treeLevel;
         item.dataset.hasChildren = dept.hasChildren || 0;
@@ -130,17 +130,17 @@ const DeptSearchModal = {
         
         // 트리 행 생성
         const row = document.createElement('div');
-        row.className = 'dept-tree-row';
+        row.className = 'spt-tree-row';
         
         // 들여쓰기
         const indent = document.createElement('span');
-        indent.className = 'dept-tree-indent';
+        indent.className = 'spt-tree-indent';
         indent.style.width = `${indentWidth}px`;
         row.appendChild(indent);
         
         // 토글 버튼
         const toggle = document.createElement('button');
-        toggle.className = 'dept-tree-toggle';
+        toggle.className = 'spt-tree-toggle';
         if (!hasChildren) {
             toggle.classList.add('no-children');
         } else {
@@ -155,16 +155,16 @@ const DeptSearchModal = {
         
         // 라벨
         const label = document.createElement('span');
-        label.className = 'dept-tree-label';
+        label.className = 'spt-tree-label';
         label.onclick = () => this.selectDept(dept.deptCd, dept.deptNm);
         
         const name = document.createElement('span');
-        name.className = 'dept-name';
+        name.className = 'dep-name';
         name.textContent = dept.deptNm;
         label.appendChild(name);
         
         const code = document.createElement('span');
-        code.className = 'dept-code';
+        code.className = 'dep-code';
         code.textContent = `(${dept.deptCd})`;
         label.appendChild(code);
         
@@ -174,7 +174,7 @@ const DeptSearchModal = {
         // 하위 부서 컨테이너
         if (hasChildren) {
             const childrenContainer = document.createElement('div');
-            childrenContainer.className = 'dept-tree-children';
+            childrenContainer.className = 'spt-tree-children';
             if (isExpanded) {
                 childrenContainer.classList.add('expanded');
             }
@@ -204,10 +204,10 @@ const DeptSearchModal = {
         const item = modalContainer.querySelector(`[data-dept-cd="${deptCd}"]`);
         if (!item) return;
         
-        const childrenContainer = item.querySelector('.dept-tree-children');
+        const childrenContainer = item.querySelector('.spt-tree-children');
         if (!childrenContainer) return;
         
-        const toggleButton = item.querySelector('.dept-tree-toggle');
+        const toggleButton = item.querySelector('.spt-tree-toggle');
         const icon = toggleButton.querySelector('i');
         
         if (childrenContainer.classList.contains('expanded')) {

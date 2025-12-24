@@ -62,7 +62,7 @@ function fn_searchDeptList() {
             fn_renderTree(deptData);
             document.getElementById('treeTotalCount').textContent = `(${deptData.length}개)`;
         } else {
-            document.getElementById('deptTreeList').innerHTML = '<div class="dept-tree-empty">조회 결과가 없습니다.</div>';
+            document.getElementById('deptTreeList').innerHTML = '<div class="spt-tree-empty">조회 결과가 없습니다.</div>';
             document.getElementById('treeTotalCount').textContent = '(0개)';
             deptData = [];
         }
@@ -78,7 +78,7 @@ function fn_renderTree(deptList) {
     treeContainer.innerHTML = '';
     
     if (!deptList || deptList.length === 0) {
-        treeContainer.innerHTML = '<div class="dept-tree-empty">조회 결과가 없습니다.</div>';
+        treeContainer.innerHTML = '<div class="spt-tree-empty">조회 결과가 없습니다.</div>';
         return;
     }
     
@@ -99,7 +99,7 @@ function fn_renderTree(deptList) {
  */
 function fn_createTreeItem(dept, allDepts) {
     const item = document.createElement('div');
-    item.className = 'dept-tree-item';
+    item.className = 'spt-tree-item';
     item.dataset.deptCd = dept.deptCd;
     item.dataset.level = dept.treeLevel || 0;
     item.dataset.hasChildren = dept.hasChildren || 0;
@@ -110,20 +110,20 @@ function fn_createTreeItem(dept, allDepts) {
     
     // 트리 행 생성
     const row = document.createElement('div');
-    row.className = 'dept-tree-row';
+    row.className = 'spt-tree-row';
     if (selectedDeptCd === dept.deptCd) {
         row.classList.add('selected');
     }
     
     // 들여쓰기
     const indent = document.createElement('span');
-    indent.className = 'dept-tree-indent';
+    indent.className = 'spt-tree-indent';
     indent.style.width = `${indentWidth}px`;
     row.appendChild(indent);
     
     // 토글 버튼
     const toggle = document.createElement('button');
-    toggle.className = 'dept-tree-toggle';
+    toggle.className = 'spt-tree-toggle';
     toggle.type = 'button';
     if (!hasChildren) {
         toggle.classList.add('no-children');
@@ -142,23 +142,23 @@ function fn_createTreeItem(dept, allDepts) {
     
     // 라벨
     const label = document.createElement('span');
-    label.className = 'dept-tree-label';
+    label.className = 'spt-tree-label';
     label.onclick = () => fn_selectDept(dept.deptCd);
     
     const name = document.createElement('span');
-    name.className = 'dept-name';
+    name.className = 'dep-name';
     name.textContent = dept.deptNm;
     label.appendChild(name);
     
     const code = document.createElement('span');
-    code.className = 'dept-code';
+    code.className = 'dep-code';
     code.textContent = `(${dept.deptCd})`;
     label.appendChild(code);
     
     // 소속 인원수 표시
     if (dept.memberCnt && dept.memberCnt > 0) {
         const count = document.createElement('span');
-        count.className = 'dept-count';
+        count.className = 'dep-count';
         count.textContent = `${dept.memberCnt}명`;
         label.appendChild(count);
     }
@@ -169,7 +169,7 @@ function fn_createTreeItem(dept, allDepts) {
     // 하위 부서 컨테이너
     if (hasChildren) {
         const childrenContainer = document.createElement('div');
-        childrenContainer.className = 'dept-tree-children';
+        childrenContainer.className = 'spt-tree-children';
         if (isExpanded) {
             childrenContainer.classList.add('expanded');
         }
@@ -195,10 +195,10 @@ function fn_toggleNode(deptCd) {
     const item = document.querySelector(`[data-dept-cd="${deptCd}"]`);
     if (!item) return;
     
-    const childrenContainer = item.querySelector('.dept-tree-children');
+    const childrenContainer = item.querySelector('.spt-tree-children');
     if (!childrenContainer) return;
     
-    const toggleButton = item.querySelector('.dept-tree-toggle');
+    const toggleButton = item.querySelector('.spt-tree-toggle');
     const icon = toggleButton.querySelector('i');
     
     if (childrenContainer.classList.contains('expanded')) {
@@ -230,7 +230,7 @@ function fn_toggleNode(deptCd) {
 function fn_selectDept(deptCd) {
     // 이전 선택 해제
     if (selectedDeptCd) {
-        const prevItem = document.querySelector(`[data-dept-cd="${selectedDeptCd}"] .dept-tree-row`);
+        const prevItem = document.querySelector(`[data-dept-cd="${selectedDeptCd}"] .spt-tree-row`);
         if (prevItem) {
             prevItem.classList.remove('selected');
         }
@@ -238,7 +238,7 @@ function fn_selectDept(deptCd) {
     
     // 새 선택
     selectedDeptCd = deptCd;
-    const currentItem = document.querySelector(`[data-dept-cd="${deptCd}"] .dept-tree-row`);
+    const currentItem = document.querySelector(`[data-dept-cd="${deptCd}"] .spt-tree-row`);
     if (currentItem) {
         currentItem.classList.add('selected');
     }
@@ -257,7 +257,7 @@ function fn_switchToViewMode(deptCd) {
     
     if (Util.isEmpty(deptCd)) {
         document.getElementById('deptDetailArea').innerHTML = 
-            '<div class="dept-detail-empty"><p class="txt-body">부서를 선택하세요</p></div>';
+            '<div class="spt-detail-empty"><p class="txt-body">부서를 선택하세요</p></div>';
         return;
     }
     
@@ -271,7 +271,7 @@ function fn_switchToViewMode(deptCd) {
             fn_renderViewMode(dept);
         } else {
             document.getElementById('deptDetailArea').innerHTML = 
-                '<div class="dept-detail-empty"><p class="txt-body">부서 정보를 조회할 수 없습니다.</p></div>';
+                '<div class="spt-detail-empty"><p class="txt-body">부서 정보를 조회할 수 없습니다.</p></div>';
         }
     }, true, 'POST');
 }
@@ -612,7 +612,7 @@ function fn_cancelForm() {
     if (currentMode === 'register') {
         // 등록 모드 취소 시 빈 화면
         document.getElementById('deptDetailArea').innerHTML = 
-            '<div class="dept-detail-empty"><p class="txt-body">부서를 선택하세요</p></div>';
+            '<div class="spt-detail-empty"><p class="txt-body">부서를 선택하세요</p></div>';
         currentMode = 'view';
         currentDeptCd = null;
     } else if (currentMode === 'edit' && currentDeptCd) {
@@ -743,7 +743,7 @@ function fn_deleteDept(deptCd) {
                     fn_searchDeptList();
                     // 상세 영역 초기화
                     document.getElementById('deptDetailArea').innerHTML = 
-                        '<div class="dept-detail-empty"><p class="txt-body">부서를 선택하세요</p></div>';
+                        '<div class="spt-detail-empty"><p class="txt-body">부서를 선택하세요</p></div>';
                     selectedDeptCd = null;
                     currentMode = 'view';
                     currentDeptCd = null;
