@@ -4,6 +4,7 @@ import biz.system.menu.dao.MenuDAO;
 import biz.system.menu.service.MenuService;
 import biz.system.menu.vo.MenuAuthVO;
 import biz.system.menu.vo.MenuVO;
+import biz.system.menu.vo.UserMenuAuthVO;
 import biz.system.menu.vo.UserRoleVO;
 import biz.util.SessionUtil;
 import egovframework.com.cmm.response.ResultVO;
@@ -28,25 +29,6 @@ public class MenuServiceImpl implements MenuService {
     
     @Resource(name = "menuDAO")
     private MenuDAO menuDAO;
-    
-    /**
-     * 권한별 메뉴 목록 조회 (계층 구조)
-     * 
-     * @param roleCd 권한 코드
-     * @return 계층 구조로 구성된 메뉴 목록
-     */
-    @Override
-    public List<MenuVO> getMenuListByRole(String roleCd) {
-        if (roleCd == null || roleCd.isEmpty()) {
-            return List.of();  // 빈 리스트 반환
-        }
-        
-        // 모든 레벨의 메뉴 조회
-        List<MenuVO> allMenus = menuDAO.selectMenuListByRole(roleCd);
-        
-        // 계층 구조로 변환
-        return convertToHierarchy(allMenus);
-    }
 
     /**
      * 관리자용 전체 메뉴 목록 조회 (계층 구조)
@@ -205,6 +187,13 @@ public class MenuServiceImpl implements MenuService {
                 return result;
             }
             
+            // 해당 메뉴와 연결된 모든 권한 그룹 권한 정보 삭제
+            menuDAO.deleteAllMenuAuthByMenuId(menuId);
+            
+            // 해당 메뉴와 연결된 모든 사용자 권한 정보 삭제
+            menuDAO.deleteAllUserMenuAuthByMenuId(menuId);
+            
+            // 메뉴 삭제
             menuDAO.deleteMenu(menuId);
             result.setResultValue(true);
             result.setMessage("메뉴가 삭제되었습니다.");
@@ -312,23 +301,85 @@ public class MenuServiceImpl implements MenuService {
     }
 
     /**
-     * 메뉴-권한 매핑 삭제
-     * @param menuAuthVO 권한 매핑 정보
+     * 특정 메뉴에 개별 권한이 부여된 사용자 목록 조회
+     * @param menuId 메뉴ID
+     * @return 사용자 목록
+     */
+    @Override
+    public List<UserMenuAuthVO> getUserListByMenu(String menuId) {
+        if (menuId == null || menuId.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return menuDAO.selectUserListByMenu(menuId);
+    }
+
+    /**
+     * 전체 사용자 목록 조회 (메뉴 권한 여부 포함)
+     * @param menuId 메뉴ID
+     * @return 사용자 목록
+     */
+    @Override
+    public List<UserMenuAuthVO> getAllUsersForMenu(String menuId) {
+        if (menuId == null || menuId.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return menuDAO.selectAllUsersForMenu(menuId);
+    }
+
+    /**
+     * 사용자-메뉴 권한 저장
+     * @param userMenuAuthVO 사용자-메뉴 권한 매핑 정보
      * @return 처리 결과
      */
     @Override
-    public ResultVO deleteMenuAuth(MenuAuthVO menuAuthVO) {
+    public ResultVO saveUserMenuAuth(UserMenuAuthVO userMenuAuthVO) {
+        ResultVO result = new ResultVO();
+        String userId = SessionUtil.getUserId();
+        
+        try {
+            userMenuAuthVO.setRegisterId(userId);
+            menuDAO.insertOrUpdateUserMenuAuth(userMenuAuthVO);
+            result.setResultValue(true);
+            result.setMessage("사용자 권한이 저장되었습니다.");
+        } catch (Exception e) {
+            log.error("사용자 권한 저장 중 오류 발생", e);
+            result.setResultValue(false);
+            result.setMessage("사용자 권한 저장 중 오류가 발생했습니다.");
+        }
+        return result;
+    }
+
+    /**
+     * 사용자-메뉴 권한 삭제
+     * @param userMenuAuthVO 사용자-메뉴 권한 매핑 정보
+     * @return 처리 결과
+     */
+    @Override
+    public ResultVO deleteUserMenuAuth(UserMenuAuthVO userMenuAuthVO) {
         ResultVO result = new ResultVO();
         
         try {
-            menuDAO.deleteMenuAuth(menuAuthVO);
+            menuDAO.deleteUserMenuAuth(userMenuAuthVO);
             result.setResultValue(true);
-            result.setMessage("권한이 삭제되었습니다.");
+            result.setMessage("사용자 권한이 삭제되었습니다.");
         } catch (Exception e) {
-            log.error("권한 삭제 중 오류 발생", e);
+            log.error("사용자 권한 삭제 중 오류 발생", e);
             result.setResultValue(false);
-            result.setMessage("권한 삭제 중 오류가 발생했습니다.");
+            result.setMessage("사용자 권한 삭제 중 오류가 발생했습니다.");
         }
         return result;
+    }
+
+    /**
+     * 권한 그룹 및 사용자별 메뉴 목록 조회
+     * 권한 그룹 권한과 개별 사용자 권한을 UNION하여 조회
+     * @param roleCd 권한 코드
+     * @param userId 사용자ID
+     * @return 메뉴 목록
+     */
+    @Override
+    public List<MenuVO> getMenuListByRoleAndUser(String roleCd, String userId) {
+        List<MenuVO> menuList = menuDAO.selectMenuListByRoleAndUser(roleCd, userId);
+        return convertToHierarchy(menuList);
     }
 }

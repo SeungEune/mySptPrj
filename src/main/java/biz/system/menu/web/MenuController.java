@@ -3,6 +3,7 @@ package biz.system.menu.web;
 import biz.system.menu.service.MenuService;
 import biz.system.menu.vo.MenuAuthVO;
 import biz.system.menu.vo.MenuVO;
+import biz.system.menu.vo.UserMenuAuthVO;
 import biz.system.menu.vo.UserRoleVO;
 import egovframework.com.cmm.response.ApiResponseVO;
 import egovframework.com.cmm.response.ResultVO;
@@ -177,23 +178,80 @@ public class MenuController {
     }
 
     /**
-     * 메뉴-권한 매핑 삭제
-     * @param menuAuthVO 권한 매핑 정보
+     * 특정 메뉴에 개별 권한이 부여된 사용자 목록 조회
+     * @param params 파라미터 (menuId)
+     * @return 사용자 목록
+     */
+    @ResponseBody
+    @PostMapping("/getUserListByMenu.do")
+    public ResponseEntity<?> getUserListByMenu(@RequestBody Map<String, String> params) {
+        try {
+            String menuId = params.get("menuId");
+            List<UserMenuAuthVO> list = menuService.getUserListByMenu(menuId);
+            return ApiResponseVO.apiResponse(list, HttpStatus.OK.value(), "조회되었습니다.");
+        } catch (Exception e) {
+            log.error("사용자 목록 조회 중 오류 발생", e);
+            return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "사용자 목록 조회 중 오류가 발생했습니다.");
+        }
+    }
+
+    /**
+     * 전체 사용자 목록 조회 (메뉴 권한 여부 포함)
+     * @param params 파라미터 (menuId)
+     * @return 사용자 목록
+     */
+    @ResponseBody
+    @PostMapping("/getAllUsersForMenu.do")
+    public ResponseEntity<?> getAllUsersForMenu(@RequestBody Map<String, String> params) {
+        try {
+            String menuId = params.get("menuId");
+            List<UserMenuAuthVO> list = menuService.getAllUsersForMenu(menuId);
+            return ApiResponseVO.apiResponse(list, HttpStatus.OK.value(), "조회되었습니다.");
+        } catch (Exception e) {
+            log.error("전체 사용자 목록 조회 중 오류 발생", e);
+            return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "전체 사용자 목록 조회 중 오류가 발생했습니다.");
+        }
+    }
+
+    /**
+     * 사용자-메뉴 권한 저장
+     * @param userMenuAuthVO 사용자-메뉴 권한 매핑 정보
      * @return 처리 결과
      */
     @ResponseBody
-    @PostMapping("/deleteMenuAuth.do")
-    public ResponseEntity<?> deleteMenuAuth(@RequestBody MenuAuthVO menuAuthVO) {
+    @PostMapping("/saveUserMenuAuth.do")
+    public ResponseEntity<?> saveUserMenuAuth(@RequestBody UserMenuAuthVO userMenuAuthVO) {
         try {
-            ResultVO result = menuService.deleteMenuAuth(menuAuthVO);
+            ResultVO result = menuService.saveUserMenuAuth(userMenuAuthVO);
             if (result.isResultValue()) {
                 return ApiResponseVO.apiResponse(result, HttpStatus.OK.value(), result.getMessage());
             } else {
                 return ApiResponseVO.apiResponse(result, HttpStatus.BAD_REQUEST.value(), result.getMessage());
             }
         } catch (Exception e) {
-            log.error("권한 삭제 중 오류 발생", e);
-            return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "권한 삭제 중 오류가 발생했습니다.");
+            log.error("사용자 권한 저장 중 오류 발생", e);
+            return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "사용자 권한 저장 중 오류가 발생했습니다.");
+        }
+    }
+
+    /**
+     * 사용자-메뉴 권한 삭제
+     * @param userMenuAuthVO 사용자-메뉴 권한 매핑 정보
+     * @return 처리 결과
+     */
+    @ResponseBody
+    @PostMapping("/deleteUserMenuAuth.do")
+    public ResponseEntity<?> deleteUserMenuAuth(@RequestBody UserMenuAuthVO userMenuAuthVO) {
+        try {
+            ResultVO result = menuService.deleteUserMenuAuth(userMenuAuthVO);
+            if (result.isResultValue()) {
+                return ApiResponseVO.apiResponse(result, HttpStatus.OK.value(), result.getMessage());
+            } else {
+                return ApiResponseVO.apiResponse(result, HttpStatus.BAD_REQUEST.value(), result.getMessage());
+            }
+        } catch (Exception e) {
+            log.error("사용자 권한 삭제 중 오류 발생", e);
+            return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "사용자 권한 삭제 중 오류가 발생했습니다.");
         }
     }
 }

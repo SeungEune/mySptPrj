@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,6 +25,7 @@ public class GlobalControllerAdvice {
     /**
      * 모든 뷰에 메뉴 목록을 자동으로 추가
      * 로그인한 사용자의 권한에 따라 메뉴 목록을 동적으로 제공
+     * 권한 그룹 권한과 개별 사용자 권한을 모두 고려
      * 
      * @return 권한별 메뉴 목록
      */
@@ -33,19 +35,20 @@ public class GlobalControllerAdvice {
         
         // 로그인하지 않은 경우 빈 리스트 반환
         if (loginVO == null) {
-            return List.of();
+            return new ArrayList<>();
+        }
+        
+        // 사용자 ID 조회
+        String userId = loginVO.getUserId();
+        if (userId == null || userId.isEmpty()) {
+            return new ArrayList<>();
         }
         
         // 사용자 권한 코드 조회
         String roleCd = loginVO.getRoleCd();
         
-        if (roleCd == null || roleCd.isEmpty()) {
-            return List.of();
-        }
-        
-        // 권한별 메뉴 목록 조회
-        List<MenuVO> menuList = menuService.getMenuListByRole(roleCd);
-        
+        // 권한 그룹 권한과 개별 사용자 권한을 모두 고려하여 메뉴 목록 조회
+        List<MenuVO> menuList = menuService.getMenuListByRoleAndUser(roleCd, userId);
         return menuList;
     }
 }

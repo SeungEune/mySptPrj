@@ -8,10 +8,12 @@
 <th:block th:fragment="contentLink">
   <link rel="stylesheet" th:href="@{/css/system/menu/menuList.css}" />
   <link rel="stylesheet" th:href="@{/css/system/menu/menuSearchModal.css}" />
+  <link rel="stylesheet" th:href="@{/css/system/user/userSearchModal.css}" />
 </th:block>
 
 <th:block th:fragment="script">
   <script th:src="@{/js/system/menu/menuSearchModal.js}"></script>
+  <script th:src="@{/js/system/user/userSearchModal.js}"></script>
   <script th:src="@{/js/system/menu/menuList.js}"></script>
 </th:block>
 
@@ -86,7 +88,6 @@
             </div>
             <div class="table-inner">
               <table class="table-type01 select-table" id="roleGroupTable">
-                <caption class="table-caption">권한 그룹 목록</caption>
                 <colgroup>
                   <col width="8%"/>
                   <col width="40%"/>
@@ -121,30 +122,32 @@
             <div class="section-header">
               <h3 class="txt-body-lg">접근 가능 사용자</h3>
               <div class="section-actions">
+                <button type="button" class="primary-button" onclick="fn_saveAllUserAuth()">수정 적용</button>
                 <button type="button" class="primary-button" id="addUserBtn">추가</button>
                 <button type="button" class="tertiary-button" id="deleteUserBtn">삭제</button>
               </div>
             </div>
             <div class="table-inner">
               <table class="table-type01 select-table" id="userListTable">
-                <caption class="table-caption">접근 가능 사용자 목록</caption>
                 <colgroup>
-                  <col width="40%"/>
-                  <col width="20%"/>
-                  <col width="20%"/>
-                  <col width="20%"/>
+                  <col width="30%"/>
+                  <col width="17.5%"/>
+                  <col width="17.5%"/>
+                  <col width="17.5%"/>
+                  <col width="17.5%"/>
                 </colgroup>
                 <thead>
                 <tr>
                   <th>사용자명</th>
                   <th>조회</th>
-                  <th>입력</th>
-                  <th>인쇄</th>
+                  <th>등록</th>
+                  <th>수정</th>
+                  <th>삭제</th>
                 </tr>
                 </thead>
                 <tbody id="userListTbody">
                 <tr>
-                  <td class="tc no-data-table" colspan="4">권한 그룹을 선택하세요</td>
+                  <td class="tc no-data-table" colspan="5">메뉴를 선택하세요</td>
                 </tr>
                 </tbody>
               </table>
@@ -271,6 +274,8 @@
 
   <!-- 메뉴 검색 모달 -->
   <th:block th:insert="~{system/menu/menuSearchModal :: menuSearchModal}"></th:block>
+  <!-- 사용자 검색 모달 -->
+  <th:block th:insert="~{system/user/userSearchModal :: userSearchModal}"></th:block>
 </div>
 
 </html>

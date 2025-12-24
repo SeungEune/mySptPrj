@@ -6,10 +6,10 @@
 let menuData = [];           // 전체 메뉴 데이터 (계층 구조)
 let expandedNodes = new Set(); // 확장된 노드 ID 목록
 let selectedMenuId = null;   // 선택된 메뉴ID
-let selectedRoleCd = null;   // 선택된 권한 그룹 코드
 let roleList = [];           // 현재 메뉴의 권한 그룹 목록
-let userList = [];           // 현재 권한 그룹의 사용자 목록
+let userMenuAuthList = [];   // 현재 메뉴에 개별 권한이 부여된 사용자 목록
 let changedAuthList = [];    // 변경된 권한 매핑 정보 배열
+let changedUserAuthList = []; // 변경된 사용자 권한 매핑 정보 배열
 
 document.addEventListener('DOMContentLoaded', () => {
     fn_init();
@@ -220,7 +220,6 @@ function fn_toggleNode(menuId) {
  */
 function fn_selectMenu(menuId) {
     selectedMenuId = menuId;
-    selectedRoleCd = null; // 권한 그룹 선택 초기화
     
     // 행 하이라이트 처리
     document.querySelectorAll('.menu-tree-row').forEach(r => r.classList.remove('selected'));
@@ -237,8 +236,8 @@ function fn_selectMenu(menuId) {
     // 권한 그룹 목록 조회
     fn_loadRoleListByMenu(menuId);
     
-    // 사용자 목록 초기화
-    fn_clearUserList();
+    // 개별 사용자 권한 목록 조회
+    fn_loadUserListByMenu(menuId);
 }
 
 /**
@@ -336,10 +335,6 @@ function fn_renderRoleList() {
     roleList.forEach((role, index) => {
         const tr = document.createElement('tr');
         tr.dataset.roleCd = role.roleCd;
-        if (role.roleCd === selectedRoleCd) {
-            tr.classList.add('selected');
-        }
-        tr.onclick = () => fn_selectRole(role.roleCd);
         
         tr.innerHTML = `
             <td>${index + 1}</td>
@@ -379,50 +374,41 @@ function fn_renderRoleList() {
 }
 
 /**
- * 권한 그룹 선택 (사용자 목록 조회)
+ * 메뉴에 개별 권한이 부여된 사용자 목록 조회
  */
-function fn_selectRole(roleCd) {
-    selectedRoleCd = roleCd;
+function fn_loadUserListByMenu(menuId) {
+    if (!menuId) {
+        fn_clearUserList();
+        return;
+    }
     
-    // 행 하이라이트 처리
-    document.querySelectorAll('#roleGroupTable tbody tr').forEach(r => r.classList.remove('selected'));
-    const selectedRow = document.querySelector(`#roleGroupTable tbody tr[data-role-cd="${roleCd}"]`);
-    if (selectedRow) selectedRow.classList.add('selected');
+    const data = { menuId: menuId };
     
-    // 사용자 목록 조회
-    fn_loadUserListByRole(roleCd);
-}
-
-/**
- * 사용자 목록 조회
- */
-function fn_loadUserListByRole(roleCd) {
-    const data = { roleCd: roleCd };
-    
-    callModule.call(Util.getRequestUrl('/system/menu/getUserListByRole.do'), data, function(result) {
-        userList = result.result || [];
+    callModule.call(Util.getRequestUrl('/system/menu/getUserListByMenu.do'), data, function(result) {
+        userMenuAuthList = result.result || [];
         fn_renderUserList();
     }, true, 'POST');
 }
 
 /**
- * 사용자 목록 렌더링
+ * 사용자 목록 렌더링 (개별 권한 기반)
  */
 function fn_renderUserList() {
     const tbody = document.getElementById('userListTbody');
     tbody.innerHTML = '';
     
-    if (!userList || userList.length === 0) {
-        tbody.innerHTML = '<tr><td class="no-data-table" colspan="4">사용자가 없습니다.</td></tr>';
+    if (!userMenuAuthList || userMenuAuthList.length === 0) {
+        tbody.innerHTML = '<tr><td class="no-data-table" colspan="5">접근 가능한 사용자가 없습니다.</td></tr>';
         return;
     }
     
-    // 권한 그룹의 메뉴 권한 정보를 사용자에게도 반영
-    const roleAuth = roleList.find(r => r.roleCd === selectedRoleCd);
-    
-    userList.forEach(user => {
+    userMenuAuthList.forEach(user => {
         const tr = document.createElement('tr');
         tr.dataset.userId = user.userId;
+        tr.onclick = () => {
+            // 행 선택 토글
+            tr.classList.toggle('selected');
+        };
         
         tr.innerHTML = `
             <td class="text-left">${user.userNm}</td>
@@ -430,22 +416,29 @@ function fn_renderUserList() {
                 <input type="checkbox" 
                        data-user-id="${user.userId}" 
                        data-auth-type="read" 
-                       ${roleAuth && roleAuth.readAuthorYn === 'Y' ? 'checked' : ''}
-                       disabled>
+                       ${user.readAuthorYn === 'Y' ? 'checked' : ''}
+                       onclick="event.stopPropagation(); fn_changeUserAuth('${user.userId}', 'read', this.checked)">
             </td>
             <td>
                 <input type="checkbox" 
                        data-user-id="${user.userId}" 
                        data-auth-type="creat" 
-                       ${roleAuth && roleAuth.creatAuthorYn === 'Y' ? 'checked' : ''}
-                       disabled>
+                       ${user.creatAuthorYn === 'Y' ? 'checked' : ''}
+                       onclick="event.stopPropagation(); fn_changeUserAuth('${user.userId}', 'creat', this.checked)">
             </td>
             <td>
                 <input type="checkbox" 
                        data-user-id="${user.userId}" 
                        data-auth-type="updt" 
-                       ${roleAuth && roleAuth.updtAuthorYn === 'Y' ? 'checked' : ''}
-                       disabled>
+                       ${user.updtAuthorYn === 'Y' ? 'checked' : ''}
+                       onclick="event.stopPropagation(); fn_changeUserAuth('${user.userId}', 'updt', this.checked)">
+            </td>
+            <td>
+                <input type="checkbox" 
+                       data-user-id="${user.userId}" 
+                       data-auth-type="delete" 
+                       ${user.deleteAuthorYn === 'Y' ? 'checked' : ''}
+                       onclick="event.stopPropagation(); fn_changeUserAuth('${user.userId}', 'delete', this.checked)">
             </td>
         `;
         
@@ -458,8 +451,8 @@ function fn_renderUserList() {
  */
 function fn_clearUserList() {
     const tbody = document.getElementById('userListTbody');
-    tbody.innerHTML = '<tr><td class="no-data-table" colspan="4">권한 그룹을 선택하세요</td></tr>';
-    userList = [];
+    tbody.innerHTML = '<tr><td class="no-data-table" colspan="5">메뉴를 선택하세요</td></tr>';
+    userMenuAuthList = [];
 }
 
 /**
@@ -541,10 +534,9 @@ function fn_saveAllAuth() {
             // 모든 저장이 완료되면
             if (index === changedAuthList.length - 1) {
                 if (failCount === 0) {
-                    MessageUtil.alert('모든 권한이 저장되었습니다.', function() {
-                        changedAuthList = [];
-                        fn_loadRoleListByMenu(selectedMenuId);
-                    });
+                    changedAuthList = [];
+                    fn_loadRoleListByMenu(selectedMenuId);
+                    MessageUtil.success('모든 권한이 저장되었습니다.');
                 } else {
                     MessageUtil.alert(`${successCount}개 저장 성공, ${failCount}개 저장 실패`);
                 }
@@ -629,7 +621,7 @@ function fn_findMenuById(menus, menuId) {
 }
 
 /**
- * 메뉴 저장 (등록/수정) - 기존 기능 유지
+ * 메뉴 저장 (등록/수정)
  */
 function fn_saveMenu() {
     const form = document.getElementById('menuForm');
@@ -661,10 +653,13 @@ function fn_saveMenu() {
     data.authList = fn_collectAuthData();
     
     callModule.call(Util.getRequestUrl('/system/menu/saveMenu.do'), data, function(result) {
-        MessageUtil.alert(result.message, function() {
+        if (result && result.result && result.result.resultValue) {
+            MessageUtil.success(result.result.message);
             fn_searchMenuList();
             fn_selectMenu(data.menuId);
-        });
+        } else {
+            MessageUtil.error(result.result.message);
+        }
     }, true, 'POST');
 }
 
@@ -706,22 +701,168 @@ function fn_cancelMenuEdit() {
 }
 
 /**
- * 사용자 추가 (권한 그룹에 사용자 추가)
+ * 사용자 권한 변경 (체크박스 변경 시)
  */
-function fn_addUserToRole() {
-    if (!selectedRoleCd) {
-        MessageUtil.alert('권한 그룹을 먼저 선택하세요.');
+function fn_changeUserAuth(userId, authType, checked) {
+    if (!selectedMenuId) {
+        MessageUtil.alert('메뉴를 먼저 선택하세요.');
         return;
     }
-    MessageUtil.alert('사용자 추가 기능은 추후 구현 예정입니다.');
+    
+    // 변경 사항 추적
+    const existingIndex = changedUserAuthList.findIndex(a => 
+        a.userId === userId && a.menuId === selectedMenuId
+    );
+    
+    const authValue = checked ? 'Y' : 'N';
+    
+    // 권한 타입에 따른 필드명 매핑
+    const authFieldMap = {
+        'read': 'readAuthorYn',
+        'creat': 'creatAuthorYn',
+        'updt': 'updtAuthorYn',
+        'delete': 'deleteAuthorYn'
+    };
+    
+    if (existingIndex >= 0) {
+        // 기존 변경 사항 업데이트
+        changedUserAuthList[existingIndex][authFieldMap[authType]] = authValue;
+    } else {
+        // 새 변경 사항 추가
+        const user = userMenuAuthList.find(u => u.userId === userId);
+        changedUserAuthList.push({
+            userId: userId,
+            menuId: selectedMenuId,
+            readAuthorYn: authType === 'read' ? authValue : (user ? user.readAuthorYn || 'N' : 'N'),
+            creatAuthorYn: authType === 'creat' ? authValue : (user ? user.creatAuthorYn || 'N' : 'N'),
+            updtAuthorYn: authType === 'updt' ? authValue : (user ? user.updtAuthorYn || 'N' : 'N'),
+            deleteAuthorYn: authType === 'delete' ? authValue : (user ? user.deleteAuthorYn || 'N' : 'N')
+        });
+    }
+    
+    // 사용자 목록의 해당 항목도 업데이트
+    const user = userMenuAuthList.find(u => u.userId === userId);
+    if (user) {
+        if (authType === 'read') user.readAuthorYn = authValue;
+        else if (authType === 'creat') user.creatAuthorYn = authValue;
+        else if (authType === 'updt') user.updtAuthorYn = authValue;
+        else if (authType === 'delete') user.deleteAuthorYn = authValue;
+    }
 }
 
 /**
- * 사용자 삭제 (권한 그룹에서 사용자 제거)
+ * 사용자 권한 저장 (일괄 저장)
+ */
+function fn_saveAllUserAuth() {
+    if (changedUserAuthList.length === 0) {
+        MessageUtil.alert('변경된 사용자 권한이 없습니다.');
+        return;
+    }
+    
+    if (!selectedMenuId) {
+        MessageUtil.alert('메뉴를 먼저 선택하세요.');
+        return;
+    }
+    
+    // 변경된 권한을 하나씩 저장
+    let successCount = 0;
+    let failCount = 0;
+    
+    changedUserAuthList.forEach((auth, index) => {
+        callModule.call(Util.getRequestUrl('/system/menu/saveUserMenuAuth.do'), auth, function(result) {
+            if (result && result.result && result.result.resultValue) {
+                successCount++;
+            } else {
+                failCount++;
+            }
+            
+            // 모든 저장이 완료되면
+            if (index === changedUserAuthList.length - 1) {
+                if (failCount === 0) {
+                    MessageUtil.alert('모든 사용자 권한이 저장되었습니다.', function() {
+                        changedUserAuthList = [];
+                        fn_loadUserListByMenu(selectedMenuId);
+                    });
+                } else {
+                    MessageUtil.alert(`${successCount}개 저장 성공, ${failCount}개 저장 실패`);
+                }
+            }
+        }, true, 'POST');
+    });
+}
+
+/**
+ * 사용자 추가 (메뉴에 개별 권한 부여)
+ */
+function fn_addUserToRole() {
+    if (!selectedMenuId) {
+        MessageUtil.alert('메뉴를 먼저 선택하세요.');
+        return;
+    }
+    
+    // 이미 권한이 있는 사용자 목록 조회 (필터링용)
+    const data = { menuId: selectedMenuId };
+    callModule.call(Util.getRequestUrl('/system/menu/getAllUsersForMenu.do'), data, function(result) {
+        const allUsers = result.result || [];
+        
+        // 이미 권한이 부여된 사용자 ID 목록 추출
+        const excludedUserIds = allUsers
+            .filter(u => u.userMenuAuthorSn)
+            .map(u => u.userId);
+        
+        // 모달 열기
+        UserSearchModal.open(function(selectedUsers) {
+            if (!selectedUsers || selectedUsers.length === 0) {
+                return;
+            }
+            
+            // 선택된 사용자들을 순회하며 권한 부여
+            let successCount = 0;
+            let failCount = 0;
+            let completedCount = 0;
+            
+            selectedUsers.forEach((user, index) => {
+                const userAuth = {
+                    userId: user.userId,
+                    menuId: selectedMenuId,
+                    readAuthorYn: 'Y',
+                    creatAuthorYn: 'N',
+                    updtAuthorYn: 'N',
+                    deleteAuthorYn: 'N'
+                };
+                
+                callModule.call(Util.getRequestUrl('/system/menu/saveUserMenuAuth.do'), userAuth, function(result) {
+                    completedCount++;
+                    
+                    if (result && result.result && result.result.resultValue) {
+                        successCount++;
+                    } else {
+                        failCount++;
+                    }
+                    
+                    // 모든 요청 완료 후 처리
+                    if (completedCount === selectedUsers.length) {
+                        if (successCount > 0) {
+                            MessageUtil.success(`${successCount}명의 사용자 권한이 부여되었습니다.`, function() {
+                                fn_loadUserListByMenu(selectedMenuId);
+                            });
+                        }
+                        if (failCount > 0) {
+                            MessageUtil.error(`${failCount}명의 사용자 권한 부여에 실패했습니다.`);
+                        }
+                    }
+                }, true, 'POST');
+            });
+        }, excludedUserIds);
+    }, true, 'POST');
+}
+
+/**
+ * 사용자 삭제 (메뉴에서 개별 권한 제거)
  */
 function fn_deleteUserFromRole() {
-    if (!selectedRoleCd) {
-        MessageUtil.alert('권한 그룹을 먼저 선택하세요.');
+    if (!selectedMenuId) {
+        MessageUtil.alert('메뉴를 먼저 선택하세요.');
         return;
     }
     
@@ -731,8 +872,36 @@ function fn_deleteUserFromRole() {
         return;
     }
     
-    MessageUtil.confirm('선택한 사용자를 권한 그룹에서 제거하시겠습니까?', function() {
-        MessageUtil.alert('사용자 삭제 기능은 추후 구현 예정입니다.');
+    const userIds = Array.from(selectedRows).map(row => row.dataset.userId);
+    
+    MessageUtil.confirm('선택한 사용자의 메뉴 접근 권한을 제거하시겠습니까?', function() {
+        let successCount = 0;
+        let failCount = 0;
+        
+        userIds.forEach((userId, index) => {
+            const data = {
+                userId: userId,
+                menuId: selectedMenuId
+            };
+            
+            callModule.call(Util.getRequestUrl('/system/menu/deleteUserMenuAuth.do'), data, function(result) {
+                if (result && result.result && result.result.resultValue) {
+                    successCount++;
+                } else {
+                    failCount++;
+                }
+                
+                if (index === userIds.length - 1) {
+                    if (failCount === 0) {
+                        MessageUtil.alert('사용자 권한이 제거되었습니다.', function() {
+                            fn_loadUserListByMenu(selectedMenuId);
+                        });
+                    } else {
+                        MessageUtil.alert(`${successCount}개 제거 성공, ${failCount}개 제거 실패`);
+                    }
+                }
+            }, true, 'POST');
+        });
     });
 }
 
@@ -751,12 +920,16 @@ function fn_deleteMenu(menuId) {
     MessageUtil.confirm('메뉴를 삭제하시겠습니까?', function() {
         const data = { menuId: menuId };
         callModule.call(Util.getRequestUrl('/system/menu/deleteMenu.do'), data, function(result) {
-            MessageUtil.alert(result.message, function() {
+            if (result && result.result && result.result.resultValue) {
                 fn_searchMenuList();
                 // 상세 정보 초기화
                 document.getElementById('menuDetailArea').innerHTML = '<div class="menu-detail-empty"><p class="txt-body">좌측 메뉴 목록에서 메뉴를 선택하세요</p></div>';
                 selectedMenuId = null;
-            });
+
+                MessageUtil.success(result.result.message);
+            } else {
+                MessageUtil.error(result.result.message);
+            }
         }, true, 'POST');
     });
 }
@@ -766,7 +939,6 @@ function fn_deleteMenu(menuId) {
  */
 function fn_switchToRegisterMode() {
     selectedMenuId = null;
-    selectedRoleCd = null;
     changedAuthList = [];
     
     // 행 선택 해제
@@ -817,3 +989,7 @@ window.fn_cancelMenuEdit = fn_cancelMenuEdit;
 window.fn_switchToMenuEditMode = fn_switchToMenuEditMode;
 window.fn_deleteMenu = fn_deleteMenu;
 window.fn_switchToRegisterMode = fn_switchToRegisterMode;
+window.fn_changeUserAuth = fn_changeUserAuth;
+window.fn_saveAllUserAuth = fn_saveAllUserAuth;
+window.fn_addUserToRole = fn_addUserToRole;
+window.fn_deleteUserFromRole = fn_deleteUserFromRole;
