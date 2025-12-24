@@ -182,11 +182,10 @@ const UserSearchModal = {
         const paginationArea = document.getElementById('modalUserPaginationArea');
         if (this.pagingVO) {
             // pagination 클래스 추가
-            paginationArea.className = 'item-box align-ct mt-30 pagination';
+            paginationArea.className = 'pagination';
             setPagination(this.pagingVO, paginationArea, 'UserSearchModal.searchUserList');
         } else {
             paginationArea.innerHTML = '';
-            paginationArea.className = 'item-box align-ct mt-30';
         }
     },
     

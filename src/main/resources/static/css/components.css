@@ -304,7 +304,7 @@
     border: 2px solid var(--active-inner);
     border-top: 0;
     border-left: 0;
-    left: 6.5px;
+    left: 6px;
     top: 3px;
     transform: rotate(var(--r, 20deg));
   }

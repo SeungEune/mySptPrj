@@ -159,7 +159,7 @@ body {
 }
 .table-box .table-inner{
   width: 100%;
-  overflow-x: auto;
+  overflow-y: auto;
 }
 /*search wrap*/
 .search-form {
