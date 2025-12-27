@@ -1,0 +1,51 @@
+@charset "utf-8";
+
+/* 공통코드 관리 화면 스타일 */
+
+/* 좌/우 2패널 레이아웃 */
+.code-mngr-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spt-number-2);
+}
+
+.code-mngr-section .item-horizontal-box {
+  display: flex;
+  gap: var(--spt-number-2);
+  width: 100%;
+}
+
+/* 좌측: 대분류 영역 (40% 비율) */
+.code-group-area {
+  width: 40%;
+  flex-shrink: 0;
+  min-width: 400px;
+}
+
+/* 우측: 소분류 영역 (60% 비율) */
+.code-detail-area {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 테이블 선택 행 하이라이트 */
+.select-table tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.select-table tbody tr:hover {
+  background-color: var(--spt-primary-0);
+}
+
+.select-table tbody tr.selected {
+  background-color: var(--spt-primary-1);
+  font-weight: 600;
+}
+
+/* 테이블 내부 스크롤 */
+.code-group-area .table-inner,
+.code-detail-area .table-inner {
+  max-height: 600px;
+  overflow-y: auto;
+}

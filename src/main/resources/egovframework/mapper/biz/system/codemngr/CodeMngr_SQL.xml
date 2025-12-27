@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="codeMngrMapper">
+
+    <!-- 코드 그룹 목록 조회 -->
+    <select id="selectCodeGroupList" parameterType="biz.system.codemngr.vo.CodeSearchVO" resultType="biz.system.codemngr.vo.CodeGroupVO">
+        SELECT code_id,
+               code_id_nm,
+               code_id_dc AS codeDc,
+               use_yn,
+               register_id,
+               TO_CHAR(regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS registDt
+        FROM tb_cmmn_code
+        WHERE 1=1
+        <if test="searchType != null and searchType != '' and searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test="searchType == 'codeId'">
+                    AND UPPER(code_id) LIKE UPPER(CONCAT('%', #{searchKeyword}, '%'))
+                </when>
+                <when test="searchType == 'codeIdNm'">
+                    AND UPPER(code_id_nm) LIKE UPPER(CONCAT('%', #{searchKeyword}, '%'))
+                </when>
+            </choose>
+        </if>
+        ORDER BY code_id
+    </select>
+
+    <!-- 코드 그룹 상세 조회 -->
+    <!-- TODO: 구현 예정 -->
+    <!--
+    <select id="selectCodeGroupDetail" parameterType="String" resultType="biz.system.codemngr.vo.CodeGroupVO">
+        SELECT code_id,
+               code_id_nm,
+               code_id_dc AS codeDc,
+               use_yn,
+               register_id,
+               TO_CHAR(regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS registDt
+        FROM tb_cmmn_code
+        WHERE code_id = #{codeId}
+    </select>
+    -->
+
+    <!-- 코드 그룹 등록 -->
+    <insert id="insertCodeGroup" parameterType="biz.system.codemngr.vo.CodeGroupVO">
+        INSERT INTO tb_cmmn_code (
+            code_id,
+            code_id_nm,
+            code_id_dc,
+            use_yn,
+            register_id,
+            regist_dt
+        ) VALUES (
+            #{codeId},
+            #{codeIdNm},
+            #{codeDc, jdbcType=VARCHAR},
+            COALESCE(#{useYn}, 'Y'),
+            #{registerId},
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <!-- 코드 그룹 수정 -->
+    <!-- TODO: 구현 예정 -->
+    <!--
+    <update id="updateCodeGroup" parameterType="biz.system.codemngr.vo.CodeGroupVO">
+        UPDATE tb_cmmn_code
+        SET code_id_nm = #{codeIdNm},
+            code_dc = #{codeDc},
+            use_yn = #{useYn},
+            updusr_id = #{updusrId},
+            updt_dt = NOW()
+        WHERE code_id = #{codeId}
+    </update>
+    -->
+
+    <!-- 코드 그룹 삭제 -->
+    <!-- TODO: 구현 예정 -->
+    <!--
+    <delete id="deleteCodeGroup" parameterType="String">
+        DELETE FROM tb_cmmn_code
+        WHERE code_id = #{codeId}
+    </delete>
+    -->
+
+    <!-- 코드 그룹 ID 중복 확인 -->
+    <select id="checkCodeIdDuplicate" parameterType="String" resultType="int">
+        SELECT COUNT(1)
+        FROM tb_cmmn_code
+        WHERE code_id = #{codeId}
+    </select>
+
+    <!-- 코드 상세값 목록 조회 -->
+    <select id="selectCodeDetailList" parameterType="String" resultType="biz.system.codemngr.vo.CodeDetailVO">
+        SELECT code_id,
+               code,
+               code_nm,
+               code_dc,
+               code_order,
+               use_yn,
+               register_id,
+               TO_CHAR(regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS registDt
+        FROM tb_cmmn_code_detail
+        WHERE code_id = #{codeId}
+        ORDER BY code_order, code
+    </select>
+
+    <!-- 코드 상세값 상세 조회 -->
+    <!-- TODO: 구현 예정 -->
+    <!--
+    <select id="selectCodeDetail" parameterType="biz.system.codemngr.vo.CodeDetailVO" resultType="biz.system.codemngr.vo.CodeDetailVO">
+        SELECT code_id,
+               code,
+               code_nm,
+               code_abbr,
+               code_dc,
+               code_order,
+               use_yn,
+               register_id,
+               TO_CHAR(regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS registDt,
+               updusr_id,
+               TO_CHAR(updt_dt, 'YYYY-MM-DD HH24:MI:SS') AS updtDt
+        FROM tb_cmmn_code_detail
+        WHERE code_id = #{codeId}
+          AND code = #{code}
+    </select>
+    -->
+
+    <!-- 코드 상세값 등록 -->
+    <!-- TODO: 구현 예정 -->
+    <!--
+    <insert id="insertCodeDetail" parameterType="biz.system.codemngr.vo.CodeDetailVO">
+        INSERT INTO tb_cmmn_code_detail (
+            code_id,
+            code,
+            code_nm,
+            code_abbr,
+            code_dc,
+            code_order,
+            use_yn,
+            register_id,
+            regist_dt
+        ) VALUES (
+            #{codeId},
+            #{code},
+            #{codeNm},
+            #{codeAbbr},
+            #{codeDc},
+            COALESCE(#{codeOrder}, 0),
+            COALESCE(#{useYn}, 'Y'),
+            #{registerId},
+            NOW()
+        )
+    </insert>
+    -->
+
+    <!-- 코드 상세값 수정 -->
+    <!-- TODO: 구현 예정 -->
+    <!--
+    <update id="updateCodeDetail" parameterType="biz.system.codemngr.vo.CodeDetailVO">
+        UPDATE tb_cmmn_code_detail
+        SET code_nm = #{codeNm},
+            code_abbr = #{codeAbbr},
+            code_dc = #{codeDc},
+            code_order = #{codeOrder},
+            use_yn = #{useYn},
+            updusr_id = #{updusrId},
+            updt_dt = NOW()
+        WHERE code_id = #{codeId}
+          AND code = #{code}
+    </update>
+    -->
+
+    <!-- 코드 상세값 삭제 -->
+    <!-- TODO: 구현 예정 -->
+    <!--
+    <delete id="deleteCodeDetail" parameterType="biz.system.codemngr.vo.CodeDetailVO">
+        DELETE FROM tb_cmmn_code_detail
+        WHERE code_id = #{codeId}
+          AND code = #{code}
+    </delete>
+    -->
+
+</mapper>

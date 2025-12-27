@@ -1,0 +1,23 @@
+@charset "utf-8";
+
+/* 코드 그룹 등록 모달 스타일 */
+
+/* 모달 내부 폼 테이블 스타일 */
+.code-group-modal-body .form-table th {
+  width: 15rem;
+}
+
+.code-group-modal-body .form-msg {
+  display: block;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.code-group-modal-body .form-msg.success {
+  color: #27AE60;
+}
+
+.code-group-modal-body .form-msg.error {
+  color: #E74C3C;
+}
+

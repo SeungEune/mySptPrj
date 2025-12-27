@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{cmm/layout/subLayout :: layout (
+            contentLink=~{::contentLink},
+            script=~{::script},
+            content=~{::content})}">
+
+<th:block th:fragment="contentLink">
+  <link rel="stylesheet" th:href="@{/css/system/code/codeMngr.css}" />
+  <link rel="stylesheet" th:href="@{/css/system/code/codeGroupRegisterModal.css}" />
+</th:block>
+
+<th:block th:fragment="script">
+  <script th:src="@{/js/system/code/codeGroupRegisterModal.js}"></script>
+  <script th:src="@{/js/system/code/codeMngr.js}"></script>
+</th:block>
+
+<div th:fragment="content" class="wrap-inner">
+  <section class="sub-title">
+    <h2 class="txt-head-md">공통코드 관리</h2>
+  </section>
+
+  <section class="sub-contents">
+    <!-- 상단 검색조건 영역 -->
+    <div class="conts-wrap">
+      <div id="searchForm" class="search-form">
+        <div class="select-group">
+          <div class="select-box">
+            <select class="select" id="searchType" name="searchType">
+              <option value="">전체</option>
+              <option value="codeId">코드</option>
+              <option value="codeIdNm">코드명</option>
+            </select>
+          </div>
+        </div>
+        <div class="input-box">
+          <input type="text" id="searchKeyword" name="searchKeyword" class="input" placeholder="검색어를 입력하세요">
+        </div>
+        <div class="button-group">
+          <button type="button" class="primary-button" id="searchBtn">검색</button>
+          <button type="button" class="tertiary-button" id="resetBtn">초기화</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 좌/우 2패널 레이아웃 -->
+    <div class="item-box code-mngr-section">
+      <div class="item-horizontal-box">
+        
+        <!-- 좌측: 대분류 목록 (40%) -->
+        <div class="item-box code-group-area">
+          <div class="conts-wrap fx-1">
+            <div class="section-header">
+              <h3 class="txt-body-lg">대분류</h3>
+              <div class="section-actions">
+                <button type="button" class="primary-button sm" id="addCodeGroupBtn">추가</button>
+                <button type="button" class="tertiary-button sm" id="deleteCodeGroupBtn">삭제</button>
+              </div>
+            </div>
+            <div class="table-box fx-1">
+              <div class="table-inner">
+                <table class="table-type01 select-table" id="codeGroupTable">
+                  <colgroup>
+                    <col width="20%"/>
+                    <col width="50%"/>
+                    <col width="30%"/>
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th class="tc">코드</th>
+                      <th class="tc">코드명</th>
+                      <th class="tc">비고</th>
+                    </tr>
+                  </thead>
+                  <tbody id="codeGroupTbody">
+                    <tr>
+                      <td class="tc no-data-table" colspan="3">조회 결과가 없습니다.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 우측: 소분류 목록 (60%) -->
+        <div class="item-box fx-1 code-detail-area">
+          <div class="conts-wrap fx-1">
+            <div class="section-header">
+              <h3 class="txt-body-lg">소분류</h3>
+              <div class="section-actions">
+                <button type="button" class="primary-button sm" id="addCodeDetailBtn">추가</button>
+                <button type="button" class="tertiary-button sm" id="deleteCodeDetailBtn">삭제</button>
+              </div>
+            </div>
+            <div class="table-box fx-1">
+              <div class="table-inner">
+                <table class="table-type01 select-table" id="codeDetailTable">
+                          <colgroup>
+                            <col width="20%"/>
+                            <col width="30%"/>
+                            <col width="25%"/>
+                            <col width="10%"/>
+                            <col width="15%"/>
+                          </colgroup>
+                        <thead>
+                          <tr>
+                            <th class="tc">코드</th>
+                            <th class="tc">코드명</th>
+                            <th class="tc">비고</th>
+                            <th class="tc">출력순서</th>
+                            <th class="tc">사용여부</th>
+                          </tr>
+                        </thead>
+                          <tbody id="codeDetailTbody">
+                            <tr>
+                              <td class="tc no-data-table" colspan="5">대분류를 선택하세요</td>
+                            </tr>
+                          </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 코드 그룹 등록 모달 -->
+  <th:block th:insert="~{system/code/codeGroupRegisterModal :: codeGroupRegisterModal}"></th:block>
+
+  <!-- jQuery tmpl 템플릿 -->
+  <!-- 코드 그룹 빈 데이터 템플릿 -->
+  <script type="text/x-jquery-tmpl" id="codeGroupEmptyTemplate">
+    <tr>
+      <td class="tc no-data-table" colspan="3">조회 결과가 없습니다.</td>
+    </tr>
+  </script>
+
+  <!-- 코드 그룹 목록 템플릿 -->
+  <script type="text/x-jquery-tmpl" id="codeGroupListTemplate">
+    <tr class="cur-point" data-code-id="{{html codeId}}" onclick="fn_selectCodeGroup('{{html codeId}}')">
+      <td class="tc">{{html codeId}}</td>
+      <td class="tc">{{html codeIdNm}}</td>
+      <td class="tc">{{if codeDc}}{{html codeDc}}{{else}}-{{/if}}</td>
+    </tr>
+  </script>
+
+  <!-- 코드 상세 빈 데이터 템플릿 -->
+  <script type="text/x-jquery-tmpl" id="codeDetailEmptyTemplate">
+    <tr>
+      <td class="tc no-data-table" colspan="5">대분류를 선택하세요</td>
+    </tr>
+  </script>
+
+  <!-- 코드 상세 목록 템플릿 -->
+  <script type="text/x-jquery-tmpl" id="codeDetailListTemplate">
+    <tr>
+      <td class="tc">{{html code}}</td>
+      <td class="tc">{{html codeNm}}</td>
+      <td class="tc">{{if codeDc}}{{html codeDc}}{{else}}-{{/if}}</td>
+      <td class="tc">{{html codeOrder}}</td>
+      <td class="tc">
+        {{html useYnCheckbox}}
+      </td>
+    </tr>
+  </script>
+</div>
+
+</html>
