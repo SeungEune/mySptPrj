@@ -38,7 +38,7 @@ public class CodeMngrController {
      */
     @GetMapping("/codeMngrForm.do")
     public String codeMngrForm(Model model) {
-        return "system/code/codeMngrForm";
+        return "system/codemngr/codeMngrForm";
     }
 
     /**

@@ -6,15 +6,15 @@
             content=~{::content})}">
 
 <th:block th:fragment="contentLink">
-  <link rel="stylesheet" th:href="@{/css/system/code/codeMngr.css}" />
-  <link rel="stylesheet" th:href="@{/css/system/code/codeGroupRegisterModal.css}" />
-  <link rel="stylesheet" th:href="@{/css/system/code/codeDetailRegisterModal.css}" />
+  <link rel="stylesheet" th:href="@{/css/system/codemngr/codeMngr.css}" />
+  <link rel="stylesheet" th:href="@{/css/system/codemngr/codeGroupRegisterModal.css}" />
+  <link rel="stylesheet" th:href="@{/css/system/codemngr/codeDetailRegisterModal.css}" />
 </th:block>
 
 <th:block th:fragment="script">
-  <script th:src="@{/js/system/code/codeGroupRegisterModal.js}"></script>
-  <script th:src="@{/js/system/code/codeDetailRegisterModal.js}"></script>
-  <script th:src="@{/js/system/code/codeMngr.js}"></script>
+  <script th:src="@{/js/system/codemngr/codeGroupRegisterModal.js}"></script>
+  <script th:src="@{/js/system/codemngr/codeDetailRegisterModal.js}"></script>
+  <script th:src="@{/js/system/codemngr/codeMngr.js}"></script>
 </th:block>
 
 <div th:fragment="content" class="wrap-inner">
@@ -130,10 +130,10 @@
   </section>
 
   <!-- 코드 그룹 등록 모달 -->
-  <th:block th:insert="~{system/code/codeGroupRegisterModal :: codeGroupRegisterModal}"></th:block>
+  <th:block th:insert="~{system/codemngr/codeGroupRegisterModal :: codeGroupRegisterModal}"></th:block>
 
   <!-- 코드 상세값 등록 모달 -->
-  <th:block th:insert="~{system/code/codeDetailRegisterModal :: codeDetailRegisterModal}"></th:block>
+  <th:block th:insert="~{system/codemngr/codeDetailRegisterModal :: codeDetailRegisterModal}"></th:block>
 
   <!-- jQuery tmpl 템플릿 -->
   <!-- 코드 그룹 빈 데이터 템플릿 -->
