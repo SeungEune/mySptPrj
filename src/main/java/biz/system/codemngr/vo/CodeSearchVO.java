@@ -17,6 +17,9 @@ public class CodeSearchVO extends ComDefaultVO {
     /** 검색 타입 */
     private String searchType;
 
+    /** 검색 카테고리 (대분류 / 소분류) */
+    private String searchCategory;
+
     /** 검색 키워드 */
     private String searchKeyword;
 }

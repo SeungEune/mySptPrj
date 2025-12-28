@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+  <!-- 코드 상세값 등록 모달 Fragment -->
+  <div th:fragment="codeDetailRegisterModal" id="codeDetailRegisterModal" class="code-detail-register-modal spt-modal">
+    <div class="code-detail-modal-overlay spt-modal-overlay" onclick="CodeDetailRegisterModal.close()"></div>
+    <div class="code-detail-modal-container spt-modal-container">
+      <div class="code-detail-modal-header spt-modal-header">
+        <h3 class="txt-head-sm">코드 상세값 등록</h3>
+        <button type="button" class="code-detail-modal-close spt-modal-close" onclick="CodeDetailRegisterModal.close()">&times;</button>
+      </div>
+      <div class="code-detail-modal-body spt-modal-body">
+        <form id="codeDetailRegisterForm">
+          <div class="table-box type01">
+            <div class="table-inner">
+              <table class="table-type01 form-table code-detail-form-table">
+                <colgroup>
+                  <col width="30%"/>
+                  <col width="70%"/>
+                </colgroup>
+                <tbody>
+                <tr>
+                  <th><label for="modalDetailCodeId">코드 ID</label></th>
+                  <td>
+                    <input type="text" id="modalDetailCodeId" name="codeId" class="input" readonly>
+                  </td>
+                </tr>
+                <tr>
+                  <th><label for="modalDetailCode">코드 <span class="required">*</span></label></th>
+                  <td>
+                    <div class="item-horizontal-box g10 align-items-center">
+                      <input type="text" id="modalDetailCode" name="code" class="input"
+                             placeholder="코드를 입력하세요" required maxlength="20">
+                      <button type="button" class="tertiary-button" id="modalCheckCodeBtn" onclick="CodeDetailRegisterModal.checkCodeDuplicate()">중복확인</button>
+                    </div>
+                    <span id="modalCodeCheckMsg" class="form-msg"></span>
+                  </td>
+                </tr>
+                <tr>
+                  <th><label for="modalDetailCodeNm">코드명 <span class="required">*</span></label></th>
+                  <td>
+                    <input type="text" id="modalDetailCodeNm" name="codeNm" class="input"
+                           placeholder="코드명을 입력하세요" required maxlength="100">
+                  </td>
+                </tr>
+                <tr>
+                  <th><label for="modalDetailCodeDc">코드 설명</label></th>
+                  <td>
+                    <input type="text" id="modalDetailCodeDc" name="codeDc" class="input"
+                           placeholder="코드 설명을 입력하세요" maxlength="500">
+                  </td>
+                </tr>
+                <tr>
+                  <th><label for="modalDetailCodeOrder">출력순서</label></th>
+                  <td>
+                    <input type="number" id="modalDetailCodeOrder" name="codeOrder" class="input"
+                           placeholder="출력순서를 입력하세요" min="1">
+                  </td>
+                </tr>
+                <tr>
+                  <th><label for="modalDetailUseYn">사용여부</label></th>
+                  <td>
+                    <div class="radio-group">
+                      <label class="radio-label">
+                        <input type="radio" id="modalDetailUseYn" name="useYn" value="Y" checked> 사용
+                      </label>
+                      <label class="radio-label">
+                        <input type="radio" name="useYn" value="N"> 미사용
+                      </label>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="code-detail-modal-footer spt-modal-footer">
+        <button type="button" class="primary-button" id="modalSaveCodeDetailBtn" onclick="CodeDetailRegisterModal.saveCodeDetail()">저장</button>
+        <button type="button" class="tertiary-button" onclick="CodeDetailRegisterModal.close()">취소</button>
+      </div>
+    </div>
+  </div>
+
+</html>
+

@@ -6,6 +6,7 @@ import biz.system.codemngr.vo.CodeSearchVO;
 import egovframework.com.cmm.response.ResultVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 코드 관리를 위한 Service 인터페이스
@@ -37,11 +38,11 @@ public interface CodeMngrService {
     ResultVO saveCodeGroup(CodeGroupVO codeGroupVO);
 
     /**
-     * 코드 그룹 삭제
-     * @param codeId 코드 그룹 ID
+     * 코드 그룹 use_yn 업데이트 (일괄 처리)
+     * @param updateList 코드 그룹 ID와 useYn의 리스트 (각 Map은 codeId, useYn 키 포함)
      * @return 처리 결과
      */
-    ResultVO deleteCodeGroup(String codeId);
+    ResultVO updateCodeGroupUseYn(List<Map<String, String>> updateList);
 
     /**
      * 코드 그룹 ID 중복 확인
@@ -73,10 +74,17 @@ public interface CodeMngrService {
     ResultVO saveCodeDetail(CodeDetailVO codeDetailVO);
 
     /**
-     * 코드 상세값 삭제
+     * 코드 상세값 중복 확인 (codeId + code 조합)
      * @param codeId 코드 그룹 ID
      * @param code 상세 코드값
+     * @return 중복 여부
+     */
+    boolean checkCodeDetailDuplicate(String codeId, String code);
+
+    /**
+     * 코드 상세값 use_yn 업데이트 (일괄 처리)
+     * @param updateList 코드 상세값 ID와 useYn의 리스트 (각 Map은 codeId, code, useYn 키 포함)
      * @return 처리 결과
      */
-    ResultVO deleteCodeDetail(String codeId, String code);
+    ResultVO updateCodeDetailUseYn(List<Map<String, String>> updateList);
 }

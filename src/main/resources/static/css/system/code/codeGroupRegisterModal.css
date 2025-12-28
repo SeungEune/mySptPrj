@@ -21,3 +21,10 @@
   color: #E74C3C;
 }
 
+/* 코드 그룹 모달 푸터 스타일 */
+.code-group-modal-footer {
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 20px;
+}
+

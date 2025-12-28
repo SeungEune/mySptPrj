@@ -1,0 +1,30 @@
+@charset "utf-8";
+
+/* 코드 상세값 등록 모달 스타일 */
+
+/* 모달 내부 폼 테이블 스타일 */
+.code-detail-modal-body .form-table th {
+  width: 15rem;
+}
+
+.code-detail-modal-body .form-msg {
+  display: block;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.code-detail-modal-body .form-msg.success {
+  color: #27AE60;
+}
+
+.code-detail-modal-body .form-msg.error {
+  color: #E74C3C;
+}
+
+/* 코드 상세값 모달 푸터 스타일 */
+.code-detail-modal-footer {
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 20px;
+}
+

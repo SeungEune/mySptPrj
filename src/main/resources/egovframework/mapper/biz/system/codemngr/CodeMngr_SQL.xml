@@ -5,25 +5,38 @@
 
     <!-- 코드 그룹 목록 조회 -->
     <select id="selectCodeGroupList" parameterType="biz.system.codemngr.vo.CodeSearchVO" resultType="biz.system.codemngr.vo.CodeGroupVO">
-        SELECT code_id,
-               code_id_nm,
-               code_id_dc AS codeDc,
-               use_yn,
-               register_id,
-               TO_CHAR(regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS registDt
-        FROM tb_cmmn_code
-        WHERE 1=1
-        <if test="searchType != null and searchType != '' and searchKeyword != null and searchKeyword != ''">
-            <choose>
-                <when test="searchType == 'codeId'">
-                    AND UPPER(code_id) LIKE UPPER(CONCAT('%', #{searchKeyword}, '%'))
-                </when>
-                <when test="searchType == 'codeIdNm'">
+        <choose>
+            <!-- 소분류 검색: 소분류 코드명으로 검색하여 해당 대분류 반환 -->
+            <when test="searchCategory != null and searchCategory == '소분류' and searchKeyword != null and searchKeyword != ''">
+                SELECT DISTINCT
+                       c.code_id,
+                       c.code_id_nm,
+                       c.code_id_dc AS codeDc,
+                       c.use_yn,
+                       c.register_id,
+                       TO_CHAR(c.regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS registDt
+                FROM tb_cmmn_code c
+                INNER JOIN tb_cmmn_code_detail cd ON c.code_id = cd.code_id
+                WHERE 1=1
+                  AND UPPER(cd.code_nm) LIKE UPPER(CONCAT('%', #{searchKeyword}, '%'))
+                ORDER BY c.code_id
+            </when>
+            <!-- 대분류 검색: 대분류 코드명으로 검색 -->
+            <otherwise>
+                SELECT code_id,
+                       code_id_nm,
+                       code_id_dc AS codeDc,
+                       use_yn,
+                       register_id,
+                       TO_CHAR(regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS registDt
+                FROM tb_cmmn_code
+                WHERE 1=1
+                <if test="searchKeyword != null and searchKeyword != ''">
                     AND UPPER(code_id_nm) LIKE UPPER(CONCAT('%', #{searchKeyword}, '%'))
-                </when>
-            </choose>
-        </if>
-        ORDER BY code_id
+                </if>
+                ORDER BY code_id
+            </otherwise>
+        </choose>
     </select>
 
     <!-- 코드 그룹 상세 조회 -->
@@ -74,14 +87,19 @@
     </update>
     -->
 
-    <!-- 코드 그룹 삭제 -->
-    <!-- TODO: 구현 예정 -->
-    <!--
-    <delete id="deleteCodeGroup" parameterType="String">
-        DELETE FROM tb_cmmn_code
+    <!-- 코드 그룹 use_yn 업데이트 -->
+    <update id="updateCodeGroupUseYn" parameterType="map">
+        UPDATE tb_cmmn_code
+        SET use_yn = #{useYn}
         WHERE code_id = #{codeId}
-    </delete>
-    -->
+    </update>
+
+    <!-- 코드 상세값 use_yn 일괄 업데이트 (대분류 비활성화 시) -->
+    <update id="updateCodeDetailUseYnByCodeId" parameterType="String">
+        UPDATE tb_cmmn_code_detail
+        SET use_yn = 'N'
+        WHERE code_id = #{codeId}
+    </update>
 
     <!-- 코드 그룹 ID 중복 확인 -->
     <select id="checkCodeIdDuplicate" parameterType="String" resultType="int">
@@ -127,14 +145,11 @@
     -->
 
     <!-- 코드 상세값 등록 -->
-    <!-- TODO: 구현 예정 -->
-    <!--
     <insert id="insertCodeDetail" parameterType="biz.system.codemngr.vo.CodeDetailVO">
         INSERT INTO tb_cmmn_code_detail (
             code_id,
             code,
             code_nm,
-            code_abbr,
             code_dc,
             code_order,
             use_yn,
@@ -144,15 +159,21 @@
             #{codeId},
             #{code},
             #{codeNm},
-            #{codeAbbr},
-            #{codeDc},
+            #{codeDc, jdbcType=VARCHAR},
             COALESCE(#{codeOrder}, 0),
             COALESCE(#{useYn}, 'Y'),
             #{registerId},
-            NOW()
+            CURRENT_TIMESTAMP
         )
     </insert>
-    -->
+
+    <!-- 코드 상세값 중복 확인 (codeId + code 조합) -->
+    <select id="checkCodeDetailDuplicate" parameterType="map" resultType="int">
+        SELECT COUNT(1)
+        FROM tb_cmmn_code_detail
+        WHERE code_id = #{codeId}
+          AND code = #{code}
+    </select>
 
     <!-- 코드 상세값 수정 -->
     <!-- TODO: 구현 예정 -->
@@ -171,14 +192,11 @@
     </update>
     -->
 
-    <!-- 코드 상세값 삭제 -->
-    <!-- TODO: 구현 예정 -->
-    <!--
-    <delete id="deleteCodeDetail" parameterType="biz.system.codemngr.vo.CodeDetailVO">
-        DELETE FROM tb_cmmn_code_detail
+    <!-- 코드 상세값 use_yn 업데이트 -->
+    <update id="updateCodeDetailUseYn" parameterType="map">
+        UPDATE tb_cmmn_code_detail
+        SET use_yn = #{useYn}
         WHERE code_id = #{codeId}
           AND code = #{code}
-    </delete>
-    -->
-
+    </update>
 </mapper>

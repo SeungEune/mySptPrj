@@ -14,7 +14,6 @@
           <div class="table-box type01">
             <div class="table-inner">
               <table class="table-type01 form-table code-group-form-table">
-                <caption class="table-caption">코드 그룹 정보</caption>
                 <colgroup>
                   <col width="30%"/>
                   <col width="70%"/>
@@ -41,8 +40,8 @@
                 <tr>
                   <th><label for="modalCodeDc">코드 설명</label></th>
                   <td>
-                    <textarea id="modalCodeDc" name="codeDc" class="textarea"
-                              placeholder="코드 설명을 입력하세요" maxlength="500" rows="3"></textarea>
+                    <input type="text" id="modalCodeDc" name="codeDc" class="input"
+                           placeholder="코드 설명을 입력하세요" maxlength="500">
                   </td>
                 </tr>
                 <tr>
@@ -65,8 +64,8 @@
         </form>
       </div>
       <div class="code-group-modal-footer spt-modal-footer">
-        <button type="button" class="tertiary-button" onclick="CodeGroupRegisterModal.close()">취소</button>
         <button type="button" class="primary-button" id="modalSaveCodeGroupBtn" onclick="CodeGroupRegisterModal.saveCodeGroup()">저장</button>
+        <button type="button" class="tertiary-button" onclick="CodeGroupRegisterModal.close()">취소</button>
       </div>
     </div>
   </div>

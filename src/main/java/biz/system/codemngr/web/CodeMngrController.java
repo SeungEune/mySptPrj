@@ -99,25 +99,23 @@ public class CodeMngrController {
     }
 
     /**
-     * 코드 그룹 삭제 (POST + JSON)
-     * @param params 파라미터 (codeId)
+     * 코드 그룹 use_yn 업데이트 (POST + JSON)
+     * @param updateList 코드 그룹 ID와 useYn의 리스트
      * @return 처리 결과
      */
     @ResponseBody
-    @PostMapping("/deleteCodeGroup.do")
-    public ResponseEntity<?> deleteCodeGroup(@RequestBody Map<String, String> params) {
+    @PostMapping("/updateCodeGroupUseYn.do")
+    public ResponseEntity<?> updateCodeGroupUseYn(@RequestBody List<Map<String, String>> updateList) {
         try {
-            String codeId = params.get("codeId");
-            // TODO: 구현 예정
-            ResultVO result = codeMngrService.deleteCodeGroup(codeId);
+            ResultVO result = codeMngrService.updateCodeGroupUseYn(updateList);
             if (result.isResultValue()) {
                 return ApiResponseVO.apiResponse(result, HttpStatus.OK.value(), result.getMessage());
             } else {
                 return ApiResponseVO.apiResponse(result, HttpStatus.BAD_REQUEST.value(), result.getMessage());
             }
         } catch (Exception e) {
-            log.error("코드 그룹 삭제 중 오류 발생", e);
-            return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "코드 그룹 삭제 중 오류가 발생했습니다.");
+            log.error("코드 그룹 사용여부 수정 중 오류 발생", e);
+            return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "코드 그룹 사용여부 수정 중 오류가 발생했습니다.");
         }
     }
 
@@ -188,7 +186,6 @@ public class CodeMngrController {
     @PostMapping("/saveCodeDetail.do")
     public ResponseEntity<?> saveCodeDetail(@RequestBody CodeDetailVO codeDetailVO) {
         try {
-            // TODO: 구현 예정
             ResultVO result = codeMngrService.saveCodeDetail(codeDetailVO);
             if (result.isResultValue()) {
                 return ApiResponseVO.apiResponse(result, HttpStatus.OK.value(), result.getMessage());
@@ -202,26 +199,44 @@ public class CodeMngrController {
     }
 
     /**
-     * 코드 상세값 삭제 (POST + JSON)
+     * 코드 상세값 중복 확인 (POST + JSON)
      * @param params 파라미터 (codeId, code)
-     * @return 처리 결과
+     * @return 중복 여부
      */
     @ResponseBody
-    @PostMapping("/deleteCodeDetail.do")
-    public ResponseEntity<?> deleteCodeDetail(@RequestBody Map<String, String> params) {
+    @PostMapping("/checkCodeDetailDuplicate.do")
+    public ResponseEntity<?> checkCodeDetailDuplicate(@RequestBody Map<String, String> params) {
         try {
             String codeId = params.get("codeId");
             String code = params.get("code");
-            // TODO: 구현 예정
-            ResultVO result = codeMngrService.deleteCodeDetail(codeId, code);
+            boolean isDuplicate = codeMngrService.checkCodeDetailDuplicate(codeId, code);
+            Map<String, Object> resultMap = new java.util.HashMap<>();
+            resultMap.put("duplicate", isDuplicate);
+            return ApiResponseVO.apiResponse(resultMap, HttpStatus.OK.value(), isDuplicate ? "이미 사용 중인 코드입니다." : "사용 가능한 코드입니다.");
+        } catch (Exception e) {
+            log.error("코드 상세값 중복 확인 중 오류 발생", e);
+            return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "코드 상세값 중복 확인 중 오류가 발생했습니다.");
+        }
+    }
+
+    /**
+     * 코드 상세값 use_yn 업데이트 (POST + JSON)
+     * @param updateList 코드 상세값 ID와 useYn의 리스트
+     * @return 처리 결과
+     */
+    @ResponseBody
+    @PostMapping("/updateCodeDetailUseYn.do")
+    public ResponseEntity<?> updateCodeDetailUseYn(@RequestBody List<Map<String, String>> updateList) {
+        try {
+            ResultVO result = codeMngrService.updateCodeDetailUseYn(updateList);
             if (result.isResultValue()) {
                 return ApiResponseVO.apiResponse(result, HttpStatus.OK.value(), result.getMessage());
             } else {
                 return ApiResponseVO.apiResponse(result, HttpStatus.BAD_REQUEST.value(), result.getMessage());
             }
         } catch (Exception e) {
-            log.error("코드 상세값 삭제 중 오류 발생", e);
-            return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "코드 상세값 삭제 중 오류가 발생했습니다.");
+            log.error("코드 상세값 사용여부 수정 중 오류 발생", e);
+            return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "코드 상세값 사용여부 수정 중 오류가 발생했습니다.");
         }
     }
 }
