@@ -39,21 +39,6 @@
         </choose>
     </select>
 
-    <!-- 코드 그룹 상세 조회 -->
-    <!-- TODO: 구현 예정 -->
-    <!--
-    <select id="selectCodeGroupDetail" parameterType="String" resultType="biz.system.codemngr.vo.CodeGroupVO">
-        SELECT code_id,
-               code_id_nm,
-               code_id_dc AS codeDc,
-               use_yn,
-               register_id,
-               TO_CHAR(regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS registDt
-        FROM tb_cmmn_code
-        WHERE code_id = #{codeId}
-    </select>
-    -->
-
     <!-- 코드 그룹 등록 -->
     <insert id="insertCodeGroup" parameterType="biz.system.codemngr.vo.CodeGroupVO">
         INSERT INTO tb_cmmn_code (
@@ -72,20 +57,6 @@
             CURRENT_TIMESTAMP
         )
     </insert>
-
-    <!-- 코드 그룹 수정 -->
-    <!-- TODO: 구현 예정 -->
-    <!--
-    <update id="updateCodeGroup" parameterType="biz.system.codemngr.vo.CodeGroupVO">
-        UPDATE tb_cmmn_code
-        SET code_id_nm = #{codeIdNm},
-            code_dc = #{codeDc},
-            use_yn = #{useYn},
-            updusr_id = #{updusrId},
-            updt_dt = NOW()
-        WHERE code_id = #{codeId}
-    </update>
-    -->
 
     <!-- 코드 그룹 use_yn 업데이트 -->
     <update id="updateCodeGroupUseYn" parameterType="map">
@@ -123,27 +94,6 @@
         ORDER BY code_order, code
     </select>
 
-    <!-- 코드 상세값 상세 조회 -->
-    <!-- TODO: 구현 예정 -->
-    <!--
-    <select id="selectCodeDetail" parameterType="biz.system.codemngr.vo.CodeDetailVO" resultType="biz.system.codemngr.vo.CodeDetailVO">
-        SELECT code_id,
-               code,
-               code_nm,
-               code_abbr,
-               code_dc,
-               code_order,
-               use_yn,
-               register_id,
-               TO_CHAR(regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS registDt,
-               updusr_id,
-               TO_CHAR(updt_dt, 'YYYY-MM-DD HH24:MI:SS') AS updtDt
-        FROM tb_cmmn_code_detail
-        WHERE code_id = #{codeId}
-          AND code = #{code}
-    </select>
-    -->
-
     <!-- 코드 상세값 등록 -->
     <insert id="insertCodeDetail" parameterType="biz.system.codemngr.vo.CodeDetailVO">
         INSERT INTO tb_cmmn_code_detail (
@@ -174,23 +124,6 @@
         WHERE code_id = #{codeId}
           AND code = #{code}
     </select>
-
-    <!-- 코드 상세값 수정 -->
-    <!-- TODO: 구현 예정 -->
-    <!--
-    <update id="updateCodeDetail" parameterType="biz.system.codemngr.vo.CodeDetailVO">
-        UPDATE tb_cmmn_code_detail
-        SET code_nm = #{codeNm},
-            code_abbr = #{codeAbbr},
-            code_dc = #{codeDc},
-            code_order = #{codeOrder},
-            use_yn = #{useYn},
-            updusr_id = #{updusrId},
-            updt_dt = NOW()
-        WHERE code_id = #{codeId}
-          AND code = #{code}
-    </update>
-    -->
 
     <!-- 코드 상세값 use_yn 업데이트 -->
     <update id="updateCodeDetailUseYn" parameterType="map">

@@ -7,7 +7,7 @@ import lombok.Setter;
  * 코드 상세값(소분류) 정보 VO
  * tb_cmmn_code_detail 테이블 매핑
  * @author Spatialt 개발팀
- * @since 2025.01.XX
+ * @since 2025.12.25
  * @version 1.0
  */
 @Getter

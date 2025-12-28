@@ -10,16 +10,16 @@ import biz.util.StringUtil;
 import egovframework.com.cmm.response.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
  * 코드 관리를 위한 Service 구현체
  * @author Spatialt 개발팀
- * @since 2025.01.XX
+ * @since 2025.12.25
  * @version 1.0
  */
 @Slf4j
@@ -35,14 +35,6 @@ public class CodeMngrServiceImpl implements CodeMngrService {
     }
 
     @Override
-    public CodeGroupVO getCodeGroupDetail(String codeId) {
-        // TODO: 구현 예정
-        // return codeMngrDAO.selectCodeGroupDetail(codeId);
-        return null;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
     public ResultVO saveCodeGroup(CodeGroupVO codeGroupVO) {
         ResultVO resultVO = new ResultVO();
         
@@ -59,6 +51,14 @@ public class CodeMngrServiceImpl implements CodeMngrService {
             if (StringUtil.isEmpty(codeGroupVO.getCodeIdNm())) {
                 resultVO.setResultValue(false);
                 resultVO.setMessage("코드 그룹명은 필수입니다.");
+                return resultVO;
+            }
+            
+            // 중복 확인
+            int duplicateCount = codeMngrDAO.checkCodeIdDuplicate(codeGroupVO.getCodeId());
+            if (duplicateCount > 0) {
+                resultVO.setResultValue(false);
+                resultVO.setMessage("이미 사용 중인 코드 그룹 ID입니다.");
                 return resultVO;
             }
             
@@ -84,13 +84,13 @@ public class CodeMngrServiceImpl implements CodeMngrService {
             log.error("코드 그룹 등록 중 오류 발생", e);
             resultVO.setResultValue(false);
             resultVO.setMessage("코드 그룹 등록 중 오류가 발생했습니다.");
+            throw new RuntimeException("코드 그룹 등록 중 오류가 발생했습니다.", e);
         }
         
         return resultVO;
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public ResultVO updateCodeGroupUseYn(List<Map<String, String>> updateList) {
         ResultVO resultVO = new ResultVO();
         
@@ -140,6 +140,7 @@ public class CodeMngrServiceImpl implements CodeMngrService {
             log.error("코드 그룹 사용여부 수정 중 오류 발생", e);
             resultVO.setResultValue(false);
             resultVO.setMessage("코드 그룹 사용여부 수정 중 오류가 발생했습니다.");
+            throw new RuntimeException("코드 그룹 사용여부 수정 중 오류가 발생했습니다.", e);
         }
         
         return resultVO;
@@ -159,21 +160,13 @@ public class CodeMngrServiceImpl implements CodeMngrService {
 
     @Override
     public List<CodeDetailVO> getCodeDetailList(String codeId) {
+        if (StringUtil.isEmpty(codeId)) {
+            return new ArrayList<>();
+        }
         return codeMngrDAO.selectCodeDetailList(codeId);
     }
 
     @Override
-    public CodeDetailVO getCodeDetail(String codeId, String code) {
-        // TODO: 구현 예정
-        // CodeDetailVO codeDetailVO = new CodeDetailVO();
-        // codeDetailVO.setCodeId(codeId);
-        // codeDetailVO.setCode(code);
-        // return codeMngrDAO.selectCodeDetail(codeDetailVO);
-        return null;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
     public ResultVO saveCodeDetail(CodeDetailVO codeDetailVO) {
         ResultVO resultVO = new ResultVO();
         
@@ -245,13 +238,13 @@ public class CodeMngrServiceImpl implements CodeMngrService {
             log.error("코드 상세값 등록 중 오류 발생", e);
             resultVO.setResultValue(false);
             resultVO.setMessage("코드 상세값 등록 중 오류가 발생했습니다.");
+            throw new RuntimeException("코드 상세값 등록 중 오류가 발생했습니다.", e);
         }
         
         return resultVO;
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public ResultVO updateCodeDetailUseYn(List<Map<String, String>> updateList) {
         ResultVO resultVO = new ResultVO();
         
@@ -302,6 +295,7 @@ public class CodeMngrServiceImpl implements CodeMngrService {
             log.error("코드 상세값 사용여부 수정 중 오류 발생", e);
             resultVO.setResultValue(false);
             resultVO.setMessage("코드 상세값 사용여부 수정 중 오류가 발생했습니다.");
+            throw new RuntimeException("코드 상세값 사용여부 수정 중 오류가 발생했습니다.", e);
         }
         
         return resultVO;

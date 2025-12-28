@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * 코드 관리를 위한 Service 인터페이스
  * @author Spatialt 개발팀
- * @since 2025.01.XX
+ * @since 2025.12.25
  * @version 1.0
  */
 public interface CodeMngrService {
@@ -22,13 +22,6 @@ public interface CodeMngrService {
      * @return 코드 그룹 목록
      */
     List<CodeGroupVO> getCodeGroupList(CodeSearchVO searchVO);
-
-    /**
-     * 코드 그룹 상세 조회
-     * @param codeId 코드 그룹 ID
-     * @return 코드 그룹 정보
-     */
-    CodeGroupVO getCodeGroupDetail(String codeId);
 
     /**
      * 코드 그룹 저장 (등록/수정)
@@ -57,14 +50,6 @@ public interface CodeMngrService {
      * @return 코드 상세값 목록
      */
     List<CodeDetailVO> getCodeDetailList(String codeId);
-
-    /**
-     * 코드 상세값 상세 조회
-     * @param codeId 코드 그룹 ID
-     * @param code 상세 코드값
-     * @return 코드 상세값 정보
-     */
-    CodeDetailVO getCodeDetail(String codeId, String code);
 
     /**
      * 코드 상세값 저장 (등록/수정)

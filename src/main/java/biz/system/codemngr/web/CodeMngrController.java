@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * 코드 관리를 처리하는 컨트롤러 클래스
  * @author Spatialt 개발팀
- * @since 2025.01.XX
+ * @since 2025.12.25
  * @version 1.0
  */
 @Slf4j
@@ -55,25 +55,6 @@ public class CodeMngrController {
         } catch (Exception e) {
             log.error("코드 그룹 목록 조회 중 오류 발생", e);
             return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "코드 그룹 목록 조회 중 오류가 발생했습니다.");
-        }
-    }
-
-    /**
-     * 코드 그룹 상세 조회 (POST + JSON)
-     * @param params 파라미터 (codeId)
-     * @return 코드 그룹 상세 정보
-     */
-    @ResponseBody
-    @PostMapping("/getCodeGroupDetail.do")
-    public ResponseEntity<?> getCodeGroupDetail(@RequestBody Map<String, String> params) {
-        try {
-            String codeId = params.get("codeId");
-            // TODO: 구현 예정
-            CodeGroupVO vo = codeMngrService.getCodeGroupDetail(codeId);
-            return ApiResponseVO.apiResponse(vo, HttpStatus.OK.value(), "조회되었습니다.");
-        } catch (Exception e) {
-            log.error("코드 그룹 상세 조회 중 오류 발생", e);
-            return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "코드 그룹 상세 조회 중 오류가 발생했습니다.");
         }
     }
 
@@ -154,26 +135,6 @@ public class CodeMngrController {
         } catch (Exception e) {
             log.error("코드 상세값 목록 조회 중 오류 발생", e);
             return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "코드 상세값 목록 조회 중 오류가 발생했습니다.");
-        }
-    }
-
-    /**
-     * 코드 상세값 상세 조회 (POST + JSON)
-     * @param params 파라미터 (codeId, code)
-     * @return 코드 상세값 정보
-     */
-    @ResponseBody
-    @PostMapping("/getCodeDetail.do")
-    public ResponseEntity<?> getCodeDetail(@RequestBody Map<String, String> params) {
-        try {
-            String codeId = params.get("codeId");
-            String code = params.get("code");
-            // TODO: 구현 예정
-            CodeDetailVO vo = codeMngrService.getCodeDetail(codeId, code);
-            return ApiResponseVO.apiResponse(vo, HttpStatus.OK.value(), "조회되었습니다.");
-        } catch (Exception e) {
-            log.error("코드 상세값 상세 조회 중 오류 발생", e);
-            return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "코드 상세값 상세 조회 중 오류가 발생했습니다.");
         }
     }
 

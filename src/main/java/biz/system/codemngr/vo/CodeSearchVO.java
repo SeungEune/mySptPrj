@@ -7,7 +7,7 @@ import lombok.Setter;
 /**
  * 코드 검색 조건 VO
  * @author Spatialt 개발팀
- * @since 2025.01.XX
+ * @since 2025.12.25
  * @version 1.0
  */
 @Getter
