@@ -65,6 +65,27 @@
         WHERE code_id = #{codeId}
     </update>
 
+    <!-- 코드 그룹 수정 -->
+    <update id="updateCodeGroup" parameterType="biz.system.codemngr.vo.CodeGroupVO">
+        UPDATE tb_cmmn_code
+        SET code_id_nm = #{codeIdNm},
+            code_id_dc = #{codeDc, jdbcType=VARCHAR},
+            use_yn = #{useYn}
+        WHERE code_id = #{codeId}
+    </update>
+
+    <!-- 코드 그룹 상세 조회 -->
+    <select id="selectCodeGroupDetail" parameterType="String" resultType="biz.system.codemngr.vo.CodeGroupVO">
+        SELECT code_id,
+               code_id_nm,
+               code_id_dc AS codeDc,
+               use_yn,
+               register_id,
+               TO_CHAR(regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS registDt
+        FROM tb_cmmn_code
+        WHERE code_id = #{codeId}
+    </select>
+
     <!-- 코드 상세값 use_yn 일괄 업데이트 (대분류 비활성화 시) -->
     <update id="updateCodeDetailUseYnByCodeId" parameterType="String">
         UPDATE tb_cmmn_code_detail
@@ -132,4 +153,30 @@
         WHERE code_id = #{codeId}
           AND code = #{code}
     </update>
+
+    <!-- 코드 상세값 수정 -->
+    <update id="updateCodeDetail" parameterType="biz.system.codemngr.vo.CodeDetailVO">
+        UPDATE tb_cmmn_code_detail
+        SET code_nm = #{codeNm},
+            code_dc = #{codeDc, jdbcType=VARCHAR},
+            code_order = #{codeOrder},
+            use_yn = #{useYn}
+        WHERE code_id = #{codeId}
+          AND code = #{code}
+    </update>
+
+    <!-- 코드 상세값 상세 조회 -->
+    <select id="selectCodeDetailOne" parameterType="map" resultType="biz.system.codemngr.vo.CodeDetailVO">
+        SELECT code_id,
+               code,
+               code_nm,
+               code_dc,
+               code_order,
+               use_yn,
+               register_id,
+               TO_CHAR(regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS registDt
+        FROM tb_cmmn_code_detail
+        WHERE code_id = #{codeId}
+          AND code = #{code}
+    </select>
 </mapper>

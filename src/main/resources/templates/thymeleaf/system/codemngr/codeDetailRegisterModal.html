@@ -6,7 +6,7 @@
     <div class="code-detail-modal-overlay spt-modal-overlay" onclick="CodeDetailRegisterModal.close()"></div>
     <div class="code-detail-modal-container spt-modal-container">
       <div class="code-detail-modal-header spt-modal-header">
-        <h3 class="txt-head-sm">코드 상세값 등록</h3>
+        <h3 class="txt-head-sm" id="codeDetailModalTitle">코드 상세값 등록</h3>
         <button type="button" class="code-detail-modal-close spt-modal-close" onclick="CodeDetailRegisterModal.close()">&times;</button>
       </div>
       <div class="code-detail-modal-body spt-modal-body">
@@ -31,7 +31,7 @@
                     <div class="item-horizontal-box g10 align-items-center">
                       <input type="text" id="modalDetailCode" name="code" class="input"
                              placeholder="코드를 입력하세요" required maxlength="20">
-                      <button type="button" class="tertiary-button" id="modalCheckCodeBtn" onclick="CodeDetailRegisterModal.checkCodeDuplicate()">중복확인</button>
+                      <button type="button" class="tertiary-button" id="modalCheckCodeBtn" onclick="CodeDetailRegisterModal.checkCodeDuplicate()" style="display: none;">중복확인</button>
                     </div>
                     <span id="modalCodeCheckMsg" class="form-msg"></span>
                   </td>

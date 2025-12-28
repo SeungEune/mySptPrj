@@ -6,9 +6,10 @@
 const CodeDetailRegisterModal = {
     isCodeChecked: false,  // 코드 중복 확인 완료 여부
     currentCodeId: null,   // 현재 선택된 코드 그룹 ID
+    currentMode: 'register',  // 현재 모드: 'register' 또는 'edit'
     
     /**
-     * 모달 열기
+     * 모달 열기 (등록 모드)
      * @param {string} codeId 선택된 코드 그룹 ID
      */
     open: function(codeId) {
@@ -17,10 +18,87 @@ const CodeDetailRegisterModal = {
             return;
         }
         
+        this.currentMode = 'register';
         this.currentCodeId = codeId;
         this.isCodeChecked = false;
         document.getElementById('codeDetailRegisterModal').classList.add('show');
         this.resetForm(codeId);
+        this.setModeUI();
+    },
+    
+    /**
+     * 모달 열기 (수정 모드)
+     * @param {string} codeId 코드 그룹 ID
+     * @param {string} code 코드값
+     */
+    openEdit: function(codeId, code) {
+        if (Util.isEmpty(codeId) || Util.isEmpty(code)) {
+            MessageUtil.warning('코드 ID와 코드값이 필요합니다.');
+            return;
+        }
+        
+        this.currentMode = 'edit';
+        this.currentCodeId = codeId;
+        this.isCodeChecked = true;  // 수정 모드에서는 중복 확인 불필요
+        document.getElementById('codeDetailRegisterModal').classList.add('show');
+        this.setModeUI();
+        this.loadCodeDetailOne(codeId, code);
+    },
+    
+    /**
+     * 모드에 따른 UI 설정
+     */
+    setModeUI: function() {
+        const titleEl = document.getElementById('codeDetailModalTitle');
+        const codeInput = document.getElementById('modalDetailCode');
+        const checkBtn = document.getElementById('modalCheckCodeBtn');
+        
+        if (this.currentMode === 'edit') {
+            if (titleEl) titleEl.textContent = '코드 상세값 수정';
+            if (codeInput) {
+                codeInput.readOnly = true;
+                codeInput.classList.add('readonly');
+            }
+            if (checkBtn) checkBtn.style.display = 'none';
+        } else {
+            if (titleEl) titleEl.textContent = '코드 상세값 등록';
+            if (codeInput) {
+                codeInput.readOnly = false;
+                codeInput.classList.remove('readonly');
+            }
+            if (checkBtn) checkBtn.style.display = '';
+        }
+    },
+    
+    /**
+     * 코드 상세값 상세 정보 로드
+     * @param {string} codeId 코드 그룹 ID
+     * @param {string} code 코드값
+     */
+    loadCodeDetailOne: function(codeId, code) {
+        const data = { codeId: codeId, code: code };
+        const url = Util.getRequestUrl('/system/code/getCodeDetailOne.do');
+        
+        callModule.call(url, data, (result) => {
+            if (result && result.result) {
+                const codeDetail = result.result;
+                document.getElementById('modalDetailCodeId').value = codeDetail.codeId || '';
+                document.getElementById('modalDetailCode').value = codeDetail.code || '';
+                document.getElementById('modalDetailCodeNm').value = codeDetail.codeNm || '';
+                document.getElementById('modalDetailCodeDc').value = codeDetail.codeDc || '';
+                document.getElementById('modalDetailCodeOrder').value = codeDetail.codeOrder || '';
+                
+                // 사용여부 설정
+                const useYn = codeDetail.useYn || 'Y';
+                const useYnRadio = document.querySelector(`#codeDetailRegisterForm input[name="useYn"][value="${useYn}"]`);
+                if (useYnRadio) {
+                    useYnRadio.checked = true;
+                }
+            } else {
+                MessageUtil.error('코드 상세값 정보를 불러올 수 없습니다.');
+                this.close();
+            }
+        }, true, 'POST');
     },
     
     /**
@@ -31,6 +109,7 @@ const CodeDetailRegisterModal = {
         this.resetForm(null);
         this.isCodeChecked = false;
         this.currentCodeId = null;
+        this.currentMode = 'register';
     },
     
     /**
@@ -167,8 +246,8 @@ const CodeDetailRegisterModal = {
             return;
         }
         
-        // 중복 확인 체크
-        if (!this.isCodeChecked) {
+        // 등록 모드일 때만 중복 확인 체크
+        if (this.currentMode === 'register' && !this.isCodeChecked) {
             MessageUtil.warning('코드 중복 확인을 해주세요.');
             return;
         }

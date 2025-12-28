@@ -45,6 +45,13 @@ public interface CodeMngrService {
     boolean checkCodeIdDuplicate(String codeId);
 
     /**
+     * 코드 그룹 상세 조회
+     * @param codeId 코드 그룹 ID
+     * @return 코드 그룹 상세 정보
+     */
+    CodeGroupVO getCodeGroupDetail(String codeId);
+
+    /**
      * 코드 상세값 목록 조회
      * @param codeId 코드 그룹 ID
      * @return 코드 상세값 목록
@@ -72,4 +79,12 @@ public interface CodeMngrService {
      * @return 처리 결과
      */
     ResultVO updateCodeDetailUseYn(List<Map<String, String>> updateList);
+
+    /**
+     * 코드 상세값 상세 조회
+     * @param codeId 코드 그룹 ID
+     * @param code 상세 코드값
+     * @return 코드 상세값 상세 정보
+     */
+    CodeDetailVO getCodeDetailOne(String codeId, String code);
 }

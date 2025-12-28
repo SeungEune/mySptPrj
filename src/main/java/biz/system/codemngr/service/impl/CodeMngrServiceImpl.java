@@ -54,37 +54,52 @@ public class CodeMngrServiceImpl implements CodeMngrService {
                 return resultVO;
             }
             
-            // 중복 확인
+            // codeId 존재 여부 확인 (등록/수정 구분)
             int duplicateCount = codeMngrDAO.checkCodeIdDuplicate(codeGroupVO.getCodeId());
-            if (duplicateCount > 0) {
-                resultVO.setResultValue(false);
-                resultVO.setMessage("이미 사용 중인 코드 그룹 ID입니다.");
-                return resultVO;
-            }
+            boolean isUpdate = duplicateCount > 0;
             
-            // 등록자 정보 설정
-            codeGroupVO.setRegisterId(loginUserId);
-            
-            // 기본값 설정
-            if (StringUtil.isEmpty(codeGroupVO.getUseYn())) {
-                codeGroupVO.setUseYn("Y");
-            }
-            
-            // 코드 그룹 등록
-            int insertResult = codeMngrDAO.insertCodeGroup(codeGroupVO);
-            if (insertResult > 0) {
-                resultVO.setResultValue(true);
-                resultVO.setMessage("코드 그룹이 등록되었습니다.");
+            if (isUpdate) {
+                // 수정 모드
+                // 기본값 설정
+                if (StringUtil.isEmpty(codeGroupVO.getUseYn())) {
+                    codeGroupVO.setUseYn("Y");
+                }
+                
+                // 코드 그룹 수정
+                int updateResult = codeMngrDAO.updateCodeGroup(codeGroupVO);
+                if (updateResult > 0) {
+                    resultVO.setResultValue(true);
+                    resultVO.setMessage("코드 그룹이 수정되었습니다.");
+                } else {
+                    resultVO.setResultValue(false);
+                    resultVO.setMessage("코드 그룹 수정에 실패했습니다.");
+                }
             } else {
-                resultVO.setResultValue(false);
-                resultVO.setMessage("코드 그룹 등록에 실패했습니다.");
+                // 등록 모드
+                // 등록자 정보 설정
+                codeGroupVO.setRegisterId(loginUserId);
+                
+                // 기본값 설정
+                if (StringUtil.isEmpty(codeGroupVO.getUseYn())) {
+                    codeGroupVO.setUseYn("Y");
+                }
+                
+                // 코드 그룹 등록
+                int insertResult = codeMngrDAO.insertCodeGroup(codeGroupVO);
+                if (insertResult > 0) {
+                    resultVO.setResultValue(true);
+                    resultVO.setMessage("코드 그룹이 등록되었습니다.");
+                } else {
+                    resultVO.setResultValue(false);
+                    resultVO.setMessage("코드 그룹 등록에 실패했습니다.");
+                }
             }
             
         } catch (Exception e) {
-            log.error("코드 그룹 등록 중 오류 발생", e);
+            log.error("코드 그룹 저장 중 오류 발생", e);
             resultVO.setResultValue(false);
-            resultVO.setMessage("코드 그룹 등록 중 오류가 발생했습니다.");
-            throw new RuntimeException("코드 그룹 등록 중 오류가 발생했습니다.", e);
+            resultVO.setMessage("코드 그룹 저장 중 오류가 발생했습니다.");
+            throw new RuntimeException("코드 그룹 저장 중 오류가 발생했습니다.", e);
         }
         
         return resultVO;
@@ -153,6 +168,14 @@ public class CodeMngrServiceImpl implements CodeMngrService {
     }
 
     @Override
+    public CodeGroupVO getCodeGroupDetail(String codeId) {
+        if (StringUtil.isEmpty(codeId)) {
+            return null;
+        }
+        return codeMngrDAO.selectCodeGroupDetail(codeId);
+    }
+
+    @Override
     public boolean checkCodeDetailDuplicate(String codeId, String code) {
         int count = codeMngrDAO.checkCodeDetailDuplicate(codeId, code);
         return count > 0;
@@ -191,54 +214,74 @@ public class CodeMngrServiceImpl implements CodeMngrService {
                 return resultVO;
             }
             
-            // 중복 확인
+            // codeId + code 조합 존재 여부 확인 (등록/수정 구분)
             int duplicateCount = codeMngrDAO.checkCodeDetailDuplicate(
                 codeDetailVO.getCodeId(), 
                 codeDetailVO.getCode()
             );
-            if (duplicateCount > 0) {
-                resultVO.setResultValue(false);
-                resultVO.setMessage("이미 사용 중인 코드입니다.");
-                return resultVO;
-            }
+            boolean isUpdate = duplicateCount > 0;
             
-            // 등록자 정보 설정
-            codeDetailVO.setRegisterId(loginUserId);
-            
-            // 기본값 설정
-            if (StringUtil.isEmpty(codeDetailVO.getUseYn())) {
-                codeDetailVO.setUseYn("Y");
-            }
-            
-            // codeOrder가 없으면 기존 최대값 + 1로 설정
-            if (codeDetailVO.getCodeOrder() == null || codeDetailVO.getCodeOrder() < 1) {
-                List<CodeDetailVO> existingList = codeMngrDAO.selectCodeDetailList(codeDetailVO.getCodeId());
-                int maxOrder = 0;
-                if (existingList != null && !existingList.isEmpty()) {
-                    maxOrder = existingList.stream()
-                        .filter(vo -> vo.getCodeOrder() != null)
-                        .mapToInt(CodeDetailVO::getCodeOrder)
-                        .max()
-                        .orElse(0);
+            if (isUpdate) {
+                // 수정 모드
+                // 기본값 설정
+                if (StringUtil.isEmpty(codeDetailVO.getUseYn())) {
+                    codeDetailVO.setUseYn("Y");
                 }
-                codeDetailVO.setCodeOrder(maxOrder + 1);
-            }
-            
-            // 코드 상세값 등록
-            int insertResult = codeMngrDAO.insertCodeDetail(codeDetailVO);
-            if (insertResult > 0) {
-                resultVO.setResultValue(true);
-                resultVO.setMessage("코드 상세값이 등록되었습니다.");
+                
+                // codeOrder가 없으면 1로 기본값 설정
+                if (codeDetailVO.getCodeOrder() == null || codeDetailVO.getCodeOrder() < 1) {
+                    codeDetailVO.setCodeOrder(1);
+                }
+                
+                // 코드 상세값 수정
+                int updateResult = codeMngrDAO.updateCodeDetail(codeDetailVO);
+                if (updateResult > 0) {
+                    resultVO.setResultValue(true);
+                    resultVO.setMessage("코드 상세값이 수정되었습니다.");
+                } else {
+                    resultVO.setResultValue(false);
+                    resultVO.setMessage("코드 상세값 수정에 실패했습니다.");
+                }
             } else {
-                resultVO.setResultValue(false);
-                resultVO.setMessage("코드 상세값 등록에 실패했습니다.");
+                // 등록 모드
+                // 등록자 정보 설정
+                codeDetailVO.setRegisterId(loginUserId);
+                
+                // 기본값 설정
+                if (StringUtil.isEmpty(codeDetailVO.getUseYn())) {
+                    codeDetailVO.setUseYn("Y");
+                }
+                
+                // codeOrder가 없으면 기존 최대값 + 1로 설정
+                if (codeDetailVO.getCodeOrder() == null || codeDetailVO.getCodeOrder() < 1) {
+                    List<CodeDetailVO> existingList = codeMngrDAO.selectCodeDetailList(codeDetailVO.getCodeId());
+                    int maxOrder = 0;
+                    if (existingList != null && !existingList.isEmpty()) {
+                        maxOrder = existingList.stream()
+                            .filter(vo -> vo.getCodeOrder() != null)
+                            .mapToInt(CodeDetailVO::getCodeOrder)
+                            .max()
+                            .orElse(0);
+                    }
+                    codeDetailVO.setCodeOrder(maxOrder + 1);
+                }
+                
+                // 코드 상세값 등록
+                int insertResult = codeMngrDAO.insertCodeDetail(codeDetailVO);
+                if (insertResult > 0) {
+                    resultVO.setResultValue(true);
+                    resultVO.setMessage("코드 상세값이 등록되었습니다.");
+                } else {
+                    resultVO.setResultValue(false);
+                    resultVO.setMessage("코드 상세값 등록에 실패했습니다.");
+                }
             }
             
         } catch (Exception e) {
-            log.error("코드 상세값 등록 중 오류 발생", e);
+            log.error("코드 상세값 저장 중 오류 발생", e);
             resultVO.setResultValue(false);
-            resultVO.setMessage("코드 상세값 등록 중 오류가 발생했습니다.");
-            throw new RuntimeException("코드 상세값 등록 중 오류가 발생했습니다.", e);
+            resultVO.setMessage("코드 상세값 저장 중 오류가 발생했습니다.");
+            throw new RuntimeException("코드 상세값 저장 중 오류가 발생했습니다.", e);
         }
         
         return resultVO;
@@ -299,5 +342,13 @@ public class CodeMngrServiceImpl implements CodeMngrService {
         }
         
         return resultVO;
+    }
+
+    @Override
+    public CodeDetailVO getCodeDetailOne(String codeId, String code) {
+        if (StringUtil.isEmpty(codeId) || StringUtil.isEmpty(code)) {
+            return null;
+        }
+        return codeMngrDAO.selectCodeDetailOne(codeId, code);
     }
 }

@@ -5,14 +5,87 @@
 // 코드 그룹 등록 모달 전역 객체
 const CodeGroupRegisterModal = {
     isCodeIdChecked: false,  // 코드 ID 중복 확인 완료 여부
+    currentMode: 'register',  // 현재 모드: 'register' 또는 'edit'
     
     /**
-     * 모달 열기
+     * 모달 열기 (등록 모드)
      */
     open: function() {
+        this.currentMode = 'register';
         this.isCodeIdChecked = false;
         document.getElementById('codeGroupRegisterModal').classList.add('show');
         this.resetForm();
+        this.setModeUI();
+    },
+    
+    /**
+     * 모달 열기 (수정 모드)
+     * @param {string} codeId 코드 그룹 ID
+     */
+    openEdit: function(codeId) {
+        if (Util.isEmpty(codeId)) {
+            MessageUtil.warning('코드 ID가 필요합니다.');
+            return;
+        }
+        
+        this.currentMode = 'edit';
+        this.isCodeIdChecked = true;  // 수정 모드에서는 중복 확인 불필요
+        document.getElementById('codeGroupRegisterModal').classList.add('show');
+        this.setModeUI();
+        this.loadCodeGroupDetail(codeId);
+    },
+    
+    /**
+     * 모드에 따른 UI 설정
+     */
+    setModeUI: function() {
+        const titleEl = document.getElementById('codeGroupModalTitle');
+        const codeIdInput = document.getElementById('modalCodeId');
+        const checkBtn = document.getElementById('modalCheckCodeIdBtn');
+        
+        if (this.currentMode === 'edit') {
+            if (titleEl) titleEl.textContent = '코드 그룹 수정';
+            if (codeIdInput) {
+                codeIdInput.readOnly = true;
+                codeIdInput.classList.add('readonly');
+            }
+            if (checkBtn) checkBtn.style.display = 'none';
+        } else {
+            if (titleEl) titleEl.textContent = '코드 그룹 등록';
+            if (codeIdInput) {
+                codeIdInput.readOnly = false;
+                codeIdInput.classList.remove('readonly');
+            }
+            if (checkBtn) checkBtn.style.display = '';
+        }
+    },
+    
+    /**
+     * 코드 그룹 상세 정보 로드
+     * @param {string} codeId 코드 그룹 ID
+     */
+    loadCodeGroupDetail: function(codeId) {
+        const data = { codeId: codeId };
+        const url = Util.getRequestUrl('/system/code/getCodeGroupDetail.do');
+        
+        callModule.call(url, data, (result) => {
+            if (result && result.result) {
+                const codeGroup = result.result;
+                document.getElementById('modalCodeId').value = codeGroup.codeId || '';
+                document.getElementById('modalCodeIdNm').value = codeGroup.codeIdNm || '';
+                document.getElementById('modalCodeDc').value = codeGroup.codeDc || '';
+                
+                // 사용여부 설정
+                const useYn = codeGroup.useYn || 'Y';
+                const useYnRadio = document.querySelector(`#codeGroupRegisterForm input[name="useYn"][value="${useYn}"]`);
+                if (useYnRadio) {
+                    useYnRadio.checked = true;
+                }
+            } else {
+                MessageUtil.error('코드 그룹 정보를 불러올 수 없습니다.');
+                this.close();
+            }
+        }, true, 'POST');
     },
     
     /**
@@ -22,6 +95,7 @@ const CodeGroupRegisterModal = {
         document.getElementById('codeGroupRegisterModal').classList.remove('show');
         this.resetForm();
         this.isCodeIdChecked = false;
+        this.currentMode = 'register';
     },
     
     /**
@@ -135,8 +209,8 @@ const CodeGroupRegisterModal = {
             return;
         }
         
-        // 중복 확인 체크
-        if (!this.isCodeIdChecked) {
+        // 등록 모드일 때만 중복 확인 체크
+        if (this.currentMode === 'register' && !this.isCodeIdChecked) {
             MessageUtil.warning('코드 ID 중복 확인을 해주세요.');
             return;
         }

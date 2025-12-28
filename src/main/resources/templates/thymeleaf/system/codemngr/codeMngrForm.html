@@ -55,6 +55,7 @@
               <h3 class="txt-body-lg">대분류</h3>
               <div class="section-actions">
                 <button type="button" class="primary-button sm" id="addCodeGroupBtn">추가</button>
+                <button type="button" class="secondary-button sm" id="editCodeGroupBtn">수정</button>
                 <button type="button" class="tertiary-button sm" id="deleteCodeGroupBtn">저장</button>
               </div>
             </div>
@@ -93,6 +94,7 @@
               <h3 class="txt-body-lg">소분류</h3>
               <div class="section-actions">
                 <button type="button" class="primary-button sm" id="addCodeDetailBtn">추가</button>
+                <button type="button" class="secondary-button sm" id="editCodeDetailBtn">수정</button>
                 <button type="button" class="tertiary-button sm" id="saveCodeDetailBtn">저장</button>
               </div>
             </div>
@@ -168,7 +170,7 @@
 
   <!-- 코드 상세 목록 템플릿 -->
   <script type="text/x-jquery-tmpl" id="codeDetailListTemplate">
-    <tr>
+    <tr class="cur-point" data-code-id="{{html codeId}}" data-code="{{html code}}" onclick="fn_selectCodeDetail('{{html codeId}}', '{{html code}}')">
       <td class="tc">{{html code}}</td>
       <td class="tc">{{html codeNm}}</td>
       <td class="tc">{{if codeDc}}{{html codeDc}}{{else}}-{{/if}}</td>

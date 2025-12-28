@@ -38,6 +38,24 @@ public class CodeMngrDAO extends EgovAbstractMapper {
     }
 
     /**
+     * 코드 그룹 수정
+     * @param codeGroupVO 코드 그룹 정보
+     * @return 수정 결과
+     */
+    public int updateCodeGroup(CodeGroupVO codeGroupVO) {
+        return update("codeMngrMapper.updateCodeGroup", codeGroupVO);
+    }
+
+    /**
+     * 코드 그룹 상세 조회
+     * @param codeId 코드 그룹 ID
+     * @return 코드 그룹 상세 정보
+     */
+    public CodeGroupVO selectCodeGroupDetail(String codeId) {
+        return selectOne("codeMngrMapper.selectCodeGroupDetail", codeId);
+    }
+
+    /**
      * 코드 그룹 use_yn 업데이트
      * @param codeId 코드 그룹 ID
      * @param useYn 사용여부 ('Y' 또는 'N')
@@ -112,5 +130,27 @@ public class CodeMngrDAO extends EgovAbstractMapper {
         params.put("code", code);
         params.put("useYn", useYn);
         return update("codeMngrMapper.updateCodeDetailUseYn", params);
+    }
+
+    /**
+     * 코드 상세값 수정
+     * @param codeDetailVO 코드 상세값 정보
+     * @return 수정 결과
+     */
+    public int updateCodeDetail(CodeDetailVO codeDetailVO) {
+        return update("codeMngrMapper.updateCodeDetail", codeDetailVO);
+    }
+
+    /**
+     * 코드 상세값 상세 조회
+     * @param codeId 코드 그룹 ID
+     * @param code 상세 코드값
+     * @return 코드 상세값 상세 정보
+     */
+    public CodeDetailVO selectCodeDetailOne(String codeId, String code) {
+        Map<String, String> params = new HashMap<>();
+        params.put("codeId", codeId);
+        params.put("code", code);
+        return selectOne("codeMngrMapper.selectCodeDetailOne", params);
     }
 }

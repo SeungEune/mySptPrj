@@ -4,6 +4,7 @@
 
 // 전역 변수
 let selectedCodeId = null; // 선택된 코드 그룹 ID
+let selectedCodeDetail = null; // 선택된 코드 상세값 (codeId, code)
 
 document.addEventListener('DOMContentLoaded', () => {
     fn_init();
@@ -23,10 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // 초기화 버튼 이벤트
     document.getElementById('resetBtn').addEventListener('click', fn_resetSearch);
 
-    // 추가/저장 버튼 이벤트
+    // 추가/수정/저장 버튼 이벤트
     document.getElementById('addCodeGroupBtn').addEventListener('click', fn_addCodeGroup);
+    document.getElementById('editCodeGroupBtn').addEventListener('click', fn_editCodeGroupClick);
     document.getElementById('deleteCodeGroupBtn').addEventListener('click', fn_saveCodeGroupUseYn);
     document.getElementById('addCodeDetailBtn').addEventListener('click', fn_addCodeDetail);
+    document.getElementById('editCodeDetailBtn').addEventListener('click', fn_editCodeDetailClick);
     document.getElementById('saveCodeDetailBtn').addEventListener('click', fn_saveCodeDetailUseYn);
 });
 
@@ -42,6 +45,7 @@ function fn_init() {
  */
 function fn_selectCodeGroup(codeId) {
     selectedCodeId = codeId;
+    selectedCodeDetail = null; // 소분류 선택 해제
 
     // 선택 행 하이라이트
     $('#codeGroupTable tbody tr').removeClass('selected');
@@ -52,10 +56,22 @@ function fn_selectCodeGroup(codeId) {
 }
 
 /**
+ * 코드 상세값 선택
+ */
+function fn_selectCodeDetail(codeId, code) {
+    selectedCodeDetail = { codeId: codeId, code: code };
+
+    // 선택 행 하이라이트
+    $('#codeDetailTable tbody tr').removeClass('selected');
+    $('#codeDetailTable tbody tr[data-code-id="' + codeId + '"][data-code="' + code + '"]').addClass('selected');
+}
+
+/**
  * 코드 상세값 목록 렌더링
  */
 function fn_renderCodeDetailList(codeId) {
     $('#codeDetailTbody').empty();
+    selectedCodeDetail = null; // 소분류 선택 해제
 
     if (!codeId) {
         $('#codeDetailEmptyTemplate').tmpl().appendTo('#codeDetailTbody');
@@ -155,6 +171,22 @@ function fn_addCodeGroup() {
 }
 
 /**
+ * 코드 그룹 수정 버튼 클릭
+ */
+function fn_editCodeGroupClick() {
+    if (!selectedCodeId) {
+        MessageUtil.warning('수정할 대분류를 먼저 선택하세요.');
+        return;
+    }
+    
+    if (typeof CodeGroupRegisterModal !== 'undefined') {
+        CodeGroupRegisterModal.openEdit(selectedCodeId);
+    } else {
+        MessageUtil.error('코드 그룹 수정 모달을 사용할 수 없습니다.');
+    }
+}
+
+/**
  * 코드 그룹 사용여부 저장
  */
 function fn_saveCodeGroupUseYn() {
@@ -224,6 +256,22 @@ function fn_addCodeDetail() {
         CodeDetailRegisterModal.open(selectedCodeId);
     } else {
         MessageUtil.error('코드 상세값 등록 모달을 사용할 수 없습니다.');
+    }
+}
+
+/**
+ * 코드 상세값 수정 버튼 클릭
+ */
+function fn_editCodeDetailClick() {
+    if (!selectedCodeDetail || !selectedCodeDetail.codeId || !selectedCodeDetail.code) {
+        MessageUtil.warning('수정할 소분류를 먼저 선택하세요.');
+        return;
+    }
+    
+    if (typeof CodeDetailRegisterModal !== 'undefined') {
+        CodeDetailRegisterModal.openEdit(selectedCodeDetail.codeId, selectedCodeDetail.code);
+    } else {
+        MessageUtil.error('코드 상세값 수정 모달을 사용할 수 없습니다.');
     }
 }
 

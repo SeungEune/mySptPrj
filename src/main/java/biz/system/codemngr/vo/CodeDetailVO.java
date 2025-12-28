@@ -37,4 +37,10 @@ public class CodeDetailVO {
 
     /** 등록일시 */
     private String registDt;
+
+    /** 수정자ID */
+    private String updusrId;
+
+    /** 수정일시 */
+    private String updtDt;
 }

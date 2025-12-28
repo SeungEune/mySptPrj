@@ -121,6 +121,24 @@ public class CodeMngrController {
     }
 
     /**
+     * 코드 그룹 상세 조회 (POST + JSON)
+     * @param params 파라미터 (codeId)
+     * @return 코드 그룹 상세 정보
+     */
+    @ResponseBody
+    @PostMapping("/getCodeGroupDetail.do")
+    public ResponseEntity<?> getCodeGroupDetail(@RequestBody Map<String, String> params) {
+        try {
+            String codeId = params.get("codeId");
+            CodeGroupVO codeGroupVO = codeMngrService.getCodeGroupDetail(codeId);
+            return ApiResponseVO.apiResponse(codeGroupVO, HttpStatus.OK.value(), "조회되었습니다.");
+        } catch (Exception e) {
+            log.error("코드 그룹 상세 조회 중 오류 발생", e);
+            return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "코드 그룹 상세 조회 중 오류가 발생했습니다.");
+        }
+    }
+
+    /**
      * 코드 상세값 목록 조회 (POST + JSON)
      * @param params 파라미터 (codeId)
      * @return 코드 상세값 목록
@@ -198,6 +216,25 @@ public class CodeMngrController {
         } catch (Exception e) {
             log.error("코드 상세값 사용여부 수정 중 오류 발생", e);
             return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "코드 상세값 사용여부 수정 중 오류가 발생했습니다.");
+        }
+    }
+
+    /**
+     * 코드 상세값 상세 조회 (POST + JSON)
+     * @param params 파라미터 (codeId, code)
+     * @return 코드 상세값 상세 정보
+     */
+    @ResponseBody
+    @PostMapping("/getCodeDetailOne.do")
+    public ResponseEntity<?> getCodeDetailOne(@RequestBody Map<String, String> params) {
+        try {
+            String codeId = params.get("codeId");
+            String code = params.get("code");
+            CodeDetailVO codeDetailVO = codeMngrService.getCodeDetailOne(codeId, code);
+            return ApiResponseVO.apiResponse(codeDetailVO, HttpStatus.OK.value(), "조회되었습니다.");
+        } catch (Exception e) {
+            log.error("코드 상세값 상세 조회 중 오류 발생", e);
+            return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "코드 상세값 상세 조회 중 오류가 발생했습니다.");
         }
     }
 }
