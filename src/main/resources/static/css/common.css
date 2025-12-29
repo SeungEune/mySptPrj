@@ -89,6 +89,7 @@ body {
   display: flex;
   flex-direction: column;
   background-color: var(--spt-background);
+  overflow: hidden;
 }
 
 /* Header, Footer는 별도 CSS에서 높이 지정 */

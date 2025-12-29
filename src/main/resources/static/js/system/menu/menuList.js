@@ -340,32 +340,36 @@ function fn_renderRoleList() {
             <td>${index + 1}</td>
             <td class="text-left">${role.roleNm}</td>
             <td>
+                <label for="" class="sr-only"></label>
                 <input type="checkbox" 
                        data-role-cd="${role.roleCd}" 
                        data-auth-type="read" 
                        ${role.readAuthorYn === 'Y' ? 'checked' : ''}
-                       onclick="event.stopPropagation(); fn_changeAuth('${role.roleCd}', 'read', this.checked)">
+                       onclick="event.stopPropagation(); fn_changeAuth('${role.roleCd}', 'read', this.checked)"/>
             </td>
             <td>
+                <label for="" class="sr-only"></label>
                 <input type="checkbox" 
                        data-role-cd="${role.roleCd}" 
                        data-auth-type="creat" 
                        ${role.creatAuthorYn === 'Y' ? 'checked' : ''}
-                       onclick="event.stopPropagation(); fn_changeAuth('${role.roleCd}', 'creat', this.checked)">
+                       onclick="event.stopPropagation(); fn_changeAuth('${role.roleCd}', 'creat', this.checked)"/>
             </td>
             <td>
+                <label for="" class="sr-only"></label>
                 <input type="checkbox" 
                        data-role-cd="${role.roleCd}" 
                        data-auth-type="updt" 
                        ${role.updtAuthorYn === 'Y' ? 'checked' : ''}
-                       onclick="event.stopPropagation(); fn_changeAuth('${role.roleCd}', 'updt', this.checked)">
+                       onclick="event.stopPropagation(); fn_changeAuth('${role.roleCd}', 'updt', this.checked)"/>
             </td>
             <td>
+                <label for="" class="sr-only"></label>
                 <input type="checkbox" 
                        data-role-cd="${role.roleCd}" 
                        data-auth-type="delete" 
                        ${role.deleteAuthorYn === 'Y' ? 'checked' : ''}
-                       onclick="event.stopPropagation(); fn_changeAuth('${role.roleCd}', 'delete', this.checked)">
+                       onclick="event.stopPropagation(); fn_changeAuth('${role.roleCd}', 'delete', this.checked)"/>
             </td>
         `;
         
@@ -417,28 +421,28 @@ function fn_renderUserList() {
                        data-user-id="${user.userId}" 
                        data-auth-type="read" 
                        ${user.readAuthorYn === 'Y' ? 'checked' : ''}
-                       onclick="event.stopPropagation(); fn_changeUserAuth('${user.userId}', 'read', this.checked)">
+                       onclick="event.stopPropagation(); fn_changeUserAuth('${user.userId}', 'read', this.checked)"/>
             </td>
             <td>
                 <input type="checkbox" 
                        data-user-id="${user.userId}" 
                        data-auth-type="creat" 
                        ${user.creatAuthorYn === 'Y' ? 'checked' : ''}
-                       onclick="event.stopPropagation(); fn_changeUserAuth('${user.userId}', 'creat', this.checked)">
+                       onclick="event.stopPropagation(); fn_changeUserAuth('${user.userId}', 'creat', this.checked)"/>
             </td>
             <td>
                 <input type="checkbox" 
                        data-user-id="${user.userId}" 
                        data-auth-type="updt" 
                        ${user.updtAuthorYn === 'Y' ? 'checked' : ''}
-                       onclick="event.stopPropagation(); fn_changeUserAuth('${user.userId}', 'updt', this.checked)">
+                       onclick="event.stopPropagation(); fn_changeUserAuth('${user.userId}', 'updt', this.checked)"/>
             </td>
             <td>
                 <input type="checkbox" 
                        data-user-id="${user.userId}" 
                        data-auth-type="delete" 
                        ${user.deleteAuthorYn === 'Y' ? 'checked' : ''}
-                       onclick="event.stopPropagation(); fn_changeUserAuth('${user.userId}', 'delete', this.checked)">
+                       onclick="event.stopPropagation(); fn_changeUserAuth('${user.userId}', 'delete', this.checked)"/>
             </td>
         `;
         
