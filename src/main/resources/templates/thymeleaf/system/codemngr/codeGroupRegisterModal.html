@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+  <!-- 코드 그룹 등록 모달 Fragment -->
+  <div th:fragment="codeGroupRegisterModal" id="codeGroupRegisterModal" class="code-group-register-modal spt-modal">
+    <div class="code-group-modal-overlay spt-modal-overlay" onclick="CodeGroupRegisterModal.close()"></div>
+    <div class="code-group-modal-container spt-modal-container">
+      <div class="code-group-modal-header spt-modal-header">
+        <h3 class="txt-head-sm" id="codeGroupModalTitle">코드 그룹 등록</h3>
+        <button type="button" class="code-group-modal-close spt-modal-close" onclick="CodeGroupRegisterModal.close()">&times;</button>
+      </div>
+      <div class="code-group-modal-body spt-modal-body">
+        <form id="codeGroupRegisterForm">
+          <div class="table-box type01">
+            <div class="table-inner">
+              <table class="table-type01 form-table code-group-form-table">
+                <colgroup>
+                  <col width="30%"/>
+                  <col width="70%"/>
+                </colgroup>
+                <tbody>
+                <tr>
+                  <th><label for="modalCodeId">코드 ID <span class="required">*</span></label></th>
+                  <td>
+                    <div class="item-horizontal-box g10 align-items-center">
+                      <input type="text" id="modalCodeId" name="codeId" class="input"
+                             placeholder="코드 ID를 입력하세요" required maxlength="20">
+                      <button type="button" class="tertiary-button" id="modalCheckCodeIdBtn" onclick="CodeGroupRegisterModal.checkCodeIdDuplicate()" style="display: none;">중복확인</button>
+                    </div>
+                    <span id="modalCodeIdCheckMsg" class="form-msg"></span>
+                  </td>
+                </tr>
+                <tr>
+                  <th><label for="modalCodeIdNm">코드 그룹명 <span class="required">*</span></label></th>
+                  <td>
+                    <input type="text" id="modalCodeIdNm" name="codeIdNm" class="input"
+                           placeholder="코드 그룹명을 입력하세요" required maxlength="100">
+                  </td>
+                </tr>
+                <tr>
+                  <th><label for="modalCodeDc">코드 설명</label></th>
+                  <td>
+                    <input type="text" id="modalCodeDc" name="codeDc" class="input"
+                           placeholder="코드 설명을 입력하세요" maxlength="500">
+                  </td>
+                </tr>
+                <tr>
+                  <th><label for="modalUseYn">사용여부</label></th>
+                  <td>
+                    <div class="radio-group">
+                      <label class="radio-label">
+                        <input type="radio" id="modalUseYn" name="useYn" value="Y" checked> 사용
+                      </label>
+                      <label class="radio-label">
+                        <input type="radio" name="useYn" value="N"> 미사용
+                      </label>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="code-group-modal-footer spt-modal-footer">
+        <button type="button" class="primary-button" id="modalSaveCodeGroupBtn" onclick="CodeGroupRegisterModal.saveCodeGroup()">저장</button>
+        <button type="button" class="tertiary-button" onclick="CodeGroupRegisterModal.close()">취소</button>
+      </div>
+    </div>
+  </div>
+
+</html>
+

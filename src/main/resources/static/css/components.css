@@ -778,3 +778,8 @@ button.spt-tree-toggle>i{
     flex-direction: column;
   }
 }
+
+/* SweetAlert2가 모달 위에 표시되도록 z-index 설정 */
+.swal2-container {
+  z-index: 10000 !important;
+}
