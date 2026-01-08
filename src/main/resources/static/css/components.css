@@ -615,6 +615,17 @@ button.spt-tree-toggle>i{
 .spt-tree-toggle:hover>i{
   filter: invert(100%) sepia(0%) saturate(100%) hue-rotate(0deg) brightness(300%) contrast(100%);
 }
+.spt-tree-toggle:has(.icon-minus){
+  background-color: var(--spt-primary);
+  color: var(--spt-white);
+}
+button.spt-tree-toggle>.icon-minus{
+  filter: invert(100%) sepia(7%) saturate(40%) hue-rotate(32deg) brightness(200%) contrast(100%);
+}
+.spt-tree-toggle:has(.icon-minus):hover{
+  background-color: var(--spt-primary-6);
+  color: var(--spt-white);
+}
 .spt-tree-toggle.no-children{
   visibility: hidden;
 }

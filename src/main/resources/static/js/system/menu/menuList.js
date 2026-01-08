@@ -144,14 +144,17 @@ function createTreeItem(menu) {
 
     // 토글 버튼
     const hasChildren = menu.subMenuList && menu.subMenuList.length > 0;
-    const toggleBtn = document.createElement('div');
+    const toggleBtn = document.createElement('button');
     toggleBtn.className = `spt-tree-toggle ${hasChildren ? '' : 'no-children'}`;
-    toggleBtn.textContent = hasChildren ? (expandedNodes.has(menu.menuId) ? '-' : '+') : '';
     if (hasChildren) {
         toggleBtn.onclick = (e) => {
             e.stopPropagation();
             fn_toggleNode(menu.menuId);
         };
+
+      const icon = document.createElement('i');
+      toggleBtn.appendChild(icon);
+      icon.className = hasChildren ? (expandedNodes.has(menu.menuId) ? 'icon-minus' : 'icon-plus') : '';
     }
     rowDiv.appendChild(toggleBtn);
     
