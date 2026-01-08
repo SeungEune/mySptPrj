@@ -175,7 +175,9 @@ const MenuSearchModal = {
                 e.stopPropagation();
                 this.toggleNode(menu.menuId);
             };
-            toggle.textContent = isExpanded ? '−' : '+';
+            const icon = document.createElement('i');
+            icon.className = isExpanded ? 'icon-minus' : 'icon-plus';
+            toggle.appendChild(icon);
         }
         row.appendChild(toggle);
         
@@ -222,38 +224,47 @@ const MenuSearchModal = {
      * @param menuId 메뉴ID
      */
     toggleNode: function(menuId) {
-        // 모달 컨테이너 내부에서만 검색
-        const modalContainer = document.getElementById('menuSearchModal');
-        if (!modalContainer) return;
-        
-        const item = modalContainer.querySelector(`[data-menu-id="${menuId}"]`);
-        if (!item) return;
-        
-        const childrenContainer = item.querySelector('.menu-modal-tree-children');
-        if (!childrenContainer) return;
-        
-        const toggleButton = item.querySelector('.menu-modal-tree-toggle');
-        
-        if (childrenContainer.classList.contains('expanded')) {
-            // 축소
-            childrenContainer.classList.remove('expanded');
-            toggleButton.dataset.expanded = 'false';
-            toggleButton.textContent = '+';
-            
-            const index = this.expandedNodes.indexOf(menuId);
-            if (index > -1) {
-                this.expandedNodes.splice(index, 1);
-            }
-        } else {
-            // 확장
-            childrenContainer.classList.add('expanded');
-            toggleButton.dataset.expanded = 'true';
-            toggleButton.textContent = '−';
-            
-            if (!this.expandedNodes.includes(menuId)) {
-                this.expandedNodes.push(menuId);
-            }
+      const modalContainer = document.getElementById('menuSearchModal');
+      if (!modalContainer) return;
+
+      const item = modalContainer.querySelector(`[data-menu-id="${menuId}"]`);
+      if (!item) return;
+
+      const childrenContainer = item.querySelector('.menu-modal-tree-children');
+      if (!childrenContainer) return;
+
+      const toggleButton = item.querySelector('.menu-modal-tree-toggle');
+      if (!toggleButton) return;
+
+      // 기존 i 태그 재사용
+      let icon = toggleButton.querySelector('i');
+      if (!icon) {
+        icon = document.createElement('i');
+        toggleButton.appendChild(icon);
+      }
+
+      if (childrenContainer.classList.contains('expanded')) {
+        // 축소
+        childrenContainer.classList.remove('expanded');
+        toggleButton.dataset.expanded = 'false';
+
+        icon.classList.remove('icon-minus');
+        icon.classList.add('icon-plus');
+
+        const index = this.expandedNodes.indexOf(menuId);
+        if (index > -1) this.expandedNodes.splice(index, 1);
+      } else {
+        // 확장
+        childrenContainer.classList.add('expanded');
+        toggleButton.dataset.expanded = 'true';
+
+        icon.classList.remove('icon-plus');
+        icon.classList.add('icon-minus');
+
+        if (!this.expandedNodes.includes(menuId)) {
+          this.expandedNodes.push(menuId);
         }
+      }
     },
     
     /**

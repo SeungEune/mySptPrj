@@ -68,6 +68,25 @@
 .menu-modal-tree-toggle.no-children {
   visibility: hidden;
 }
+button.menu-modal-tree-toggle>i{
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.menu-modal-tree-toggle:hover>i{
+  filter: invert(100%) sepia(0%) saturate(100%) hue-rotate(0deg) brightness(300%) contrast(100%);
+}
+.menu-modal-tree-toggle:has(.icon-minus){
+  background-color: var(--spt-primary);
+  color: var(--spt-white);
+}
+button.menu-modal-tree-toggle>.icon-minus{
+  filter: invert(100%) sepia(7%) saturate(40%) hue-rotate(32deg) brightness(200%) contrast(100%);
+}
+.menu-modal-tree-toggle:has(.icon-minus):hover{
+  background-color: var(--spt-primary-6);
+  color: var(--spt-white);
+}
 /* 라벨 */
 .menu-modal-tree-label {
   display: flex;
