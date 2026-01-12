@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{cmm/layout/subLayout :: layout (
+            contentLink=~{::contentLink},
+            script=~{::script},
+            content=~{::content})}">
+
+<th:block th:fragment="contentLink">
+  <!--아래는 각 화면에 맞게 커스텀-->
+<!--  <link rel="stylesheet" th:href="@{/css/system/dept/deptList.css}" />-->
+</th:block>
+
+<th:block th:fragment="script">
+  <!--아래는 각 화면에 맞게 커스텀-->
+<!--  <script th:src="@{/js/system/dept/deptList.js}"></script>-->
+</th:block>
+
+<div th:fragment="content" class="wrap-inner">
+  <section class="sub-title">
+    <h2 class="txt-head-md">예시</h2>
+  </section>
+
+  <section class="sub-contents">
+    <h2>예시 화면입니다.</h2>
+  </section>
+</div>
+
+</html>
+
+
