@@ -21,7 +21,9 @@ class MessageUtil {
             confirmButtonText: confirmText ? confirmText : '확인',
             cancelButtonText: cancelText ? cancelText : '취소',
             customClass: {
-                popup: 'dr-customPopup max420'
+                popup: 'dr-customPopup max420',
+                confirmButton: 'primary-button',
+                cancelButton: 'tertiary-button',
             },
         }).then((result) => {
             if (result.isConfirmed) {
@@ -42,7 +44,9 @@ class MessageUtil {
             confirmButtonText: confirmText ? confirmText : '확인',
             cancelButtonText: cancelText ? cancelText : '취소',
             customClass: {
-                popup: 'dr-customPopup max420'
+                popup: 'dr-customPopup max420',
+                confirmButton: 'primary-button',
+                cancelButton: 'tertiary-button',
             },
         }).then(result => {
             if(result.isConfirmed){
@@ -61,7 +65,11 @@ class MessageUtil {
             allowOutsideClick: false,
             showCancelButton: true,
             confirmButtonText: confirmText ? confirmText : '확인',
-            cancelButtonText: cancelText ? cancelText : '취소'
+            cancelButtonText: cancelText ? cancelText : '취소',
+            customClass: {
+              confirmButton: 'primary-button',
+              cancelButton: 'tertiary-button',
+            },
         }).then((result) => {
             if(result.isConfirmed){
                 if (callback && callback instanceof Function) {
@@ -82,7 +90,9 @@ class MessageUtil {
                 confirmButtonText: confirmText ? confirmText : '확인',
                 cancelButtonText: cancelText ? cancelText : '취소',
                 customClass: {
-                    popup: 'dr-customPopup max420'
+                    popup: 'dr-customPopup max420',
+                    confirmButton: 'primary-button',
+                    cancelButton: 'tertiary-button',
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -100,7 +110,9 @@ class MessageUtil {
             icon: 'success',
             allowOutsideClick: false,
             customClass: {
-                popup: 'dr-customPopup max420'
+                popup: 'dr-customPopup max420',
+                confirmButton: 'primary-button',
+                cancelButton: 'tertiary-button',
             },
         }).then((result) => {
             if(result.isConfirmed){
@@ -117,7 +129,9 @@ class MessageUtil {
             icon: 'error',
             allowOutsideClick: false,
             customClass: {
-                popup: 'dr-customPopup max420'
+                popup: 'dr-customPopup max420',
+                confirmButton: 'primary-button',
+                cancelButton: 'tertiary-button',
             },
         }).then((result) => {
             if (callback && callback instanceof Function) {
@@ -133,7 +147,9 @@ class MessageUtil {
             icon: 'warning',
             allowOutsideClick: false,
             customClass: {
-                popup: 'dr-customPopup max420'
+                popup: 'dr-customPopup max420',
+                confirmButton: 'primary-button',
+                cancelButton: 'tertiary-button',
             },
         }).then(() => {
             if (callback && callback instanceof Function) {
@@ -155,7 +171,9 @@ class MessageUtil {
                 container: 'swal2-toast-container',
                 popup: 'swal2-toast-popup',
                 htmlContainer: 'swal2-toast-html-container',
-                timerProgressBar: 'swal2-toast-progress'
+                timerProgressBar: 'swal2-toast-progress',
+                confirmButton: 'primary-button',
+                cancelButton: 'tertiary-button',
             },
             didOpen: (toast) => {
                 toast.addEventListener('mouseenter', Swal.stopTimer);

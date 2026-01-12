@@ -17,6 +17,7 @@
   font-size: 1.4rem;
   text-align: center;
   transition: all 0.2s;
+  cursor: pointer;
 }
 [class*="-button"].lg{
   height: var(--spt-number-8);
@@ -71,6 +72,58 @@
 }
 .outline-button.gray:hover {
   background-color: var(--spt-gray-0);
+}
+
+.dr-customPopup [class*="-button"] {
+  justify-content: center!important;
+  align-items: center!important;
+  min-width: fit-content!important;
+  height: var(--spt-number-6)!important;
+  padding: 0 var(--spt-number-2)!important;
+  border-radius: var(--spt-number-1)!important;
+  font-size: 1.4rem!important;
+  text-align: center!important;
+  transition: all 0.2s!important;
+  cursor: pointer!important;
+}
+.dr-customPopup .primary-button {
+  background-color:var(--spt-primary)!important;
+  color: var(--spt-white)!important;
+}
+.dr-customPopup .primary-button:hover{
+  background-color: var(--spt-primary-6)!important;
+}
+.dr-customPopup .secondary-button{
+  border: 1px solid var(--spt-primary)!important;
+  color: var(--spt-primary)!important;
+  background-color: var(--spt-primary-0)!important;
+}
+.dr-customPopup .secondary-button:hover {
+  background-color: var(--spt-primary-1)!important;
+}
+.dr-customPopup .tertiary-button{
+  border: 1px solid var(--spt-black)!important;
+  color: var(--spt-black)!important;
+  background-color: transparent!important;
+}
+.dr-customPopup .tertiary-button:hover{
+  background-color: rgba(0,0,0,5%)!important;
+}
+.dr-customPopup .outline-button {
+  border: 1px solid var(--spt-primary)!important;
+  color: var(--spt-primary)!important;
+  background-color: var(--spt-white)!important;
+}
+.dr-customPopup .outline-button:hover {
+  background-color: var(--spt-primary-0)!important;
+}
+.dr-customPopup .outline-button.gray {
+  border: 1px solid var(--spt-gray-4)!important;
+  color: var(--spt-gray-4)!important;
+  background-color: var(--spt-white)!important;
+}
+.dr-customPopup .outline-button.gray:hover {
+  background-color: var(--spt-gray-0)!important;
 }
 
 .txt-link {
@@ -396,6 +449,7 @@
 .table-type01 td {
   padding: 1.2rem 1.6rem;
   border-bottom: 1px solid var(--spt-border-line-1);
+  vertical-align: middle;
   text-align: left;
   font-size: 1.4rem;
 }
