@@ -8,10 +8,13 @@
   --spt-black:#121212;
   --spt-gray:#495057;
 
-  --spt-success: #155724;
-  --spt-warning: #856404;
-  --spt-error: #721C24;
-  --spt-disabled: #6D7379;
+  --spt-success: #228738;
+  --spt-warning: #8a5c00;
+  --spt-error: #bd2c0f;
+  --spt-point: #d63d4a;
+  --spt-light-gray: #6d7882;
+  --spt-disabled: #8a949e;
+  --spt-information: #0b78cb;
 
   --spt-primary-0:#f3f3ff;
   --spt-primary-1:#E0E1F9;
@@ -42,10 +45,25 @@
   --spt-border-line-2:#EBEEF2;
 
   --spt-background:#F4F6F8;
-  --spt-background-success:#D4EDDA;
-  --spt-background-warning:#FFF3CD;
-  --spt-background-error:#F8D7DA;
-  --spt-background-disabled:#E9ECEF;
+  --spt-background-success:#eaf6ec;
+  --spt-background-warning:#fff3db;
+  --spt-background-warning-fill:#ffb114;
+  --spt-background-point:#fbeff0;
+  --spt-background-error:#fdefec;
+  --spt-background-disabled:#cdd1d5;
+  --spt-background-light-gray:#e6e8ea;
+  --spt-background-information:#e7f4fe;
+
+  --spt-icon-primary: invert(43%) sepia(11%) saturate(5469%) hue-rotate(210deg) brightness(96%) contrast(83%);
+  --spt-icon-success: invert(21%) sepia(81%) saturate(494%) hue-rotate(82deg) brightness(98%) contrast(89%);
+  --spt-icon-warning: invert(31%) sepia(82%) saturate(1238%) hue-rotate(28deg) brightness(93%) contrast(97%);
+  --spt-icon-warning-fill: invert(77%) sepia(30%) saturate(2214%) hue-rotate(344deg) brightness(100%) contrast(104%);
+  --spt-icon-point: invert(49%) sepia(51%) saturate(5771%) hue-rotate(329deg) brightness(84%) contrast(99%);
+  --spt-icon-error: invert(17%) sepia(30%) saturate(4407%) hue-rotate(331deg) brightness(83%) contrast(96%);
+  --spt-icon-disabled: invert(50%) sepia(11%) saturate(424%) hue-rotate(167deg) brightness(90%) contrast(87%);
+  --spt-icon-light-gray: invert(48%) sepia(9%) saturate(329%) hue-rotate(169deg) brightness(90%) contrast(86%);
+  --spt-icon-information: invert(24%) sepia(82%) saturate(2346%) hue-rotate(190deg) brightness(90%) contrast(93%);
+  --spt-icon-white:invert(100%) sepia(95%) saturate(0%) hue-rotate(173deg) brightness(150%) contrast(107%);
 
   --spt-number-1: .8rem;
   --spt-number-2: 1.6rem;
@@ -89,7 +107,6 @@ body {
   display: flex;
   flex-direction: column;
   background-color: var(--spt-background);
-  overflow: hidden;
 }
 
 /* Header, Footer는 별도 CSS에서 높이 지정 */
@@ -127,6 +144,12 @@ body {
   padding-bottom: var(--spt-number-4);
 }
 
+.sub-title{
+  display: flex;
+  flex-direction: column;
+  gap: var(--spt-number-1);
+}
+
 /** wrap **/
 .conts-wrap{
   display: flex;
@@ -161,9 +184,6 @@ body {
 .table-box .table-inner{
   width: 100%;
   overflow-y: auto;
-}
-.spt-modal-body .table-box{
-  box-shadow: unset;
 }
 /*search wrap*/
 .search-form {
@@ -237,6 +257,11 @@ body {
   font-weight: 600;
   line-height: 1.4;
 }
+.txt-head-xs {
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
 
 .txt-body-xl {
   font-size: 2.4rem;
@@ -277,7 +302,28 @@ body {
 .fc-primary {
   color: var(--spt-primary) !important;
 }
-.fc-gr {
+.fc-success {
+  color: var(--spt-success) !important;
+}
+.fc-warning {
+  color: var(--spt-warning) !important;
+}
+.fc-error {
+  color: var(--spt-error) !important;
+}
+.fc-point {
+  color: var(--spt-point) !important;
+}
+.fc-gray {
+  color: var(--spt-light-gray) !important;
+}
+.fc-disabled {
+  color: var(--spt-disabled) !important;
+}
+.fc-information {
+  color: var(--spt-information) !important;
+}
+.fc-dk-gray {
   color: var(--spt-gray) !important;
 }
 .fc-wh {
@@ -294,7 +340,7 @@ body {
   gap: 0;
 }
 .g-8{
-  gap: var(--spt-number-1);
+  gap: var(--spt-number-1) !important;
 }
 .g-16{
   gap: var(--spt-number-2);
@@ -740,10 +786,16 @@ body {
   flex-direction: column;
   gap: var(--spt-number-2);
 }
+.item-box.form-group{
+  gap: var(--spt-number-1);
+}
 .item-horizontal-box {
   display: flex;
   flex-direction: row;
   gap: var(--spt-number-2);
+}
+.item-horizontal-box.form-group{
+  gap: var(--spt-number-1);
 }
 
 .fx-row{
@@ -783,7 +835,7 @@ body {
 }
 
 .align-start {
-  align-items: flex-end;
+  align-items: flex-start !important;
 }
 .align-end {
   align-items: flex-end;
@@ -803,6 +855,15 @@ body {
 }
 .fx-1{
   flex: 1;
+}
+.fx-1h{
+  flex: 1.5;
+}
+.fx-2{
+  flex: 2;
+}
+.fx-3{
+  flex: 3;
 }
 
 /* ========= position ========= */
@@ -856,11 +917,51 @@ body {
   max-width: fit-content;
 }
 
-
+/* ========= border ========= */
+.border-color-1{
+  border-color: var(--spt-border-line-1);
+}
+.border-color-2{
+  border-color: var(--spt-border-line-2);
+}
+/* hr */
+.hr-1{
+  height:1px;
+  border:0;
+  background:var(--spt-border-line-1);
+}
+.hr-2{
+  height:1px;
+  border:0;
+  background:var(--spt-border-line-2);
+}
+/* ========= shadow ========= */
+.shadow-0{
+  box-shadow: none;
+}
+.shadow-1{
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+.shadow-2{
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
 /* ========= icon ========= */
 .icon{
+  display: inline-flex;
   width: var(--spt-number-3);
   height: var(--spt-number-3);
+}
+.icon.lg{
+  width: var(--spt-number-4);
+  height: var(--spt-number-4);
+}
+.icon.md{
+  width: var(--spt-number-3);
+  height: var(--spt-number-3);
+}
+.icon.sm{
+  width: var(--spt-number-2);
+  height: var(--spt-number-2);
 }
 .icon-plus::before{
   display: block;
@@ -901,4 +1002,146 @@ body {
   height: 100%;
   background: url("../images/icon/icon_arrow_down.svg")no-repeat center;
   background-size: 100%;
+}
+.icon-arrow-circle-down::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_arrow_circle_down.svg")no-repeat center;
+  background-size: 100%;
+}
+.icon-bolt::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_bolt.svg")no-repeat center;
+  background-size: 100%;
+}
+.icon-delete::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_delete.svg")no-repeat center;
+  background-size: 100%;
+}
+.icon-docs::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_docs.svg")no-repeat center;
+  background-size: 100%;
+}
+.icon-edit::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_edit.svg")no-repeat center;
+  background-size: 100%;
+}
+.icon-time::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_time.svg")no-repeat center;
+  background-size: 100%;
+}
+.icon-drag::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_drag.svg")no-repeat center;
+  background-size: 100%;
+}
+.icon-search::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_search.svg")no-repeat center;
+  background-size: 100%;
+}
+.icon-setting::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_setting.svg")no-repeat center;
+  background-size: 100%;
+}
+.icon-list::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_list.svg")no-repeat center;
+  background-size: 100%;
+}
+.icon-more::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_more.svg")no-repeat center;
+  background-size: 100%;
+}
+.icon-visibility::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_visibility.svg")no-repeat center;
+  background-size: 100%;
+}
+.icon-chevron-left::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_chevron_left.svg")no-repeat center;
+  background-size: 100%;
+}
+.icon-chevron-right::before{
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: url("../images/icon/icon_chevron_right.svg")no-repeat center;
+  background-size: 100%;
+}
+.icon-color-primary{
+  filter: var(--spt-icon-primary);
+}
+.icon-color-success{
+  filter: var(--spt-icon-success);
+}
+.icon-color-warning{
+  filter: var(--spt-icon-warning);
+}
+.icon-color-warning-fill{
+  filter: var(--spt-icon-warning-fill);
+}
+.icon-color-point{
+  filter: var(--spt-icon-point);
+}
+.icon-color-error{
+  filter: var(--spt-icon-error);
+}
+.icon-color-disabled{
+  filter: var(--spt-icon-disabled);
+}
+.icon-color-gray{
+  filter: var(--spt-icon-light-gray);
+}
+.icon-color-information{
+  filter: var(--spt-icon-information);
+}
+.icon-color-white{
+  filter: var(--spt-icon-white);
 }

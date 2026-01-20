@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{cmm/layout/subLayout :: layout (
+            contentLink=~{::contentLink},
+            script=~{::script},
+            content=~{::content})}">
+
+<th:block th:fragment="contentLink">
+  <!--아래는 각 화면에 맞게 커스텀-->
+<!--  <link rel="stylesheet" th:href="@{/css/system/dept/deptList.css}" />-->
+  <link rel="stylesheet" th:href="@{/css/pub/pub.css}" />
+</th:block>
+
+<th:block th:fragment="script">
+  <!--아래는 각 화면에 맞게 커스텀-->
+<!--  <script th:src="@{/js/system/dept/deptList.js}"></script>-->
+</th:block>
+
+<div th:fragment="content" class="wrap-inner">
+  <section class="sub-title">
+    <h2 class="txt-head-md">컴포넌트 정리</h2>
+    <p class="txt-body-md fc-dk-gray">컴포넌트 관리를 위한 페이지입니다.</p>
+  </section>
+
+  <section class="sub-contents fx-1">
+    <div class="item-horizontal-box fx-1">
+      <section class="conts-wrap fx-1 p-0 g-0">
+        <div class="cont-head white">
+          <p class="title">content title</p>
+        </div>
+        <div class="cont-body fx-1">
+
+        </div>
+      </section>
+      <section class="conts-wrap fx-1 p-0 g-0">
+        <div class="cont-head gray">
+          <p class="title">content title</p>
+        </div>
+        <div class="cont-body">
+
+        </div>
+      </section>
+      <section class="conts-wrap fx-1 p-0 g-0">
+        <div class="cont-head">
+          <p class="title">content title</p>
+        </div>
+        <div class="cont-body gray fx-1">
+
+        </div>
+      </section>
+      <section class="conts-wrap fx-1">
+        <p class="txt-head-sm">content title</p>
+        <div></div>
+      </section>
+    </div>
+    <div class="item-horizontal-box fx-1">
+      <section class="conts-wrap fx-2 p-0 g-0">
+        <div class="cont-head white">
+          <p class="title">Text Styles</p>
+        </div>
+        <div class="cont-body">
+          <div class="item-horizontal-box">
+            <div class="item-horizontal-box">
+              <div class="item-box">
+                <p class="badge">head</p>
+                <h1 class="txt-head-xxl">txt-head-xxl</h1>
+                <h2 class="txt-head-xl">txt-head-xl</h2>
+                <h3 class="txt-head-lg">txt-head-lg</h3>
+                <h4 class="txt-head-md">txt-head-md</h4>
+                <h5 class="txt-head-sm">txt-head-sm</h5>
+                <h6 class="txt-head-xs">txt-head-xs</h6>
+              </div>
+              <div class="item-box">
+                <p class="badge">body</p>
+                <h1 class="txt-body-xl">txt-body-xl</h1>
+                <h2 class="txt-body-lg">txt-body-lg</h2>
+                <h3 class="txt-body-md">txt-body-md</h3>
+                <h4 class="txt-body-sm">txt-body-sm</h4>
+                <h5 class="txt-body-xs">txt-body-xm</h5>
+              </div>
+            </div>
+            <div class="item-box">
+              <p class="badge">font weight</p>
+              <div class="item-box">
+                <p class="fw-bold txt-body-lg">fw-bold</p>
+                <p class="fw-regular txt-body-lg">fw-regular</p>
+                <p class="fw-light txt-body-lg">fw-light</p>
+              </div>
+            </div>
+            <div class="item-box">
+              <p class="badge">font color</p>
+              <div class="item-box">
+                <p class="fw-bold txt-body-lg fc-primary">fc-primary</p>
+                <p class="fw-bold txt-body-lg fc-success">fc-success</p>
+                <p class="fw-bold txt-body-lg fc-warning">fc-warning</p>
+                <p class="fw-bold txt-body-lg fc-error">fc-error</p>
+                <p class="fw-bold txt-body-lg fc-point">fc-point</p>
+                <p class="fw-bold txt-body-lg fc-gray">fc-gray</p>
+                <p class="fw-bold txt-body-lg fc-disabled">fc-disabled</p>
+                <p class="fw-bold txt-body-lg fc-information">fc-information</p>
+                <p class="fw-bold txt-body-lg fc-dk-gray">fc-dk-gray</p>
+                <p class="fw-bold txt-body-lg fc-wh">fc-wh</p>
+                <p class="fw-bold txt-body-lg required">required</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="conts-wrap fx-1 p-0 g-0">
+        <div class="cont-head white">
+          <p class="title">Icon</p>
+        </div>
+        <div class="cont-body">
+          <p class="badge">icon</p>
+          <div class="item-horizontal-box fx-wrap">
+            <i class="icon icon-plus" title="icon-plus"></i>
+            <i class="icon icon-minus" title="icon-minus"></i>
+            <i class="icon icon-drop-down" title="icon-drop-down"></i>
+            <i class="icon icon-arrow-up" title="icon-arrow-up"></i>
+            <i class="icon icon-arrow-down" title="icon-arrow-down"></i>
+            <i class="icon icon-arrow-circle-down" title="icon-arrow-circle-down"></i>
+            <i class="icon icon-bolt" title="icon-bolt"></i>
+            <i class="icon icon-delete" title="icon-delete"></i>
+            <i class="icon icon-docs" title="icon-docs"></i>
+            <i class="icon icon-edit" title="icon-edit"></i>
+            <i class="icon icon-time" title="icon-time"></i>
+            <i class="icon icon-drag" title="icon-drag"></i>
+            <i class="icon icon-search" title="icon-search"></i>
+            <i class="icon icon-setting" title="icon-setting"></i>
+            <i class="icon icon-list" title="icon-list"></i>
+            <i class="icon icon-more" title="icon-more"></i>
+            <i class="icon icon-visibility" title="icon-visibility"></i>
+            <i class="icon icon-chevron-left" title="icon-chevron-left"></i>
+            <i class="icon icon-chevron-right" title="icon-chevron-right"></i>
+          </div>
+          <p class="badge">icon-box</p>
+          <div class="item-horizontal-box">
+            <div class="icon-box square">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box circle">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square outline">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box circle outline">
+              <i class="icon icon-time"></i>
+            </div>
+          </div>
+          <p class="badge">icon-box size</p>
+          <div class="item-horizontal-box">
+            <div class="icon-box square lg">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square md">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square sm">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box circle lg">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box circle md">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box circle sm">
+              <i class="icon icon-time"></i>
+            </div>
+          </div>
+          <p class="badge">icon-box color</p>
+          <div class="item-horizontal-box">
+            <div class="icon-box square">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square success">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square warning">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square error">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square point">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square gray">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square disabled">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square information">
+              <i class="icon icon-time"></i>
+            </div>
+          </div>
+          <div class="item-horizontal-box">
+            <div class="icon-box square outline">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square outline success">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square outline warning">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square outline error">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square outline point">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square outline gray">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square outline disabled">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square outline information">
+              <i class="icon icon-time"></i>
+            </div>
+          </div>
+          <div class="item-horizontal-box">
+            <div class="icon-box square fill">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square fill success">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square fill warning">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square fill error">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square fill point">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square fill gray">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square fill disabled">
+              <i class="icon icon-time"></i>
+            </div>
+            <div class="icon-box square fill information">
+              <i class="icon icon-time"></i>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <section class="conts-wrap fx-1 p-0 g-0">
+      <div class="cont-head white">
+        <p class="title">Button</p>
+      </div>
+      <div class="cont-body">
+        <div class="item-horizontal-box align-ct">
+          <button class="primary-button">primary-button</button>
+          <button class="secondary-button">secondary-button</button>
+          <button class="tertiary-button">tertiary-button</button>
+          <button class="outline-button">outline-button</button>
+          <button class="outline-button gray">outline-button gray</button>
+          <button class="txt-link">txt-link</button>
+          <button class="txt-link">
+            <i class="icon icon-plus"></i>
+            txt-link
+          </button>
+        </div>
+        <div class="item-box">
+          <p class="badge">size</p>
+          <div class="item-horizontal-box">
+            <div class="item-horizontal-box align-ct">
+              <button class="primary-button lg">primary-button lg</button>
+              <button class="primary-button md">primary-button md</button>
+              <button class="primary-button sm">primary-button sm</button>
+            </div>
+            <div class="item-horizontal-box align-ct">
+              <button class="txt-link lg">txt-link lg</button>
+              <button class="txt-link md">txt-link md</button>
+              <button class="txt-link sm">txt-link sm</button>
+              <button class="txt-link xs">txt-link xs</button>
+            </div>
+          </div>
+        </div>
+        <div class="item-box">
+          <p class="badge">icon</p>
+          <div class="item-horizontal-box">
+            <div class="item-horizontal-box align-ct">
+              <button class="primary-button lg"><i class="icon icon-plus"></i>primary-button lg</button>
+              <button class="secondary-button md"><i class="icon icon-plus"></i>secondary-button md</button>
+              <button class="tertiary-button sm"><i class="icon icon-plus"></i>tertiary-button sm</button>
+            </div>
+            <div class="item-horizontal-box align-ct">
+              <button class="txt-link lg"><i class="icon icon-plus"></i>txt-link lg</button>
+              <button class="txt-link md"><i class="icon icon-plus"></i>txt-link md</button>
+              <button class="txt-link sm"><i class="icon icon-plus"></i>txt-link sm</button>
+              <button class="txt-link xs"><i class="icon icon-plus"></i>txt-link xs</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="conts-wrap fx-1 p-0 g-0">
+      <div class="cont-head white">
+        <p class="title">Badge</p>
+      </div>
+      <div class="cont-body">
+        <div class="item-horizontal-box">
+          <p class="badge">badge</p>
+          <p class="badge success">success</p>
+          <p class="badge warning">warning</p>
+          <p class="badge point">point</p>
+          <p class="badge error">error</p>
+          <p class="badge disabled">disabled</p>
+          <p class="badge gray">gray</p>
+          <p class="badge information">information</p>
+        </div>
+        <div class="item-horizontal-box">
+          <p class="badge outline">badge outline</p>
+          <p class="badge outline success">success outline</p>
+          <p class="badge outline warning">warning outline</p>
+          <p class="badge outline point">point outline</p>
+          <p class="badge outline error">error outline</p>
+          <p class="badge outline disabled">disabled outline</p>
+          <p class="badge outline gray">gray outline</p>
+          <p class="badge outline information">information outline</p>
+        </div>
+        <div class="item-horizontal-box">
+          <p class="badge fill">badge fill</p>
+          <p class="badge fill success">success fill</p>
+          <p class="badge fill warning">warning fill</p>
+          <p class="badge fill point">point fill</p>
+          <p class="badge fill error">error fill</p>
+          <p class="badge fill disabled">disabled fill</p>
+          <p class="badge fill gray">gray fill</p>
+          <p class="badge fill information">information fill</p>
+        </div>
+        <p class="txt-body-sm">icon badge</p>
+        <div class="item-horizontal-box">
+          <p class="badge"><i class="icon icon-time"></i>badge</p>
+          <p class="badge success"><i class="icon icon-time"></i>success</p>
+          <p class="badge warning"><i class="icon icon-time"></i>warning</p>
+          <p class="badge point"><i class="icon icon-time"></i>point</p>
+          <p class="badge error"><i class="icon icon-time"></i>error</p>
+          <p class="badge disabled"><i class="icon icon-time"></i>disabled</p>
+          <p class="badge gray"><i class="icon icon-time"></i>gray</p>
+          <p class="badge information"><i class="icon icon-time"></i>information</p>
+        </div>
+      </div>
+    </section>
+    <section class="conts-wrap fx-1 p-0 g-0">
+      <div class="cont-head white">
+        <p class="title">Select</p>
+      </div>
+      <div class="cont-body">
+        <div class="item-horizontal-box form-group">
+          <div class="item-box form-group">
+            <label class="select-label" for="searchType">검색타입</label>
+            <select class="select" id="searchType" name="searchType">
+              <option value="userNm">이름</option>
+              <option value="userId">아이디</option>
+              <option value="deptNm">부서</option>
+            </select>
+          </div>
+          <div class="item-box form-group">
+            <label class="select-label" for="status">재직상태</label>
+            <select class="select" id="status" name="status"><option value="">전체</option>
+              <option value="NORMAL">정상</option>
+              <option value="REST">휴직</option>
+              <option value="QUIT">퇴사</option>
+              <option value="STOP">정지</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="conts-wrap fx-1 p-0 g-0">
+      <div class="cont-head white">
+        <p class="title">Textarea</p>
+      </div>
+      <div class="cont-body">
+        <div class="item-box form-group">
+          <label for="textarea1" class="input-label">설명</label>
+          <textarea id="textarea1" class="textarea" placeholder="설명을 입력해주세요."></textarea>
+        </div>
+        <div class="item-box form-group">
+          <label for="textarea2" class="input-label">설명</label>
+          <textarea id="textarea2" class="textarea resize-vertical" placeholder="설명을 입력해주세요.">높이값 수동 조절</textarea>
+        </div>
+        <div class="item-box form-group">
+          <label for="textarea3" class="input-label">설명</label>
+          <textarea id="textarea3" class="textarea resize-auto" placeholder="설명을 입력해주세요." rows="1">
+높이값 자동 조절
+
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+</textarea>
+        </div>
+      </div>
+    </section>
+    <section class="conts-wrap fx-1 p-0 g-0">
+      <div class="cont-head white">
+        <p class="title">Input</p>
+      </div>
+      <div class="cont-body">
+        <p class="badge">text</p>
+        <div class="item-box form-group">
+          <label for="txt1" class="input-label">기타</label>
+          <input type="text" id="txt1" class="input" placeholder="내용을 입력하세요" required="" />
+        </div>
+        <div class="item-box form-group">
+          <label for="txt2" class="input-label">기타</label>
+          <input type="text" id="txt2" class="input" placeholder="내용을 입력하세요" readonly="">
+        </div>
+        <p class="badge">text - size</p>
+        <div class="item-box form-group">
+          <label for="txt3" class="input-label">기타</label>
+          <input type="text" id="txt3" class="input lg" placeholder="내용을 입력하세요" required="" />
+        </div>
+        <div class="item-box form-group">
+          <label for="txt4" class="input-label">기타</label>
+          <input type="text" id="txt4" class="input md" placeholder="내용을 입력하세요" required="" />
+        </div>
+        <div class="item-box form-group">
+          <label for="txt5" class="input-label">기타</label>
+          <input type="text" id="txt5" class="input sm" placeholder="내용을 입력하세요" required="" />
+        </div>
+        <p class="badge">calendar</p>
+        <div class="item-box form-group">
+          <label for="txt2" class="input-label">달력</label>
+          <input type="date" id="date" class="input">
+        </div>
+        <p class="badge">search icon button</p>
+        <div class="item-box form-group">
+          <label for="txt7" class="input-label">검색</label>
+          <div class="search-form">
+            <input type="text" id="txt7" class="input search lg" placeholder="검색어를 입력하세요">
+            <button class="search-button">
+              <i class="icon icon-search"></i>
+              <span>검색</span>
+            </button>
+          </div>
+        </div>
+        <div class="item-box form-group">
+          <label for="txt6" class="input-label">검색</label>
+          <div class="search-form">
+            <input type="text" id="txt6" class="input search" placeholder="검색어를 입력하세요">
+            <button class="search-button">
+              <i class="icon icon-search"></i>
+              <span>검색</span>
+            </button>
+          </div>
+        </div>
+        <div class="item-box form-group">
+          <label for="txt8" class="input-label">검색</label>
+          <div class="search-form">
+            <input type="text" id="txt8" class="input search sm" placeholder="검색어를 입력하세요">
+            <button class="search-button">
+              <i class="icon icon-search"></i>
+              <span>검색</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="item-horizontal-box">
+      <div class="item-box fx-1">
+        <section class="conts-wrap fx-1 p-0 g-0">
+          <div class="cont-head white">
+            <p class="title">Radio</p>
+          </div>
+          <div class="cont-body">
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="useYn" />
+                <span>기본</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="useYn" checked />
+                <span>선택됨</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="useYn2" disabled />
+                <span>비활성화</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="useYn2" disabled checked />
+                <span>선택된 비활성화</span>
+              </label>
+            </div>
+          </div>
+        </section>
+        <section class="conts-wrap fx-1 p-0 g-0">
+          <div class="cont-head white">
+            <p class="title">Checkbox</p>
+          </div>
+          <div class="cont-body">
+            <div class="item-horizontal-box">
+              <div class="chk-item">
+                <input id="ck1" type="checkbox" />
+                <label for="ck1">기본</label>
+              </div>
+              <div class="chk-item">
+                <input id="ck2" type="checkbox" checked/>
+                <label for="ck1">선택됨</label>
+              </div>
+              <div class="chk-item">
+                <input id="ck3" type="checkbox" disabled />
+                <label for="ck1">비활성화</label>
+              </div>
+              <div class="chk-item">
+                <input id="ck4" type="checkbox" disabled checked />
+                <label for="ck1">선택된 비활성화</label>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="conts-wrap fx-1 p-0 g-0">
+          <div class="cont-head white">
+            <p class="title">Pagination</p>
+          </div>
+          <div class="cont-body">
+            <div class="item-box jst-ct mt-20">
+              <div id="paginationArea" class="pagination">
+                <a class="prev_page disabled_prev_page">이전 페이지</a>
+                <ul>
+                  <li class="active">
+                    <a href="javascript:void(0);" class="active">1</a>
+                  </li>
+                  <li>
+                    <a href="javascript:void(0);">2</a>
+                  </li>
+                  <li>
+                    <a href="javascript:void(0);">3</a>
+                  </li>
+                  <li>
+                    <a href="javascript:void(0);">4</a>
+                  </li>
+                  <li>
+                    <a href="javascript:void(0);">5</a>
+                  </li>
+                  <li>
+                    <a href="javascript:void(0);">6</a>
+                  </li>
+                </ul>
+                <a href="javascript:void(0)" class="next_page ">다음 페이지</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <section class="conts-wrap fx-1 p-0 g-0">
+        <div class="cont-head white">
+          <p class="title">Tree menu</p>
+        </div>
+        <div class="cont-body">
+          <div class="item-horizontal-box fx-1">
+            <div class="spt-tree-container">
+              <div class="spt-tree-header">
+                <span class="txt-body-sm">부서 목록</span>
+                <span class="txt-body-sm" id="treeTotalCount">(6개)</span>
+              </div>
+              <div class="spt-tree-list" id="deptTreeList">
+                <div class="spt-tree-item" data-dept-cd="DEPT_001" data-level="0" data-has-children="0">
+                  <div class="spt-tree-row">
+                    <span class="spt-tree-indent" style="width: 0px;"></span>
+                    <button class="spt-tree-toggle no-children" type="button"></button>
+                    <span class="spt-tree-label">
+                    <span class="dep-name">사장</span>
+                    <span class="dep-code">(DEPT_001)</span>
+                  </span>
+                  </div>
+                </div>
+                <div class="spt-tree-item" data-dept-cd="DEPT_002" data-level="0" data-has-children="1">
+                  <div class="spt-tree-row">
+                    <span class="spt-tree-indent" style="width: 0px;"></span>
+                    <button class="spt-tree-toggle" type="button" data-expanded="false">
+                      <i class="icon-plus"></i></button>
+                    <span class="spt-tree-label">
+                    <span class="dep-name">사업본부</span>
+                    <span class="dep-code">(DEPT_002)</span>
+                  </span>
+                  </div>
+                  <div class="spt-tree-children">
+                    <div class="spt-tree-item" data-dept-cd="DEPT_021" data-level="1" data-has-children="0">
+                      <div class="spt-tree-row">
+                        <span class="spt-tree-indent" style="width: 20px;"></span>
+                        <button class="spt-tree-toggle no-children" type="button"></button>
+                        <span class="spt-tree-label">
+                        <span class="dep-name">인재Pool</span>
+                        <span class="dep-code">(DEPT_021)</span>
+                        <span class="dep-count">1명</span>
+                      </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="spt-tree-item" data-dept-cd="DEPT_003" data-level="0" data-has-children="0">
+                  <div class="spt-tree-row">
+                    <span class="spt-tree-indent" style="width: 0px;"></span>
+                    <button class="spt-tree-toggle no-children" type="button"></button>
+                    <span class="spt-tree-label"><span class="dep-name">총무영업팀</span>
+                  <span class="dep-code">(DEPT_003)</span>
+                  <span class="dep-count">1명</span></span>
+                  </div>
+                </div>
+                <div class="spt-tree-item" data-dept-cd="DEPT_004" data-level="0" data-has-children="0">
+                  <div class="spt-tree-row">
+                    <span class="spt-tree-indent" style="width: 0px;"></span>
+                    <button class="spt-tree-toggle no-children" type="button"></button>
+                    <span class="spt-tree-label">
+                    <span class="dep-name">기술연구소</span>
+                    <span class="dep-code">(DEPT_004)</span>
+                    <span class="dep-count">1명</span>
+                  </span>
+                  </div>
+                </div>
+                <div class="spt-tree-item" data-dept-cd="DEPT_005" data-level="0" data-has-children="0">
+                  <div class="spt-tree-row">
+                    <span class="spt-tree-indent" style="width: 0px;"></span>
+                    <button class="spt-tree-toggle no-children" type="button"></button>
+                    <span class="spt-tree-label">
+                    <span class="dep-name">경영지원</span>
+                    <span class="dep-code">(DEPT_005)</span>
+                  </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="spt-tree-container">
+              <div class="spt-tree-header">
+                <span class="txt-body-sm">
+                  전체 메뉴
+                  <span id="treeTotalCount2">(25)</span>
+                </span>
+              </div>
+              <div class="spt-tree-list" id="menuTreeList">
+                <div class="spt-tree-item">
+                  <div class="spt-tree-row" data-id="M02">
+                    <div class="spt-tree-toggle ">+</div>
+                    <div class="spt-tree-label">
+                      <span class="dep-name">접수관리</span>
+                      <span class="dep-code">(M02)</span>
+                    </div>
+                  </div>
+                  <div class="spt-tree-children" id="children-M02">
+                    <div class="spt-tree-item">
+                      <div class="spt-tree-row" data-id="M021">
+                        <div class="spt-tree-toggle no-children"></div>
+                        <div class="spt-tree-label">
+                          <span class="dep-name">성능평가 접수</span>
+                          <span class="dep-code">(M021)</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="spt-tree-item">
+                      <div class="spt-tree-row" data-id="M022">
+                        <div class="spt-tree-toggle no-children"></div>
+                        <div class="spt-tree-label">
+                          <span class="dep-name">시험체 장비 관리</span>
+                          <span class="dep-code">(M022)</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="spt-tree-item">
+                      <div class="spt-tree-row" data-id="M023">
+                        <div class="spt-tree-toggle no-children"></div>
+                        <div class="spt-tree-label">
+                          <span class="dep-name">ESS 정밀 안전 진단</span>
+                          <span class="dep-code">(M023)</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="spt-tree-item">
+                  <div class="spt-tree-row" data-id="M03">
+                    <div class="spt-tree-toggle ">-</div>
+                    <div class="spt-tree-label">
+                      <span class="dep-name">시험</span>
+                      <span class="dep-code">(M03)</span>
+                    </div>
+                  </div>
+                  <div class="spt-tree-children expanded" id="children-M03">
+                    <div class="spt-tree-item">
+                      <div class="spt-tree-row" data-id="M031" style="padding-left: 35px;">
+                        <div class="spt-tree-toggle no-children"></div>
+                        <div class="spt-tree-label">
+                          <span class="dep-name dep-disabled">시퀀스관리</span>
+                          <span class="dep-disabled-badge">미사용</span>
+                          <span class="dep-code">(M031)</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="spt-tree-item">
+                      <div class="spt-tree-row" data-id="M032" style="padding-left: 35px;">
+                        <div class="spt-tree-toggle no-children"></div>
+                        <div class="spt-tree-label">
+                          <span class="dep-name">시험수행</span>
+                          <span class="dep-code">(M032)</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="spt-tree-item">
+                      <div class="spt-tree-row" data-id="M033" style="padding-left: 35px;">
+                        <div class="spt-tree-toggle no-children"></div>
+                        <div class="spt-tree-label">
+                          <span class="dep-name">시험수행이력</span>
+                          <span class="dep-code">(M033)</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="spt-tree-item">
+                  <div class="spt-tree-row" data-id="M04">
+                    <div class="spt-tree-toggle ">+</div>
+                    <div class="spt-tree-label">
+                      <span class="dep-name">차트</span>
+                      <span class="dep-code">(M04)</span>
+                    </div>
+                  </div>
+                  <div class="spt-tree-children" id="children-M04">
+                    <div class="spt-tree-item">
+                      <div class="spt-tree-row" data-id="M041" style="padding-left: 35px;">
+                        <div class="spt-tree-toggle no-children"></div>
+                        <div class="spt-tree-label">
+                          <span class="dep-name">차트 이력</span>
+                          <span class="dep-code">(M041)</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="spt-tree-item">
+                      <div class="spt-tree-row" data-id="M042" style="padding-left: 35px;">
+                        <div class="spt-tree-toggle no-children"></div>
+                        <div class="spt-tree-label">
+                          <span class="dep-name">셀 편차 분석</span>
+                          <span class="dep-code">(M042)</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="spt-tree-item">
+                      <div class="spt-tree-row" data-id="M043" style="padding-left: 35px;">
+                        <div class="spt-tree-toggle no-children"></div>
+                        <div class="spt-tree-label">
+                          <span class="dep-name">계산식 관리</span>
+                          <span class="dep-code">(M043)</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="spt-tree-item">
+                  <div class="spt-tree-row" data-id="M05">
+                    <div class="spt-tree-toggle ">+</div>
+                    <div class="spt-tree-label">
+                      <span class="dep-name">차트와 다운로드</span>
+                      <span class="dep-code">(M05)</span>
+                    </div>
+                  </div>
+                  <div class="spt-tree-children" id="children-M05">
+                    <div class="spt-tree-item">
+                      <div class="spt-tree-row" data-id="M051" style="padding-left: 35px;">
+                        <div class="spt-tree-toggle no-children"></div>
+                        <div class="spt-tree-label">
+                          <span class="dep-name">차트</span>
+                          <span class="dep-code">(M051)</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="spt-tree-item">
+                      <div class="spt-tree-row" data-id="M052" style="padding-left: 35px;">
+                        <div class="spt-tree-toggle no-children"></div>
+                        <div class="spt-tree-label">
+                          <span class="dep-name">다운로드</span>
+                          <span class="dep-code">(M052)</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <section class="conts-wrap table-box fx-1 p-0 g-0">
+      <div class="cont-head white">
+        <p class="title">Table</p>
+      </div>
+      <div class="cont-body">
+        <div class="table-inner">
+          <table class="table-type01" id="">
+            <colgroup>
+              <col width="5%">
+              <col width="12%">
+              <col width="10%">
+              <col width="12%">
+              <col width="10%">
+              <col width="15%">
+              <col width="10%">
+              <col width="14%">
+            </colgroup>
+            <thead>
+            <tr>
+              <th class="tc">No</th>
+              <th class="tc">아이디</th>
+              <th class="tc">이름</th>
+              <th class="tc">부서</th>
+              <th class="tc">직급/역할</th>
+              <th class="tc">이메일</th>
+              <th class="tc">상태</th>
+              <th class="tc">등록일</th>
+            </tr>
+            </thead>
+            <tbody id="">
+            <tr class="tc cur-point" data-user-id="ess2" onclick="fn_goViewForm('ess2')">
+              <td>1</td>
+              <td>ess2</td>
+              <td>ess2</td>
+              <td>기술연구소</td>
+              <td>시스템관리자</td>
+              <td>spt@gmail.com</td>
+              <td>정상</td>
+              <td>2026-01-02</td>
+            </tr>
+            <tr class="tc cur-point" data-user-id="ess1" onclick="fn_goViewForm('ess1')">
+              <td>2</td>
+              <td>ess1</td>
+              <td>시스템관리자</td>
+              <td>인재Pool</td>
+              <td>시스템관리자</td>
+              <td>lse9904@spatialt.co.kr</td>
+              <td>정상</td>
+              <td>2025-12-24</td>
+            </tr>
+            <tr class="tc cur-point" data-user-id="admin" onclick="fn_goViewForm('admin')">
+              <td>3</td>
+              <td>admin</td>
+              <td>시스템관리자</td>
+              <td>총무영업팀</td>
+              <td>시스템관리자</td>
+              <td>admin@example.com</td>
+              <td>정상</td>
+              <td>2025-12-14</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="badge">hover event</p>
+        <div class="table-inner">
+          <table class="table-type01 select-table" id="">
+            <colgroup>
+              <col width="5%">
+              <col width="12%">
+              <col width="10%">
+              <col width="12%">
+              <col width="10%">
+              <col width="15%">
+              <col width="10%">
+              <col width="14%">
+            </colgroup>
+            <thead>
+            <tr>
+              <th class="tc">No</th>
+              <th class="tc">아이디</th>
+              <th class="tc">이름</th>
+              <th class="tc">부서</th>
+              <th class="tc">직급/역할</th>
+              <th class="tc">이메일</th>
+              <th class="tc">상태</th>
+              <th class="tc">등록일</th>
+            </tr>
+            </thead>
+            <tbody id="userListBody"><tr class="tc cur-point" data-user-id="ess2" onclick="fn_goViewForm('ess2')">             <td>1</td>             <td>ess2</td>             <td>ess2</td>             <td>기술연구소</td>             <td>시스템관리자</td>             <td>spt@gmail.com</td>             <td>정상</td>             <td>2026-01-02</td>         </tr><tr class="tc cur-point" data-user-id="ess1" onclick="fn_goViewForm('ess1')">             <td>2</td>             <td>ess1</td>             <td>시스템관리자</td>             <td>인재Pool</td>             <td>시스템관리자</td>             <td>lse9904@spatialt.co.kr</td>             <td>정상</td>             <td>2025-12-24</td>         </tr><tr class="tc cur-point" data-user-id="admin" onclick="fn_goViewForm('admin')">             <td>3</td>             <td>admin</td>             <td>시스템관리자</td>             <td>총무영업팀</td>             <td>시스템관리자</td>             <td>admin@example.com</td>             <td>정상</td>             <td>2025-12-14</td>         </tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <section class="conts-wrap fx-1 p-0 g-0">
+      <div class="cont-head white">
+        <p class="title">Tab</p>
+      </div>
+      <div class="cont-body">
+        <div class="tab-menu">
+          <ul>
+            <li data-tab="tab-menu1" class="on">
+              <a href="#">menu1</a>
+            </li>
+            <li data-tab="tab-menu2">
+              <a href="#">menu2</a>
+            </li>
+            <li data-tab="tab-menu3">
+              <a href="#">menu3</a>
+            </li>
+          </ul>
+
+          <div class="tab-content on" id="tab-menu1">menu 1</div>
+          <div class="tab-content" id="tab-menu2">menu 2</div>
+          <div class="tab-content" id="tab-menu3">menu 3</div>
+        </div>
+        <div class="tab-menu fullsize">
+          <ul>
+            <li data-tab="tab-menu4" class="on">
+              <a href="#">menu1</a>
+            </li>
+            <li data-tab="tab-menu5">
+              <a href="#">menu2</a>
+            </li>
+            <li data-tab="tab-menu6">
+              <a href="#">menu3</a>
+            </li>
+          </ul>
+
+          <div class="tab-content on" id="tab-menu4">menu 1</div>
+          <div class="tab-content" id="tab-menu5">menu 2</div>
+          <div class="tab-content" id="tab-menu6">menu 3</div>
+        </div>
+      </div>
+    </section>
+  </section>
+</div>
+
+
+<script>
+  $(document).ready(function () {
+
+    function autoResize($textarea) {
+      $textarea.css('height', 'auto');
+      $textarea.css('height', $textarea[0].scrollHeight + 'px');
+    }
+
+    $(document).on('input', '.textarea.resize-auto', function () {
+      autoResize($(this));
+    });
+
+    $('.textarea.resize-auto').each(function () {
+      autoResize($(this));
+    });
+
+
+    $('.tab-menu li').click(function(e){
+      e.preventDefault();
+      let current = $(this).attr('data-tab');
+      $('.tab-menu li').removeClass('on');
+      $('.tab-content').removeClass('on');
+      $(this).addClass('on');
+      $('#' + current).addClass('on');
+    });
+
+  });
+</script>
+
+
+
+</html>
+
+

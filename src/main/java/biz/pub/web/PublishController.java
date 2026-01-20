@@ -17,6 +17,12 @@ public class PublishController {
         return "pub/callPopup";
     }
 
+    // components
+    @GetMapping(value = "/components.do")
+    public String components() {
+        return "pub/temp/components";
+    }
+
     @GetMapping(value = "/template1.do")
     public String template1() {
         return "pub/temp/template1";

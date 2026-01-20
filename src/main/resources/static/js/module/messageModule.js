@@ -3,6 +3,11 @@ class MessageUtil {
         Swal.fire({
             html: message,
             icon: 'info',
+            customClass: {
+              popup: 'dr-customPopup max420',
+              confirmButton: 'primary-button',
+              cancelButton: 'tertiary-button',
+            },
             allowOutsideClick: false,
             didDestroy: () => {
                 if (callback && callback instanceof Function) {
@@ -67,6 +72,7 @@ class MessageUtil {
             confirmButtonText: confirmText ? confirmText : '확인',
             cancelButtonText: cancelText ? cancelText : '취소',
             customClass: {
+              popup: 'dr-customPopup max420',
               confirmButton: 'primary-button',
               cancelButton: 'tertiary-button',
             },
