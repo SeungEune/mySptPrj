@@ -1,37 +1,28 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<!-- TOC JavaScript -->
-<script th:src="@{/js/toc/toc.js}"></script>
-
-  <div th:fragment="tocLayout">
-    <!-- TOC 사이드바 -->
-    <aside class="dashboard-sidebar">
-      <div class="sidebar-menu">
-        <!-- 1차 메뉴 반복 -->
-        <div th:each="menu : ${menuList}" class="sidebar-menu-item-wrapper">
-          <!-- 1차 메뉴 아이템 -->
-          <div class="sidebar-menu-item toc-menu-item"
-               th:classappend="${(menu.subMenuList != null and menu.subMenuList.size() > 0) ? 'has-submenu' : ''} + ${#strings.contains(#httpServletRequest.requestURI, menu.menuUrl) ? ' active' : ''}">
-            <i th:class="'icon-' + ${menu.menuIcon}"></i>
+<div th:fragment="tocLayout">
+  <aside class="dashboard-sidebar">
+    <div class="sidebar-menu">
+      <ul class="sidebar-menu-wrap">
+        <li class="dep-1-menu"
+            th:each="menu : ${menuList}"
+            th:classappend="${menu.subMenuList != null and menu.subMenuList.size() > 0 ? 'has-submenu' : ''}">
+          <a class="dep-1-item" href="#">
             <span th:text="${menu.menuNm}"></span>
-            <!-- 하위 메뉴가 있는 경우 화살표 아이콘 표시 -->
-            <span th:if="${menu.subMenuList != null and menu.subMenuList.size() > 0}" class="submenu-arrow"><i class="icon-drop-down"></i></span>
-          </div>
+            <i class="icon-drop-down submenu-arrow"></i>
+          </a>
 
-          <!-- 2차 메뉴 (하위 메뉴) -->
-          <div class="submenu-list" th:if="${menu.subMenuList != null and menu.subMenuList.size() > 0}">
-            <a th:each="subMenu : ${menu.subMenuList}"
-               th:href="@{${subMenu.menuUrl}}"
-               class="submenu-item"
-               th:classappend="${#strings.contains(#httpServletRequest.requestURI, subMenu.menuUrl)} ? 'active' : ''">
-              <i th:class="'icon-' + ${subMenu.menuIcon}"></i>
-              <span th:text="${subMenu.menuNm}"></span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </aside>
-  </div>
+          <ul class="dep-2-menu" th:if="${menu.subMenuList != null and menu.subMenuList.size() > 0}">
+            <li th:each="subMenu : ${menu.subMenuList}">
+              <a class="dep-2-item" th:href="@{${subMenu.menuUrl}}">
+                <span th:text="${subMenu.menuNm}"></span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </aside>
+</div>
 </html>
-

@@ -161,6 +161,9 @@ body {
   background-color: var(--spt-white);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 }
+.conts-wrap.shadow-none{
+  box-shadow: none;
+}
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -185,35 +188,7 @@ body {
   width: 100%;
   overflow-y: auto;
 }
-/*search wrap*/
-.search-form {
-  display: flex;
-  align-items: center;
-  gap: var(--spt-number-1);
-  width: 100%;
-}
-.search-form .input-box {
-  flex: 4;
-  min-width: 200px;
-}
-.search-form>.select-group{
-  display: flex;
-  align-items: center;
-  flex: 1;
-  gap: var(--spt-number-1);
-}
-.search-form>.select-group>div{
-  flex: 1;
-}
-.search-form>.button-group{
-  display: flex;
-  align-items: center;
-  flex: 1;
-  gap: var(--spt-number-1);
-}
-.search-form>.button-group>button{
-  flex: 1;
-}
+
 /*input wrap*/
 .input-group {
   display: flex;
@@ -229,6 +204,26 @@ body {
 }
 .pw-group>input{
   flex: 1;
+}
+
+/* ========= Typography & Text Utilities ========= */
+.dp-none{
+  display: none;
+}
+.dp-flex{
+  display: flex;
+}
+.dp-block{
+  display: block;
+}
+.dp-inline{
+  display: inline;
+}
+.dp-in-flex{
+  display: inline-flex;
+}
+.dp-in-block{
+  display: inline-block;
 }
 
 /* ========= Typography & Text Utilities ========= */

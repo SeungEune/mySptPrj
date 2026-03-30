@@ -20,7 +20,7 @@ time, mark, audio, video, button {
   line-height: 1;
   vertical-align: baseline;
 }
-body, div, p, h1, h2, h3, h4, h5, h6, ul, ol, li, dl, dt, dd, table, th, td, form, fieldset, legend, input, textarea, a, button, select, ul, li, span, em{margin: 0;padding: 0;box-sizing: border-box;font-family: 'Pretendard','AppleGothic', 'Malgun Gothic','맑은 고딕', '돋음','Dotum','Apple SD Gothic Neo', Arial, Helvetica, sans-serif; color:#000000;}
+body, div, p, h1, h2, h3, h4, h5, h6, ul, ol, li, dl, dt, dd, table, th, td, form, fieldset, legend, input, textarea, a, button, select, ul, li, span, em{margin: 0;padding: 0;box-sizing: border-box;font-family: 'Pretendard GOV','AppleGothic', 'Malgun Gothic','맑은 고딕', '돋음','Dotum','Apple SD Gothic Neo', Arial, Helvetica, sans-serif; color:#000000;}
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
