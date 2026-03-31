@@ -1,34 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>500</title>
+    <title>500 | Spatialt 인트라넷</title>
+    <th:block th:replace="~{cmm/meta :: metaLayout}"></th:block>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/reset.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/common.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/components.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/error/error.css}">
 </head>
-<link type="text/css" rel="stylesheet" href="/css/error.css" >
-<link type="text/css" rel="stylesheet" href="/css/reset.css" >
-<link type="text/css" rel="stylesheet" href="/css/components.css" >
-<link type="text/css" rel="stylesheet" href="/css/common.css" >
-<body>
-<header>
-    <h1><a href="/"><img class="color" src="/images/funLogo.png"><img class="white" src="/images/funLogo_w.png"></a></h1>
-</header>
-<main>
-    <div class="error-inner">
-        <div class="error-img">
-            <img src="/images/error_bg.svg" alt="error">
-        </div>
-        <div class="error-info">
-            <h2 class="error-name">500</h2>
-            <p class="error-info-txt">
-                죄송합니다. 페이지가 작동하지 않습니다.
-                <span>현재 주소에서 요청을 처리할 수 없습니다.</span>
+<body class="error-body">
+<div class="error-page">
+    <header class="error-header">
+        <a href="/main/mainForm.do" class="error-logo" aria-label="메인으로 이동">
+            <img src="/images/logo.png" alt="Spatialt 로고">
+        </a>
+    </header>
+
+    <main class="error-main">
+        <section class="error-card" aria-labelledby="error-title">
+            <span class="error-badge">ERROR 500</span>
+            <h1 id="error-title" class="txt-head-lg error-title">일시적인 오류가 발생했습니다.</h1>
+            <p class="txt-body-md error-desc">
+                요청을 처리하는 중 문제가 발생했습니다.<br>
+                잠시 후 다시 시도하거나, 계속 문제가 발생하면 관리자에게 문의해 주세요.
             </p>
-        </div>
-        <div class="button-box">
-            <button class="back-btn" onclick="history.back()">이전으로</button>
-            <button class="primary-btn" onclick="location.href='/'">메인으로</button>
-        </div>
-    </div>
-</main>
+
+            <div class="error-guide">
+                <p class="txt-head-xs error-guide-title">확인해 볼 사항</p>
+                <ul class="txt-body-sm error-desc error-guide-list">
+                    <li>잠시 후 동일한 작업을 다시 시도해 주세요.</li>
+                    <li>입력 중이던 내용이 있다면 다시 확인해 주세요.</li>
+                    <li>반복적으로 발생하면 관리자에게 문의해 주세요.</li>
+                </ul>
+            </div>
+
+            <div class="error-actions">
+                <button type="button" class="outline-button gray lg" onclick="history.back()"><span>이전 페이지</span></button>
+                <a href="/main/mainForm.do" class="primary-button lg"><span>메인으로 이동</span></a>
+            </div>
+        </section>
+    </main>
+</div>
 </body>
 </html>

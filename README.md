@@ -84,12 +84,14 @@ src/main/resources/
 3. `docs/ui-rules.md`
 4. `docs/ui-component-patterns.md`
 5. `docs/task-checklists/ui-fix.md`
+6. `docs/verification.md`
 
 ### 백엔드 수정
 1. `AGENTS.md`
 2. `docs/project-map.md`
 3. `docs/backend-rules.md`
 4. `docs/task-checklists/bugfix.md`
+5. `docs/verification.md`
 
 ### reference-cursor 반영 검토
 1. `docs/design-reference-adoption.md`
@@ -120,3 +122,4 @@ src/main/resources/
 
 프로젝트의 상세 작업 규칙은 README보다 `AGENTS.md`와 `docs/` 문서를 우선한다.
 README는 입구 역할, `AGENTS.md`는 실제 운영 기준 역할을 맡는다.
+역할을 맡는다.
