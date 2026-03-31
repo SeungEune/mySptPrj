@@ -34,18 +34,17 @@
 
 ## 빌드 및 실행
 
-> 현재 레포에는 Maven Wrapper(`mvnw`)가 없다. 로컬 환경에 Maven이 설치되어 있어야 한다.
-> 추후 `mvnw` 도입 전까지는 아래 명령을 기준으로 문서화한다.
+> Maven Wrapper(`mvnw`)를 사용한다. 로컬에 Maven이 없어도 프로젝트 기준으로 동일한 빌드/테스트 진입점을 사용할 수 있다.
 
 ```bash
 # 의존성 포함 빌드
-mvn package
+./mvnw package
 
 # 테스트 포함 기본 검증
-mvn test
+./mvnw test
 
 # 테스트 생략 빌드
-mvn -DskipTests package
+./mvnw -DskipTests package
 ```
 
 ## 디렉토리 구조

@@ -39,17 +39,17 @@ src/main/resources/
 
 ## 3. 빌드 및 기본 검증
 
-> 현재 Maven Wrapper(`mvnw`)는 없다. 로컬 환경에 Maven이 설치되어 있어야 한다.
+> Maven Wrapper(`mvnw`)를 사용한다. 로컬에 Maven이 없어도 `./mvnw` 기준으로 빌드/테스트를 실행할 수 있다.
 
 ```bash
 # 기본 빌드
-mvn package
+./mvnw package
 
 # 테스트 실행
-mvn test
+./mvnw test
 
 # 테스트 생략 빌드
-mvn -DskipTests package
+./mvnw -DskipTests package
 ```
 
 ## 4. 문서 허브
@@ -105,13 +105,14 @@ mvn -DskipTests package
 
 ## 7. 현재 상태 메모
 
-이 프로젝트는 하네스 문서 체계를 초기 구축한 상태다.
-현재는 아래 문서들을 기준으로 작업 방식을 정리하는 단계이며,
+이 프로젝트는 하네스 문서 체계를 초기 구축했고, Maven Wrapper(`mvnw`) 도입까지 반영한 상태다.
+현재는 문서 기반 작업 레일을 세운 뒤, 검증/자동화 영역을 순차적으로 보강하는 단계다.
+
 추후 다음 항목들을 순차적으로 보강할 수 있다.
 
-- README 지속 보강
+- README 및 docs 지속 보강
 - 테스트/검증 루틴 보강
-- Maven Wrapper 도입 검토
+- `./mvnw` 기준 최소 검증 흐름 정리
 - 디자인 시스템 마이그레이션 노트 정리
 - CI 도입
 
