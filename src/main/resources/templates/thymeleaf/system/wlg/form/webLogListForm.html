@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{cmm/layout/subLayout :: layout (
+            contentLink=~{::contentLink},
+            script=~{::script},
+            content=~{::content})}">
+
+<th:block th:fragment="contentLink">
+    <link rel="stylesheet" th:href="@{/css/system/wlg/webLogList.css}" />
+</th:block>
+
+<th:block th:fragment="script">
+    <script th:src="@{/js/system/wlg/webLogList.js}"></script>
+</th:block>
+
+<div th:fragment="content" class="wrap-inner">
+    <section class="sub-title">
+        <h2 class="txt-head-md">웹로그 관리</h2>
+    </section>
+
+    <section class="sub-contents">
+        <div class="conts-wrap">
+            <div class="search-form weblog-search-form">
+                <div class="select-group">
+                    <div class="select-box">
+                        <select class="select" id="searchType" name="searchType">
+                            <option value="url">URL</option>
+                            <option value="rqesterId">요청자ID</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-box">
+                    <input type="text" id="searchKeyword" name="searchKeyword" class="input" placeholder="검색어를 입력하세요">
+                </div>
+                <div class="date-range-box weblog-date-range">
+                    <div class="input-box">
+                        <input type="date" id="searchBgnDe" name="searchBgnDe" class="input">
+                    </div>
+                    <span class="date-separator">~</span>
+                    <div class="input-box">
+                        <input type="date" id="searchEndDe" name="searchEndDe" class="input">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="primary-button" id="searchBtn"><span>검색</span></button>
+                    <button type="button" class="tertiary-button" id="resetBtn"><span>초기화</span></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="conts-wrap table-box">
+            <div class="item-horizontal-box jst-btw align-ct mb-10">
+                <div class="total-count">
+                    <span class="txt-body-sm">Total: <strong id="totalCount">0</strong>건</span>
+                </div>
+            </div>
+
+            <div class="table-inner">
+                <table class="table-type01 select-table" id="webLogTable">
+                    <caption class="sr-only">웹로그 목록</caption>
+                    <colgroup>
+                        <col width="8%"/>
+                        <col width="42%"/>
+                        <col width="14%"/>
+                        <col width="16%"/>
+                        <col width="20%"/>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th class="tc">No</th>
+                        <th class="tc">URL</th>
+                        <th class="tc">요청자ID</th>
+                        <th class="tc">요청IP</th>
+                        <th class="tc">발생일시</th>
+                    </tr>
+                    </thead>
+                    <tbody id="webLogListBody">
+                    <tr>
+                        <td class="no-data-table" colspan="5">조회 결과가 없습니다.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="item-box jst-ct mt-20">
+                <div id="paginationArea" class="pagination"></div>
+            </div>
+        </div>
+    </section>
+
+    <script type="text/x-jquery-tmpl" id="emptyTemplate">
+        <tr>
+            <td class="no-data-table" colspan="5">조회 결과가 없습니다.</td>
+        </tr>
+    </script>
+
+    <script type="text/x-jquery-tmpl" id="listTemplate">
+        <tr class="tc">
+            <td>{{html rowNum}}</td>
+            <td class="tl">{{html url}}</td>
+            <td>{{if rqesterId}}{{html rqesterId}}{{else}}-{{/if}}</td>
+            <td>{{if rqesterIp}}{{html rqesterIp}}{{else}}-{{/if}}</td>
+            <td>{{html ocrnDt}}</td>
+        </tr>
+    </script>
+</div>
+</html>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="webLogDAO">
+
+    <insert id="insertWebLog" parameterType="biz.system.wlg.vo.WebLogVO">
+        INSERT INTO tb_web_log (
+            rqester_id,
+            rqester_ip,
+            url,
+            ocrn_dt
+        ) VALUES (
+            #{rqesterId},
+            #{rqesterIp},
+            #{url},
+            NOW()
+        )
+    </insert>
+
+    <sql id="webLogSearchQuery">
+        <if test="searchType != null and searchType != '' and searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test="searchType == 'rqesterId'">
+                    AND rqester_id LIKE CONCAT('%', #{searchKeyword}, '%')
+                </when>
+                <otherwise>
+                    AND url LIKE CONCAT('%', #{searchKeyword}, '%')
+                </otherwise>
+            </choose>
+        </if>
+
+        <if test="searchBgnDe != null and searchBgnDe != '' and searchEndDe != null and searchEndDe != ''">
+            AND ocrn_dt BETWEEN TO_TIMESTAMP(CONCAT(#{searchBgnDe}, ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS')
+            AND TO_TIMESTAMP(CONCAT(#{searchEndDe}, ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS')
+        </if>
+    </sql>
+
+    <select id="selectWebLogList" parameterType="biz.system.wlg.vo.WebLogVO" resultType="biz.system.wlg.vo.WebLogVO">
+        SELECT
+            demand_sn,
+            url,
+            rqester_id,
+            rqester_ip,
+            TO_CHAR(ocrn_dt, 'YYYY-MM-DD HH24:MI:SS') AS ocrn_dt,
+            ROW_NUMBER() OVER (ORDER BY ocrn_dt DESC) AS row_num
+        FROM tb_web_log
+        WHERE 1 = 1
+        <include refid="webLogSearchQuery"/>
+        ORDER BY ocrn_dt DESC
+        LIMIT #{searchVO.pageSize} OFFSET #{searchVO.offset}
+    </select>
+
+    <select id="selectWebLogListCount" parameterType="biz.system.wlg.vo.WebLogVO" resultType="int">
+        SELECT COUNT(1)
+        FROM tb_web_log
+        WHERE 1 = 1
+        <include refid="webLogSearchQuery"/>
+    </select>
+</mapper>

@@ -1,0 +1,15 @@
+@charset "utf-8";
+
+.weblog-search-form {
+  gap: 1.2rem;
+}
+
+.weblog-date-range {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+
+.weblog-date-range .input-box {
+  min-width: 16rem;
+}

@@ -1,5 +1,7 @@
 package egovframework.com.config;
 
+import egovframework.com.cmm.interceptor.CustomAuthenticInterceptor;
+import egovframework.com.cmm.interceptor.WebLogInterceptor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
@@ -10,8 +12,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import egovframework.com.cmm.interceptor.CustomAuthenticInterceptor;
-
 /**
  * @ClassName : EgovConfigWebDispatcherServlet.java
  * @Description : DispatcherServlet 설정
@@ -19,53 +19,47 @@ import egovframework.com.cmm.interceptor.CustomAuthenticInterceptor;
  * @author : 윤주호
  * @since  : 2021. 7. 20
  * @version : 1.0
- *
- * <pre>
- * << 개정이력(Modification Information) >>
- *
- *   수정일              수정자               수정내용
- *  -------------  ------------   ---------------------
- *   2021. 7. 20    윤주호               최초 생성
- * </pre>
- *
  */
 @Configuration
 @ComponentScan(basePackages = { "egovframework", "biz" }, excludeFilters = {
-	@ComponentScan.Filter(type = FilterType.ANNOTATION, value = Service.class),
-	@ComponentScan.Filter(type = FilterType.ANNOTATION, value = Repository.class),
-	@ComponentScan.Filter(type = FilterType.ANNOTATION, value = Configuration.class)
+        @ComponentScan.Filter(type = FilterType.ANNOTATION, value = Service.class),
+        @ComponentScan.Filter(type = FilterType.ANNOTATION, value = Repository.class),
+        @ComponentScan.Filter(type = FilterType.ANNOTATION, value = Configuration.class)
 })
 public class EgovConfigWebDispatcherServlet implements WebMvcConfigurer {
 
-	// =====================================================================
-	// RequestMappingHandlerMapping 설정
-	// =====================================================================
-	// -------------------------------------------------------------
-	// RequestMappingHandlerMapping 설정 - Interceptor 추가
-	// -------------------------------------------------------------
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new CustomAuthenticInterceptor()).addPathPatterns("/**/*.do").excludePathPatterns("/login/**", "/auth/**", "/error/**");
-	}
+    private final WebLogInterceptor webLogInterceptor;
 
-	// -------------------------------------------------------------
-	// RequestMappingHandlerMapping 설정 View Controller 추가
-	// -------------------------------------------------------------
-	@Override
-	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.addViewController("/").setViewName("redirect:/login/loginForm.do");
-		registry.addViewController("/cmmn/validator.do").setViewName("cmmn/validator");
-	}
+    public EgovConfigWebDispatcherServlet(WebLogInterceptor webLogInterceptor) {
+        this.webLogInterceptor = webLogInterceptor;
+    }
 
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/js/**")
-				.addResourceLocations("classpath:/static/js/", "classpath:/public/js/", "/js/");
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new CustomAuthenticInterceptor())
+                .addPathPatterns("/**/*.do")
+                .excludePathPatterns("/login/**", "/auth/**", "/error/**");
 
-		registry.addResourceHandler("/css/**")
-				.addResourceLocations("classpath:/static/css/", "classpath:/public/css/", "/css/");
+        registry.addInterceptor(webLogInterceptor)
+                .addPathPatterns("/**/*.do", "/api/**")
+                .excludePathPatterns("/login/**", "/auth/**", "/error/**", "/system/wlg/**", "/api/system/wlg/**");
+    }
 
-		registry.addResourceHandler("/images/**")
-				.addResourceLocations("classpath:/static/images/", "classpath:/public/images/", "/images/");
-	}
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/").setViewName("redirect:/login/loginForm.do");
+        registry.addViewController("/cmmn/validator.do").setViewName("cmmn/validator");
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/js/**")
+                .addResourceLocations("classpath:/static/js/", "classpath:/public/js/", "/js/");
+
+        registry.addResourceHandler("/css/**")
+                .addResourceLocations("classpath:/static/css/", "classpath:/public/css/", "/css/");
+
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations("classpath:/static/images/", "classpath:/public/images/", "/images/");
+    }
 }
