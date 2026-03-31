@@ -67,8 +67,8 @@ src/main/resources/
   UI/템플릿 작업 규칙
 - `docs/ui-component-patterns.md`  
   현재 클래스 체계 기준 UI 마크업/컴포넌트 예시
-- `docs/design-reference-adoption.md`  
-  reference-cursor 자료를 현재 프로젝트에 어떻게 반영할지 정리한 비교표/전략 문서
+- `docs/verification.md`  
+  `./mvnw` 기준 최소 검증 루틴 문서
 
 ### 작업 체크리스트
 - `docs/task-checklists/ui-fix.md`  
@@ -93,9 +93,10 @@ src/main/resources/
 4. `docs/task-checklists/bugfix.md`
 5. `docs/verification.md`
 
-### reference-cursor 반영 검토
-1. `docs/design-reference-adoption.md`
-2. 관련 규칙 문서(`ui-rules.md`, `backend-rules.md`) 확인
+### 신규 기능 또는 참고 소스 반영 검토
+1. 관련 규칙 문서(`ui-rules.md`, `backend-rules.md`) 확인
+2. 현재 프로젝트 구조와 충돌 여부 확인
+3. 필요 시 별도 설계/이식 계획 수립
 
 ## 6. 현재 운영 원칙
 

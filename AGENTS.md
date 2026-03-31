@@ -31,7 +31,6 @@
 - 검증 루틴: `docs/verification.md`
 - 화면 수정 작업 절차: `docs/task-checklists/ui-fix.md`
 - 버그 수정 작업 절차: `docs/task-checklists/bugfix.md`
-- reference 반영 판단 기준: `docs/design-reference-adoption.md`
 
 ## 빌드 및 실행
 
