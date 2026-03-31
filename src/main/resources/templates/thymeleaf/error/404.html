@@ -1,35 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>404</title>
+    <title>404 | Spatialt 인트라넷</title>
+    <th:block th:replace="~{cmm/meta :: metaLayout}"></th:block>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/reset.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/common.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/components.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/error/error.css}">
 </head>
-<link type="text/css" rel="stylesheet" href="/css/error.css" >
-<link type="text/css" rel="stylesheet" href="/css/reset.css" >
-<link type="text/css" rel="stylesheet" href="/css/components.css" >
-<link type="text/css" rel="stylesheet" href="/css/common.css" >
-<body>
-<header>
-    <h1><a href="/"><img class="color" src="/images/funLogo.png"><img class="white" src="/images/funLogo_w.png"></a></h1>
-</header>
-<main>
-    <div class="error-inner">
-        <div class="error-img">
-            <img src="/images/error_bg.svg" alt="error">
-        </div>
-        <div class="error-info">
-            <h2 class="error-name">404</h2>
-            <p class="error-info-txt">
-                죄송합니다. 페이지를 찾을 수 없습니다.
-                <span>존재하지 않는 주소를 입력하셨거나, 요청하신 페이지의 주소가 변경, 삭제되어 찾을 수 없습니다.</span>
-            </p>
-        </div>
-        <div class="button-box">
-            <button class="back-btn" onclick="history.back()">이전으로</button>
-            <button class="primary-btn" onclick="location.href='/'">메인으로</button>
-        </div>
-    </div>
-</main>
+<body class="error-body">
+<div class="error-page">
+    <header class="error-header">
+        <a href="/main/mainForm.do" class="error-logo" aria-label="메인으로 이동">
+            <img src="/images/logo.png" alt="Spatialt 로고">
+        </a>
+    </header>
 
+    <main class="error-main">
+        <section class="error-card" aria-labelledby="error-title">
+            <span class="error-badge">ERROR 404</span>
+            <h1 id="error-title" class="txt-head-lg error-title">요청하신 페이지를 찾을 수 없습니다.</h1>
+            <p class="txt-body-md error-desc">
+                입력하신 주소가 잘못되었거나, 페이지가 이동 또는 삭제되었을 수 있습니다.<br>
+                아래 안내를 확인한 뒤 다시 시도해 주세요.
+            </p>
+
+            <div class="error-guide">
+                <p class="txt-head-xs error-guide-title">확인해 볼 사항</p>
+                <ul class="txt-body-sm error-desc error-guide-list">
+                    <li>주소(URL)에 오타가 없는지 확인해 주세요.</li>
+                    <li>메뉴를 통해 다시 접근하거나, 메인 화면에서 원하는 페이지를 찾아주세요.</li>
+                    <li>계속 같은 문제가 발생하면 관리자에게 문의해 주세요.</li>
+                </ul>
+            </div>
+
+            <div class="error-actions">
+                <button type="button" class="outline-button gray lg" onclick="history.back()"><span>이전 페이지</span></button>
+                <a href="/main/mainForm.do" class="primary-button lg"><span>메인으로 이동</span></a>
+            </div>
+        </section>
+    </main>
+</div>
 </body>
 </html>

@@ -1,0 +1,117 @@
+@charset "utf-8";
+
+body.error-body {
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--spt-primary-0) 0%, var(--spt-background) 100%);
+}
+
+.error-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.error-header {
+  display: flex;
+  justify-content: center;
+  padding: var(--spt-number-4) var(--spt-number-3) 0;
+}
+
+.error-header .error-logo {
+  display: inline-flex;
+}
+
+.error-header .error-logo img {
+  width: 16rem;
+  height: auto;
+}
+
+.error-main {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spt-number-4);
+}
+
+.error-card {
+  width: 100%;
+  max-width: 72rem;
+  padding: var(--spt-number-6);
+  border: 1px solid var(--spt-border-line-2);
+  border-radius: 2.4rem;
+  background-color: var(--spt-white);
+  box-shadow: 0 2rem 5rem rgba(61, 64, 135, 0.08);
+}
+
+.error-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 8.4rem;
+  height: 3.2rem;
+  padding: 0 1.2rem;
+  border-radius: 999px;
+  background-color: var(--spt-primary-0);
+  color: var(--spt-primary-6);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.error-title {
+  margin-top: var(--spt-number-3);
+  color: var(--spt-gray-9);
+}
+
+.error-desc {
+  margin-top: var(--spt-number-2);
+  color: var(--spt-gray-5);
+  line-height: 1.7;
+}
+
+.error-guide {
+  margin-top: var(--spt-number-4);
+  padding: var(--spt-number-3);
+  border-radius: 1.6rem;
+  background-color: var(--spt-background);
+}
+
+.error-guide-title {
+  margin-bottom: var(--spt-number-1);
+}
+
+.error-guide-list {
+  padding-left: 1.8rem;
+}
+
+.error-guide-list li + li {
+  margin-top: .8rem;
+}
+
+.error-actions {
+  display: flex;
+  gap: var(--spt-number-2);
+  margin-top: var(--spt-number-4);
+  flex-wrap: wrap;
+}
+
+.error-actions a,
+.error-actions button {
+  min-width: 14rem;
+}
+
+@media (max-width: 768px) {
+  .error-card {
+    padding: var(--spt-number-4);
+    border-radius: 1.6rem;
+  }
+
+  .error-actions {
+    flex-direction: column;
+  }
+
+  .error-actions a,
+  .error-actions button {
+    width: 100%;
+  }
+}
