@@ -1,0 +1,37 @@
+@charset "utf-8";
+
+.notice-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 5.6rem;
+  height: 2.8rem;
+  padding: 0 .8rem;
+  border-radius: 999px;
+  background-color: var(--spt-primary-0);
+  color: var(--spt-primary-6);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.notice-title-cell {
+  font-weight: 600;
+}
+
+.notice-form-table .textarea,
+.notice-textarea {
+  width: 100%;
+  min-height: 28rem;
+  padding: 1.6rem;
+  border: 1px solid var(--spt-border-line-2);
+  border-radius: 1.2rem;
+  resize: vertical;
+  font-size: 1.4rem;
+  line-height: 1.6;
+}
+
+.notice-content-box {
+  white-space: pre-wrap;
+  min-height: 24rem;
+  line-height: 1.7;
+}

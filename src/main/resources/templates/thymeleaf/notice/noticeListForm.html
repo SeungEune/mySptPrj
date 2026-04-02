@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{cmm/layout/subLayout :: layout (contentLink=~{::contentLink}, script=~{::script}, content=~{::content})}">
+<th:block th:fragment="contentLink">
+    <link rel="stylesheet" th:href="@{/css/notice/notice.css}" />
+</th:block>
+<th:block th:fragment="script">
+    <script th:inline="javascript">
+        const CAN_MANAGE_NOTICE = /*[[${canManageNotice}]]*/ false;
+    </script>
+    <script th:src="@{/js/notice/noticeList.js}"></script>
+</th:block>
+<div th:fragment="content" class="wrap-inner">
+    <section class="sub-title">
+        <h2 class="txt-head-md">공지사항</h2>
+    </section>
+
+    <section class="sub-contents">
+        <div class="conts-wrap">
+            <div class="search-form">
+                <div class="select-group">
+                    <div class="select-box">
+                        <select class="select" id="searchType" name="searchType">
+                            <option value="noticeTitle">제목</option>
+                            <option value="noticeCn">내용</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-box">
+                    <input type="text" id="searchKeyword" name="searchKeyword" class="input" placeholder="검색어를 입력하세요">
+                </div>
+                <div class="button-group">
+                    <button type="button" class="primary-button" id="searchBtn"><span>검색</span></button>
+                    <button type="button" class="tertiary-button" id="resetBtn"><span>초기화</span></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="conts-wrap table-box">
+            <div class="item-horizontal-box jst-btw align-ct mb-10">
+                <div class="total-count">
+                    <span class="txt-body-sm">Total: <strong id="totalCount">0</strong>건</span>
+                </div>
+                <div class="item-horizontal-box g10" id="noticeManageArea" th:if="${canManageNotice}">
+                    <button type="button" class="primary-button" id="registerBtn"><span>공지 등록</span></button>
+                </div>
+            </div>
+            <div class="table-inner">
+                <table class="table-type01 select-table" id="noticeTable">
+                    <caption class="sr-only">공지사항 목록</caption>
+                    <colgroup>
+                        <col width="8%"/>
+                        <col width="10%"/>
+                        <col/>
+                        <col width="14%"/>
+                        <col width="10%"/>
+                        <col width="16%"/>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th class="tc">No</th>
+                        <th class="tc">중요</th>
+                        <th class="tc">제목</th>
+                        <th class="tc">등록자</th>
+                        <th class="tc">조회수</th>
+                        <th class="tc">등록일</th>
+                    </tr>
+                    </thead>
+                    <tbody id="noticeListBody">
+                    <tr>
+                        <td class="no-data-table" colspan="6">조회 결과가 없습니다.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="item-box jst-ct mt-20">
+                <div id="paginationArea" class="pagination"></div>
+            </div>
+        </div>
+    </section>
+
+    <script type="text/x-jquery-tmpl" id="emptyTemplate">
+    <tr>
+        <td class="no-data-table" colspan="6">조회 결과가 없습니다.</td>
+    </tr>
+    </script>
+
+    <script type="text/x-jquery-tmpl" id="listTemplate">
+    <tr class="tc cur-point" data-notice-sn="{{html noticeSn}}" onclick="fn_goViewForm('{{html noticeSn}}')">
+        <td>{{html rowNum}}</td>
+        <td>{{if importantYn === 'Y'}}<span class="notice-badge">중요</span>{{else}}-{{/if}}</td>
+        <td class="tl notice-title-cell">{{html noticeTitle}}</td>
+        <td>{{if registerNm}}{{html registerNm}}{{else}}{{html registerId}}{{/if}}</td>
+        <td>{{if viewCnt}}{{html viewCnt}}{{else}}0{{/if}}</td>
+        <td>{{html registDt}}</td>
+    </tr>
+    </script>
+</div>
+</html>

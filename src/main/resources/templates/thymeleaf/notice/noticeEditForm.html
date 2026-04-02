@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{cmm/layout/subLayout :: layout (contentLink=~{::contentLink}, script=~{::script}, content=~{::content})}">
+<th:block th:fragment="contentLink">
+    <link rel="stylesheet" th:href="@{/css/notice/notice.css}" />
+</th:block>
+<th:block th:fragment="script">
+    <script th:inline="javascript">
+        const NOTICE_SN = /*[[${noticeSn}]]*/ 0;
+    </script>
+    <script th:src="@{/js/notice/noticeEditForm.js}"></script>
+</th:block>
+<div th:fragment="content" class="wrap-inner">
+    <section class="sub-title"><h2 class="txt-head-md">공지사항 수정</h2></section>
+    <section class="sub-contents">
+        <div class="conts-wrap">
+            <div class="table-box type01">
+                <div class="table-inner">
+                    <table class="table-type01 form-table notice-form-table">
+                        <caption class="sr-only">공지사항 수정</caption>
+                        <colgroup><col width="20%"><col></colgroup>
+                        <tbody>
+                        <tr>
+                            <th><label for="noticeTitle">제목 <span class="required">*</span></label></th>
+                            <td><input type="text" id="noticeTitle" class="input" placeholder="제목을 입력하세요"></td>
+                        </tr>
+                        <tr>
+                            <th>중요 여부</th>
+                            <td>
+                                <div class="radio-group">
+                                    <label class="radio-label"><input type="radio" name="importantYn" value="Y"> 중요</label>
+                                    <label class="radio-label"><input type="radio" name="importantYn" value="N"> 일반</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="noticeCn">내용 <span class="required">*</span></label></th>
+                            <td><textarea id="noticeCn" class="textarea notice-textarea" placeholder="공지 내용을 입력하세요"></textarea></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="item-horizontal-box jst-end g10 mt-20">
+                <button type="button" class="primary-button" id="updateBtn"><span>수정</span></button>
+                <button type="button" class="tertiary-button" id="cancelBtn"><span>취소</span></button>
+            </div>
+        </div>
+    </section>
+</div>
+</html>

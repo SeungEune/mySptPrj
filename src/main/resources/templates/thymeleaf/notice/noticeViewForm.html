@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{cmm/layout/subLayout :: layout (contentLink=~{::contentLink}, script=~{::script}, content=~{::content})}">
+<th:block th:fragment="contentLink">
+    <link rel="stylesheet" th:href="@{/css/notice/notice.css}" />
+</th:block>
+<th:block th:fragment="script">
+    <script th:inline="javascript">
+        const NOTICE_SN = /*[[${noticeSn}]]*/ 0;
+        const CAN_MANAGE_NOTICE = /*[[${canManageNotice}]]*/ false;
+    </script>
+    <script th:src="@{/js/notice/noticeViewForm.js}"></script>
+</th:block>
+<div th:fragment="content" class="wrap-inner">
+    <section class="sub-title"><h2 class="txt-head-md">공지사항 상세</h2></section>
+    <section class="sub-contents">
+        <div class="conts-wrap">
+            <div class="table-box type01">
+                <div class="table-inner">
+                    <table class="table-type01 form-table notice-form-table">
+                        <caption class="sr-only">공지사항 상세</caption>
+                        <colgroup><col width="20%"><col></colgroup>
+                        <tbody>
+                        <tr><th>제목</th><td id="noticeTitle">-</td></tr>
+                        <tr><th>중요 여부</th><td id="importantYn">-</td></tr>
+                        <tr><th>등록자</th><td id="registerInfo">-</td></tr>
+                        <tr><th>조회수</th><td id="viewCnt">0</td></tr>
+                        <tr><th>내용</th><td><div id="noticeCn" class="notice-content-box">-</div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="item-horizontal-box jst-end g10 mt-20">
+                <button type="button" class="secondary-button" id="listBtn"><span>목록</span></button>
+                <button type="button" class="primary-button" id="editBtn" th:if="${canManageNotice}"><span>수정</span></button>
+                <button type="button" class="tertiary-button" id="deleteBtn" th:if="${canManageNotice}"><span>삭제</span></button>
+            </div>
+        </div>
+    </section>
+</div>
+</html>

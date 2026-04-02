@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="noticeDAO">
+
+    <sql id="noticeSearchQuery">
+        AND use_yn = 'Y'
+        <if test="searchType != null and searchType != '' and searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test="searchType == 'noticeCn'">
+                    AND notice_cn LIKE CONCAT('%', #{searchKeyword}, '%')
+                </when>
+                <otherwise>
+                    AND notice_title LIKE CONCAT('%', #{searchKeyword}, '%')
+                </otherwise>
+            </choose>
+        </if>
+    </sql>
+
+    <select id="selectNoticeListCnt" parameterType="biz.notice.vo.NoticeVO" resultType="int">
+        SELECT COUNT(1)
+          FROM tb_notice
+         WHERE 1 = 1
+        <include refid="noticeSearchQuery"/>
+    </select>
+
+    <select id="selectNoticeList" parameterType="biz.notice.vo.NoticeVO" resultType="biz.notice.vo.NoticeVO">
+        SELECT
+            notice_sn,
+            notice_title,
+            notice_cn,
+            important_yn,
+            view_cnt,
+            use_yn,
+            register_id,
+            TO_CHAR(regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS regist_dt,
+            updusr_id,
+            TO_CHAR(updt_dt, 'YYYY-MM-DD HH24:MI:SS') AS updt_dt,
+            ROW_NUMBER() OVER (ORDER BY important_yn ASC, regist_dt ASC) AS row_num
+        FROM tb_notice
+        WHERE 1 = 1
+        <include refid="noticeSearchQuery"/>
+        ORDER BY important_yn DESC, regist_dt DESC
+        LIMIT #{searchVO.pageSize} OFFSET #{searchVO.offset}
+    </select>
+
+    <select id="selectNoticeDetail" parameterType="long" resultType="biz.notice.vo.NoticeVO">
+        SELECT
+            n.notice_sn,
+            n.notice_title,
+            n.notice_cn,
+            n.important_yn,
+            n.view_cnt,
+            n.use_yn,
+            n.register_id,
+            u.user_nm AS register_nm,
+            TO_CHAR(n.regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS regist_dt,
+            n.updusr_id,
+            TO_CHAR(n.updt_dt, 'YYYY-MM-DD HH24:MI:SS') AS updt_dt
+        FROM tb_notice n
+        LEFT OUTER JOIN tb_user u
+          ON n.register_id = u.user_id
+        WHERE n.notice_sn = #{noticeSn}
+          AND n.use_yn = 'Y'
+    </select>
+
+    <insert id="insertNotice" parameterType="biz.notice.vo.NoticeVO">
+        INSERT INTO tb_notice (
+            notice_title,
+            notice_cn,
+            important_yn,
+            view_cnt,
+            use_yn,
+            register_id,
+            regist_dt
+        ) VALUES (
+            #{noticeTitle},
+            #{noticeCn},
+            #{importantYn},
+            0,
+            'Y',
+            #{registerId},
+            NOW()
+        )
+    </insert>
+
+    <update id="updateNotice" parameterType="biz.notice.vo.NoticeVO">
+        UPDATE tb_notice
+           SET notice_title = #{noticeTitle},
+               notice_cn = #{noticeCn},
+               important_yn = #{importantYn},
+               updusr_id = #{updusrId},
+               updt_dt = NOW()
+         WHERE notice_sn = #{noticeSn}
+           AND use_yn = 'Y'
+    </update>
+
+    <update id="deleteNotice" parameterType="long">
+        UPDATE tb_notice
+           SET use_yn = 'N',
+               updt_dt = NOW()
+         WHERE notice_sn = #{noticeSn}
+           AND use_yn = 'Y'
+    </update>
+
+    <update id="incrementViewCnt" parameterType="long">
+        UPDATE tb_notice
+           SET view_cnt = COALESCE(view_cnt, 0) + 1
+         WHERE notice_sn = #{noticeSn}
+           AND use_yn = 'Y'
+    </update>
+</mapper>
