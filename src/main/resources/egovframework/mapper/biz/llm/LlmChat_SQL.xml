@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="llmChatDAO">
+
+    <insert id="insertChatSession" parameterType="biz.llm.vo.LlmChatSessionVO" useGeneratedKeys="true" keyProperty="chatSessionId">
+        INSERT INTO tb_llm_chat_session (
+            session_title,
+            prompt_role_cd,
+            frst_register_id,
+            frst_regist_dt,
+            last_updt_dt,
+            use_yn
+        ) VALUES (
+            #{sessionTitle},
+            #{promptRoleCd},
+            #{frstRegisterId},
+            NOW(),
+            NOW(),
+            'Y'
+        )
+    </insert>
+
+    <select id="selectChatSessionList" parameterType="biz.llm.vo.LlmChatSessionVO" resultType="biz.llm.vo.LlmChatSessionVO">
+        SELECT
+            chat_session_id,
+            session_title,
+            prompt_role_cd,
+            frst_register_id,
+            TO_CHAR(frst_regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS frst_regist_dt,
+            TO_CHAR(last_updt_dt, 'YYYY-MM-DD HH24:MI:SS') AS last_updt_dt,
+            use_yn
+        FROM tb_llm_chat_session
+        WHERE use_yn = 'Y'
+          AND frst_register_id = #{frstRegisterId}
+        ORDER BY last_updt_dt DESC, chat_session_id DESC
+    </select>
+
+    <select id="selectChatSessionDetail" parameterType="long" resultType="biz.llm.vo.LlmChatSessionVO">
+        SELECT
+            chat_session_id,
+            session_title,
+            prompt_role_cd,
+            frst_register_id,
+            TO_CHAR(frst_regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS frst_regist_dt,
+            TO_CHAR(last_updt_dt, 'YYYY-MM-DD HH24:MI:SS') AS last_updt_dt,
+            use_yn
+        FROM tb_llm_chat_session
+        WHERE chat_session_id = #{chatSessionId}
+          AND use_yn = 'Y'
+    </select>
+
+    <update id="updateChatSessionLastUpdtDt" parameterType="long">
+        UPDATE tb_llm_chat_session
+           SET last_updt_dt = NOW()
+         WHERE chat_session_id = #{chatSessionId}
+           AND use_yn = 'Y'
+    </update>
+
+    <insert id="insertChatHistory" parameterType="biz.llm.vo.LlmChatHistoryVO" useGeneratedKeys="true" keyProperty="chatHistoryId">
+        INSERT INTO tb_llm_chat_history (
+            chat_session_id,
+            message_seq,
+            message_role,
+            message_content,
+            response_time_ms,
+            frst_register_id,
+            frst_regist_dt
+        ) VALUES (
+            #{chatSessionId,jdbcType=BIGINT},
+            #{messageSeq,jdbcType=INTEGER},
+            #{messageRole,jdbcType=VARCHAR},
+            #{messageContent,jdbcType=LONGVARCHAR},
+            #{responseTimeMs,jdbcType=BIGINT},
+            #{frstRegisterId,jdbcType=VARCHAR},
+            NOW()
+        )
+    </insert>
+
+    <select id="selectChatHistoryList" parameterType="long" resultType="biz.llm.vo.LlmChatHistoryVO">
+        SELECT
+            chat_history_id,
+            chat_session_id,
+            message_seq,
+            message_role,
+            message_content,
+            response_time_ms,
+            frst_register_id,
+            TO_CHAR(frst_regist_dt, 'YYYY-MM-DD HH24:MI:SS') AS frst_regist_dt
+        FROM tb_llm_chat_history
+        WHERE chat_session_id = #{chatSessionId}
+        ORDER BY message_seq ASC, chat_history_id ASC
+    </select>
+
+    <select id="selectNextMessageSeq" parameterType="long" resultType="int">
+        SELECT COALESCE(MAX(message_seq), 0) + 1
+        FROM tb_llm_chat_history
+        WHERE chat_session_id = #{chatSessionId}
+    </select>
+</mapper>
