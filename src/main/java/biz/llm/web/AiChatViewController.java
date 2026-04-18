@@ -22,4 +22,11 @@ public class AiChatViewController {
         model.addAttribute("modelName", modelName);
         return "llm/chatForm";
     }
+
+    @GetMapping("/langchainChatForm.do")
+    public String langchainChatForm(Model model) {
+        model.addAttribute("pageTitle", "LangChain 채팅");
+        model.addAttribute("modelName", modelName);
+        return "llm/langchainChatForm";
+    }
 }

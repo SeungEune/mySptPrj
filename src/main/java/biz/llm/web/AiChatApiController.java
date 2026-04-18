@@ -1,6 +1,7 @@
 package biz.llm.web;
 
 import biz.llm.service.AiChatService;
+import biz.llm.service.LangChainChatService;
 import biz.llm.vo.*;
 import egovframework.com.cmm.response.ApiResponseVO;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,9 @@ public class AiChatApiController {
     @Resource(name = "aiChatService")
     private AiChatService aiChatService;
 
+    @Resource(name = "langChainChatService")
+    private LangChainChatService langChainChatService;
+
     /**
      * 채팅 메시지 전송 API
      */
@@ -46,6 +50,22 @@ public class AiChatApiController {
             return ApiResponseVO.apiResponse(null, HttpStatus.BAD_REQUEST.value(), e.getMessage());
         } catch (Exception e) {
             log.error("AI 메시지 처리 중 오류 발생", e);
+            return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "AI 응답 처리 중 오류가 발생했습니다.");
+        }
+    }
+
+    /**
+     * 현재 연결 대상으로 설정된 모델 정보를 조회하는 API
+     */
+    @PostMapping("/sendMessageLangChain.do")
+    public ResponseEntity<?> sendMessageLangChain(@RequestBody AiChatRequestVO requestVO) {
+        try {
+            AiChatResponseVO responseVO = langChainChatService.sendMessage(requestVO);
+            return ApiResponseVO.apiResponse(responseVO, HttpStatus.OK.value(), "응답 성공");
+        } catch (IllegalArgumentException e) {
+            return ApiResponseVO.apiResponse(null, HttpStatus.BAD_REQUEST.value(), e.getMessage());
+        } catch (Exception e) {
+            log.error("LangChain4j AI 메시지 처리 중 오류 발생", e);
             return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "AI 응답 처리 중 오류가 발생했습니다.");
         }
     }
