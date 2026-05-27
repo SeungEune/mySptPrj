@@ -219,7 +219,7 @@ function fn_sendMessage() {
         history: chatHistory.slice(0, chatHistory.length - 1)
     };
 
-    callModule.call(Util.getRequestUrl('/llm/sendMessageLangChain.do'), requestData, (result) => {
+    callModule.call(Util.getRequestUrl('/llm/sendMessage.do'), requestData, (result) => {
         fn_removeLoading();
 
         if (result && result.status && result.status.code !== 200) {

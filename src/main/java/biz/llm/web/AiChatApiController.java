@@ -2,6 +2,7 @@ package biz.llm.web;
 
 import biz.llm.service.AiChatService;
 import biz.llm.service.LangChainChatService;
+import biz.llm.service.LlmChatSessionService;
 import biz.llm.vo.*;
 import egovframework.com.cmm.response.ApiResponseVO;
 import lombok.extern.slf4j.Slf4j;
@@ -38,34 +39,22 @@ public class AiChatApiController {
     @Resource(name = "langChainChatService")
     private LangChainChatService langChainChatService;
 
+    @Resource(name = "llmChatSessionService")
+    private LlmChatSessionService llmChatSessionService;
+
     /**
-     * 채팅 메시지 전송 API
+     * 기본 채팅 메시지 전송 API
+     * 현재 기본 경로는 LangChain 경로로 전환한다.
      */
     @PostMapping("/sendMessage.do")
     public ResponseEntity<?> sendMessage(@RequestBody AiChatRequestVO requestVO) {
-        try {
-            AiChatResponseVO responseVO = aiChatService.sendMessage(requestVO);
-            return ApiResponseVO.apiResponse(responseVO, HttpStatus.OK.value(), "응답 성공");
-        } catch (IllegalArgumentException e) {
-            return ApiResponseVO.apiResponse(null, HttpStatus.BAD_REQUEST.value(), e.getMessage());
-        } catch (Exception e) {
-            log.error("AI 메시지 처리 중 오류 발생", e);
-            return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "AI 응답 처리 중 오류가 발생했습니다.");
-        }
-    }
-
-    /**
-     * 현재 연결 대상으로 설정된 모델 정보를 조회하는 API
-     */
-    @PostMapping("/sendMessageLangChain.do")
-    public ResponseEntity<?> sendMessageLangChain(@RequestBody AiChatRequestVO requestVO) {
         try {
             AiChatResponseVO responseVO = langChainChatService.sendMessage(requestVO);
             return ApiResponseVO.apiResponse(responseVO, HttpStatus.OK.value(), "응답 성공");
         } catch (IllegalArgumentException e) {
             return ApiResponseVO.apiResponse(null, HttpStatus.BAD_REQUEST.value(), e.getMessage());
         } catch (Exception e) {
-            log.error("LangChain4j AI 메시지 처리 중 오류 발생", e);
+            log.error("LangChain4j 기본 메시지 처리 중 오류 발생", e);
             return ApiResponseVO.apiResponse(null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "AI 응답 처리 중 오류가 발생했습니다.");
         }
     }
@@ -106,7 +95,7 @@ public class AiChatApiController {
     @GetMapping("/getPromptRoleList.do")
     public ResponseEntity<?> getPromptRoleList() {
         try {
-            List<LlmPromptRoleVO> roleList = aiChatService.getPromptRoleList();
+            List<LlmPromptRoleVO> roleList = llmChatSessionService.getPromptRoleList();
             return ApiResponseVO.apiResponse(roleList, null, HttpStatus.OK.value(), "조회되었습니다.");
         } catch (Exception e) {
             log.error("프롬프트 역할 목록 조회 중 오류 발생", e);
@@ -120,7 +109,7 @@ public class AiChatApiController {
     @PostMapping("/createSession.do")
     public ResponseEntity<?> createSession(@RequestBody LlmChatSessionCreateVO createVO) {
         try {
-            LlmChatSessionVO sessionVO = aiChatService.createChatSession(createVO);
+            LlmChatSessionVO sessionVO = llmChatSessionService.createChatSession(createVO);
             return ApiResponseVO.apiResponse(sessionVO, HttpStatus.OK.value(), "채팅 세션이 생성되었습니다.");
         } catch (IllegalArgumentException e) {
             return ApiResponseVO.apiResponse(null, HttpStatus.BAD_REQUEST.value(), e.getMessage());
@@ -136,7 +125,7 @@ public class AiChatApiController {
     @PostMapping("/getSessionList.do")
     public ResponseEntity<?> getSessionList() {
         try {
-            List<LlmChatSessionVO> sessionList = aiChatService.getChatSessionList();
+            List<LlmChatSessionVO> sessionList = llmChatSessionService.getChatSessionList();
             return ApiResponseVO.apiResponse(sessionList, null, HttpStatus.OK.value(), "조회되었습니다.");
         } catch (Exception e) {
             log.error("채팅 세션 목록 조회 중 오류 발생", e);
@@ -156,7 +145,7 @@ public class AiChatApiController {
             }
 
             Long chatSessionId = Long.valueOf(String.valueOf(chatSessionIdObj));
-            LlmChatSessionDetailVO detailVO = aiChatService.getChatSessionDetail(chatSessionId);
+            LlmChatSessionDetailVO detailVO = llmChatSessionService.getChatSessionDetail(chatSessionId);
             return ApiResponseVO.apiResponse(detailVO, HttpStatus.OK.value(), "조회되었습니다.");
         } catch (IllegalArgumentException e) {
             return ApiResponseVO.apiResponse(null, HttpStatus.BAD_REQUEST.value(), e.getMessage());

@@ -2,6 +2,7 @@ package biz.llm.service.impl;
 
 import biz.llm.dao.LlmChatDAO;
 import biz.llm.service.AiChatService;
+import biz.llm.service.LlmChatSessionService;
 import biz.llm.vo.*;
 import biz.util.AuthService;
 import biz.util.StringUtil;
@@ -125,48 +126,6 @@ public class AiChatServiceImpl implements AiChatService {
         return responseVO;
     }
 
-    @Override
-    public List<LlmPromptRoleVO> getPromptRoleList() {
-        return LlmPromptRoleType.toRoleVOList();
-    }
-
-    @Override
-    public LlmChatSessionVO createChatSession(LlmChatSessionCreateVO createVO) {
-        if (createVO == null || StringUtil.isEmpty(createVO.getPromptRoleCd())) {
-            throw new IllegalArgumentException("프롬프트 역할은 필수입니다.");
-        }
-
-        LlmChatSessionVO sessionVO = new LlmChatSessionVO();
-        sessionVO.setPromptRoleCd(createVO.getPromptRoleCd());
-        sessionVO.setSessionTitle(buildSessionTitle(createVO.getSessionTitle(), createVO.getPromptRoleCd()));
-        sessionVO.setFrstRegisterId(authService.getCurrentUserId());
-        llmChatDAO.insertChatSession(sessionVO);
-        return llmChatDAO.selectChatSessionDetail(sessionVO.getChatSessionId());
-    }
-
-    @Override
-    public List<LlmChatSessionVO> getChatSessionList() {
-        LlmChatSessionVO sessionVO = new LlmChatSessionVO();
-        sessionVO.setFrstRegisterId(authService.getCurrentUserId());
-        return llmChatDAO.selectChatSessionList(sessionVO);
-    }
-
-    @Override
-    public LlmChatSessionDetailVO getChatSessionDetail(Long chatSessionId) {
-        if (chatSessionId == null) {
-            throw new IllegalArgumentException("채팅 세션 ID는 필수입니다.");
-        }
-
-        LlmChatSessionVO sessionVO = llmChatDAO.selectChatSessionDetail(chatSessionId);
-        if (sessionVO == null) {
-            throw new IllegalArgumentException("존재하지 않는 채팅 세션입니다.");
-        }
-
-        LlmChatSessionDetailVO detailVO = new LlmChatSessionDetailVO();
-        detailVO.setSessionInfo(sessionVO);
-        detailVO.setHistoryList(llmChatDAO.selectChatHistoryList(chatSessionId));
-        return detailVO;
-    }
 
     private void validateRequest(AiChatRequestVO requestVO) {
         if (requestVO == null || StringUtil.isEmpty(requestVO.getMessage())) {
@@ -566,11 +525,17 @@ public class AiChatServiceImpl implements AiChatService {
 
         LlmChatSessionCreateVO createVO = new LlmChatSessionCreateVO();
         createVO.setPromptRoleCd(StringUtil.isEmpty(requestVO.getPromptRoleCd()) ? "DEV" : requestVO.getPromptRoleCd());
-        createVO.setSessionTitle(buildSessionTitle(requestVO.getMessage(), createVO.getPromptRoleCd()));
-        return createChatSession(createVO);
+        createVO.setSessionTitle(buildLegacySessionTitle(requestVO.getMessage(), createVO.getPromptRoleCd()));
+
+        LlmChatSessionVO sessionVO = new LlmChatSessionVO();
+        sessionVO.setPromptRoleCd(createVO.getPromptRoleCd());
+        sessionVO.setSessionTitle(createVO.getSessionTitle());
+        sessionVO.setFrstRegisterId(authService.getCurrentUserId());
+        llmChatDAO.insertChatSession(sessionVO);
+        return llmChatDAO.selectChatSessionDetail(sessionVO.getChatSessionId());
     }
 
-    private String buildSessionTitle(String sessionTitle, String promptRoleCd) {
+    private String buildLegacySessionTitle(String sessionTitle, String promptRoleCd) {
         if (!StringUtil.isEmpty(sessionTitle)) {
             String trimmed = sessionTitle.trim();
             return trimmed.length() > 200 ? trimmed.substring(0, 200) : trimmed;
